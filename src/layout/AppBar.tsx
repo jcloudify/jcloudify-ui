@@ -1,10 +1,10 @@
 import React from "react";
 import {AppBar as RAAppBar} from "react-admin";
-import {Box, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 
 export const AppBar: React.FC = () => {
   return (
-    <RAAppBar container={React.Fragment}>
+    <RAAppBar>
       <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
         Poja
       </Typography>
