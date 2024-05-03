@@ -9,6 +9,7 @@ export interface OptionalFn<T extends (...args: any[]) => any>
 
 export interface OptionalVal<T> extends BaseOptional {
   get: () => Required<T>;
+  ifPresentThen: <R>(cb: (v: T) => R) => void;
 }
 
 export type Optional<T> = T extends (...args: any[]) => any
@@ -16,6 +17,7 @@ export type Optional<T> = T extends (...args: any[]) => any
   : OptionalVal<T>;
 
 /**
+ * Partial impl of Monad
  * TODO: test
  */
 export const optional = <T>(val: T | undefined | null): Optional<T> => {
@@ -24,8 +26,12 @@ export const optional = <T>(val: T | undefined | null): Optional<T> => {
 
   const call = (...args: any[]) => {
     if (typeof val === "function") {
-      val(...args);
+      return val(...args);
     }
+  };
+
+  const ifPresentThen = <R>(cb: (v: Required<T>) => R) => {
+    if (isPresent()) return cb(val as Required<T>);
   };
 
   const get = () => {
@@ -39,5 +45,6 @@ export const optional = <T>(val: T | undefined | null): Optional<T> => {
     get,
     call,
     isPresent,
+    ifPresentThen,
   } as unknown as Optional<T>;
 };
