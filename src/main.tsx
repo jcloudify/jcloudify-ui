@@ -2,11 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {Admin, Resource} from "react-admin";
 import {Layout} from "@/layout";
+import {dataProvider} from "@/providers";
 import {defaultTheme} from "@/themes";
+import {applications} from "@/operations";
 
 export const App = () => (
-  <Admin layout={Layout} theme={defaultTheme}>
-    <Resource name="applications" list={React.Fragment} />
+  <Admin dataProvider={dataProvider} theme={defaultTheme} layout={Layout}>
+    <Resource {...applications} />
   </Admin>
 );
 
