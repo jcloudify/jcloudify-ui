@@ -2,12 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {Admin, Resource} from "react-admin";
 import {Layout} from "@/layout";
-import {dataProvider} from "@/providers";
+import {authProvider, dataProvider} from "@/providers";
 import {defaultTheme} from "@/themes";
 import {applications} from "@/operations";
 
 export const App = () => (
-  <Admin dataProvider={dataProvider} theme={defaultTheme} layout={Layout}>
+  <Admin
+    dataProvider={dataProvider}
+    authProvider={authProvider}
+    theme={defaultTheme}
+    layout={Layout}
+  >
     <Resource {...applications} />
   </Admin>
 );

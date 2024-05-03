@@ -1,4 +1,4 @@
-import {Identifier, RaRecord} from "react-admin";
+import {AuthProvider, Identifier, RaRecord} from "react-admin";
 
 export type Dict<V> = Record<string, V>;
 
@@ -12,4 +12,9 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
   getOne: (id: Identifier, meta?: Dict<any>) => Promise<R>;
   save: (resources: any, meta?: Dict<any>) => Promise<R>;
   delete: (id: Identifier) => Promise<R>;
+}
+
+export interface PojaAuthProvider extends AuthProvider {
+  getCachedAuthConf: () => object /* openapi::Configuration */;
+  getCachedWhoami: () => object /* api::User::Whoami */;
 }
