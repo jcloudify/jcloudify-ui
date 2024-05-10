@@ -36,7 +36,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
   const isHealthy = app.state === "HEALTHY";
 
   return (
-    <Grid item xs={12} lg={6}>
+    <Grid item xs={12} md={6}>
       <Stack
         data-testid={`applications-${app.id}`}
         role="button"
