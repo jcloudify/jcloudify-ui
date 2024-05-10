@@ -1,32 +1,34 @@
 import {faker as m} from "@faker-js/faker/locale/en";
 
-const app = () => ({
-  name: m.company.name(),
-  deployed_url: m.internet.url(),
+const app = (id: string) => ({
+  id,
+  name: "jcloudify-" + id,
+  deployed_url: "jcloudify-" + id + ".app",
   archived: false,
-  state: m.helpers.arrayElement(["ACTIVE", "INACTIVE"]),
-  github_repository: "https://github.com/poja-app/".concat(m.git.branch()),
+  github_repository: "https://github.com/poja-app/jcloudify-api-" + id,
   creation_datetime: m.date.recent(),
 });
 
 export const app1 = {
-  id: "app1",
-  ...app(),
+  ...app("app1"),
+  state: "HEALTHY",
 };
 
 export const app2 = {
-  id: "app2",
-  ...app(),
+  ...app("app2"),
+  state: "UNHEALTHY",
 };
 
 export const app3 = {
+  ...app("app3"),
   id: "app3",
-  ...app(),
+  state: "UNHEALTHY",
 };
 
 export const app4 = {
+  ...app("app4"),
   id: "app4",
-  ...app(),
+  state: "HEALTHY",
 };
 
 export const apps = [app1, app2, app3, app4];

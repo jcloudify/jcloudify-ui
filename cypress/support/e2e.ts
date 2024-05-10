@@ -22,6 +22,7 @@ declare global {
     interface Chainable {
       getByTestid<Subject>(testid: string): Chainable<Subject>;
       pathnameEq(to: string): Chainable;
+      getByHref<Subject>(href: string): Chainable<Subject>;
     }
   }
 }

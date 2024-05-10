@@ -13,26 +13,32 @@ import {Apps, Settings, GitHub, Brightness1} from "@mui/icons-material";
 import {colors} from "@/themes";
 import {AppProps} from "./types";
 
-const AppActiveDot = () => (
-  <Chip
-    icon={<Brightness1 fontSize="small" color="success" />}
-    label={<Typography variant="body2">Active</Typography>}
-    sx={{
-      width: "fit-content",
-      height: "2rem",
-      bgcolor: colors("gray-0"),
-      border: "1px solid #e0e0e0",
-      zIndex: 2,
-    }}
-  />
-);
+const AppFlag: React.FC<AppProps> = ({app}) => {
+  const isHealthy = app.state === "HEALTHY";
+  return (
+    <Chip
+      icon={
+        <Brightness1 fontSize="small" color={isHealthy ? "success" : "error"} />
+      }
+      label={<Typography variant="body2">{app.state.toLowerCase()}</Typography>}
+      sx={{
+        width: "fit-content",
+        height: "2rem",
+        bgcolor: colors("gray-0"),
+        border: "1px solid #e0e0e0",
+        zIndex: 2,
+      }}
+    />
+  );
+};
 
 const AppGridTile: React.FC<AppProps> = ({app}) => {
-  const isActive = app.state === "ACTIVE";
+  const isHealthy = app.state === "HEALTHY";
 
   return (
     <Grid item xs={12} lg={6}>
       <Stack
+        data-testid={`applications-${app.id}`}
         role="button"
         component={Paper}
         spacing={2}
@@ -51,7 +57,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
           </Avatar>
           <Stack flex={1}>
             <Typography fontWeight="semibold">{app.name}</Typography>
-            {isActive && (
+            {isHealthy && (
               <Link
                 to={app.deployed_url}
                 sx={{
@@ -98,7 +104,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end" height="2rem">
-          {isActive && <AppActiveDot />}
+          <AppFlag app={app} />
         </Stack>
 
         <Link
