@@ -1,13 +1,7 @@
 import React from "react";
-import {AppBar as RAAppBar} from "react-admin";
-import {Typography} from "@mui/material";
+import {AppBarProps as RAAppBarProps, AppBar as RAAppBar} from "react-admin";
 
-export const AppBar: React.FC = () => {
-  return (
-    <RAAppBar>
-      <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-        Poja
-      </Typography>
-    </RAAppBar>
-  );
+// open to cusomization
+export const AppBar: React.FC<RAAppBarProps> = (props) => {
+  return <RAAppBar {...props} />;
 };

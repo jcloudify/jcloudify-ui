@@ -9,7 +9,7 @@ export const defaultTheme: RaThemeOptions = {
       main: "#dc2626",
     },
     primary: {
-      main: colors("spring-boot"),
+      main: "#121212",
     },
   },
   typography: {

@@ -2,27 +2,27 @@ import {PojaAuthProvider} from "./types";
 
 export const authProvider: PojaAuthProvider = {
   login: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve();
   },
   logout: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve();
   },
   checkAuth: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve();
   },
   checkError: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve();
   },
   getIdentity: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve({} as any);
   },
   getPermissions: () => {
-    throw new Error("Function not implemented");
+    return Promise.resolve([]);
   },
   getCachedWhoami: () => {
-    throw new Error("Function not implemented");
+    return {} as any;
   },
   getCachedAuthConf: () => {
-    throw new Error("Function not implemented");
+    return {} as any;
   },
 };
