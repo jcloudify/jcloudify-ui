@@ -6,7 +6,7 @@ import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
 import {defaultTheme} from "@/themes";
 import {apps} from "@/operations";
-import {AppShowLayout} from "@/operations/apps";
+import {AppShowLayout, appShowViews} from "@/operations/apps";
 
 export const App = () => (
   <Admin
@@ -19,11 +19,10 @@ export const App = () => (
 
     <CustomRoutes>
       <Route path="/applications/:appId/show" element={<AppShowLayout />}>
-        <Route index element={<Navigate to="overview" />} />
-        <Route path="overview" element={<h1>Overview</h1>} />
-        <Route path="deployments" element={<h1>Deployments</h1>} />
-        <Route path="analytics" element={<h1>Analytics</h1>} />
-        <Route path="logs" element={<h1>Logs</h1>} />
+        <Route index element={<Navigate to="environments" />} />
+        {Object.keys(appShowViews).map((path) => (
+          <Route key={path} path={path} element={appShowViews[path]} />
+        ))}
       </Route>
     </CustomRoutes>
   </Admin>

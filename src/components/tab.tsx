@@ -61,7 +61,6 @@ export const Tabs: React.FC<TabsProps> = ({
         indicatorColor="primary"
         variant="fullWidth"
         allowScrollButtonsMobile
-        scrollButtons="auto"
         {...props}
       >
         {tabs.map((tab) => (
