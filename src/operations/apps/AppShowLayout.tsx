@@ -4,6 +4,7 @@ import {Outlet, useParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {Tabs} from "@/components/tab";
 import {colors} from "@/themes";
+import {SetEnvironment} from "@/operations/environments";
 
 const tabList = ["Environments", "Deployments", "Analytics", "Logs"];
 
@@ -12,7 +13,10 @@ export const AppShowLayout: React.FC = () => {
   return (
     <Box>
       <ShowBase id={appId} resource="applications">
-        <AppShowTitle />
+        <Box>
+          <AppShowTitle />
+          <SetEnvironment />
+        </Box>
       </ShowBase>
 
       <Box borderBottom={`1px solid ${colors("gray-0")}`}>

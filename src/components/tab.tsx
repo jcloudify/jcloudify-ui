@@ -1,5 +1,5 @@
 import {createContext, useState, useContext, useMemo, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {
   Stack,
   Tabs as MUITabs,
@@ -37,6 +37,7 @@ export const Tabs: React.FC<TabsProps> = ({
   tabProps = {},
   ...props
 }) => {
+  const [p] = useSearchParams();
   const [value, setValue] = useState(tabs[0]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export const Tabs: React.FC<TabsProps> = ({
             value={tab}
             label={tab}
             component={asLink ? Link : "div"}
-            to={tab.toLowerCase()}
+            to={`${tab.toLowerCase()}?${p}`}
             sx={{
               textTransform: "none",
             }}
