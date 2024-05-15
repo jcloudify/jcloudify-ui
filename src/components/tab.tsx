@@ -45,20 +45,21 @@ export const Tabs: React.FC<TabsProps> = ({
   useEffect(() => {
     const syncTabWithCurrentPath = () => {
       let synced = false;
-      for (let tab of tabs) {
-        if (pathname.endsWith(tab.toLowerCase())) {
-          synced = true;
-          setValue(tab);
-          break;
+      if (asLink) {
+        for (let tab of tabs) {
+          if (pathname.endsWith(tab.toLowerCase())) {
+            synced = true;
+            setValue(tab);
+            break;
+          }
         }
       }
-
       if (!synced) {
         setValue(tabs[0]);
       }
     };
     syncTabWithCurrentPath();
-  }, [tabs, pathname]);
+  }, [tabs, pathname, asLink]);
 
   if (!tabs.length) throw new Error("at least 1 tab is required");
 
