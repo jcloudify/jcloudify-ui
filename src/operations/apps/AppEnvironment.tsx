@@ -1,5 +1,7 @@
+import {useGetOne} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {
+  Grid,
   Box,
   Stack,
   Divider,
@@ -18,54 +20,55 @@ import {colors} from "@/themes";
 export const AppEnvironment: React.FC = () => {
   const [p] = useSearchParams();
 
-  const env = p.get("env");
+  const envId = p.get("env");
 
+  const {data: env} = useGetOne("environments", {id: envId});
   const {appId} = useParams();
-
-  const confTitle = env ? (
-    <Typography variant="h5">
-      Configure <b>{env}</b> env
-    </Typography>
-  ) : (
-    "Configuration"
-  );
 
   if (!appId) return null;
   return (
-    <Stack mt={2.5} spacing={2} mb={2}>
-      <Card>
-        <CardHeader
-          title="Environments"
-          subheader="Create or Delete an environment"
-        />
-        <Divider sx={{borderColor: colors("gray-0")}} />
-        <CardContent>
-          <EnvironmentList
-            hasCreate
-            exporter={false}
-            appId={appId}
-            title=" "
-            pagination={false}
+    <Grid container spacing={2} mt={2.5}>
+      <Grid item xs={12} lg={6}>
+        <Card component={Box} flex={1} height="100%">
+          <CardHeader
+            title="Environments"
+            subheader="Create or Delete an environment"
           />
-        </CardContent>
-      </Card>
+          <Divider sx={{borderColor: colors("gray-0")}} />
+          <CardContent>
+            <EnvironmentList
+              hasCreate
+              exporter={false}
+              appId={appId}
+              title=" "
+              pagination={false}
+            />
+          </CardContent>
+        </Card>
+      </Grid>
 
-      <Card component={Box}>
-        <CardHeader title={confTitle} subheader="variables, machine, ..." />
-        <Divider />
-        <CardContent>
-          {env ? (
-            <EnvironmentVariablesEdit envId={env} />
+      <Grid item xs={12} lg={6}>
+        <Card component={Box} minWidth="40rem" height="100%">
+          <CardHeader
+            title={`"${env?.environment_type ?? "..."}" Env variables`}
+          />
+          <Divider />
+          {envId ? (
+            <CardContent>
+              <EnvironmentVariablesEdit
+                envId={envId}
+                title=" "
+                pagination={false}
+              />
+            </CardContent>
           ) : (
             <NoEnvSelectedPlaceholder />
           )}
-        </CardContent>
-      </Card>
-    </Stack>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
-
-// {!selectedEnv && <NoEnvSelectedPlaceholder />}
 
 const NoEnvSelectedPlaceholder = () => {
   return (
@@ -74,9 +77,11 @@ const NoEnvSelectedPlaceholder = () => {
       alignItems="center"
       p={4}
       sx={{bgcolor: colors("gray")}}
+      height="100%"
+      width="100%"
     >
       <Typography variant="h5" fontWeight="400">
-        Click an Environment to configure
+        Click an Environment to set variables
       </Typography>
       <Box p={3}>
         <Settings fontSize="large" />
