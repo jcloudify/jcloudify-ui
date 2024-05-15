@@ -1,5 +1,5 @@
 import {createContext, useState, useContext, useMemo, useEffect} from "react";
-import {Link, useSearchParams} from "react-router-dom";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 import {
   Stack,
   Tabs as MUITabs,
@@ -40,9 +40,25 @@ export const Tabs: React.FC<TabsProps> = ({
   const [p] = useSearchParams();
   const [value, setValue] = useState(tabs[0]);
 
+  const {pathname} = useLocation();
+
   useEffect(() => {
-    setValue(tabs[0]);
-  }, [tabs]);
+    const syncTabWithCurrentPath = () => {
+      let synced = false;
+      for (let tab of tabs) {
+        if (pathname.endsWith(tab.toLowerCase())) {
+          synced = true;
+          setValue(tab);
+          break;
+        }
+      }
+
+      if (!synced) {
+        setValue(tabs[0]);
+      }
+    };
+    syncTabWithCurrentPath();
+  }, [tabs, pathname]);
 
   if (!tabs.length) throw new Error("at least 1 tab is required");
 
