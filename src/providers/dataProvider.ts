@@ -1,7 +1,11 @@
 import {DataProvider as RADataProvider} from "react-admin";
 import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
-import {applicationProvider, environmentProvider} from "./";
+import {
+  applicationProvider,
+  envVariablesProvider,
+  environmentProvider,
+} from "./";
 
 const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
@@ -9,6 +13,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return applicationProvider;
     case "environments":
       return environmentProvider;
+    case "env_variables":
+      return envVariablesProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }
