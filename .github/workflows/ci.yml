@@ -1,4 +1,6 @@
-on: [push, pull_request]
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
 
 env:
   AWS_REGION: eu-west-3
@@ -24,9 +26,6 @@ jobs:
   test-unit:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    container:
-      image: cypress/browsers:node-18.16.0-chrome-114.0.5735.133-1-ff-114.0.2-edge-114.0.1823.51-1
-      options: --user 1001
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,12 +42,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
       - run: sh ./initNpmrc.sh jcloudify-store npm-jcloudify-app 057045785189
 
-      - name: Setup cypress
-        uses: cypress-io/github-action@v6
-        with:
-          runTests: false
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cypress dependencies
+        # From: https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements, Ubuntu section
+        run: |
+          sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 
       - name: Run unit tests
         run: npm run test:unit
@@ -56,9 +59,6 @@ jobs:
   test-e2e:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    container:
-      image: cypress/browsers:node-18.16.0-chrome-114.0.5735.133-1-ff-114.0.2-edge-114.0.1823.51-1
-      options: --user 1001
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,7 +75,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
       - run: sh ./initNpmrc.sh jcloudify-store npm-jcloudify-app 057045785189
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cypress dependencies
+        # From: https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements, Ubuntu section
+        run: |
+          sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 
       - name: Run e2e tests
         uses: cypress-io/github-action@v6
