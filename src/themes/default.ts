@@ -105,8 +105,6 @@ export const defaultTheme: RaThemeOptions = {
         head: {
           borderBottom: `1px solid ${colors("gray-1")}`,
           fontSize: "0.75rem",
-          textTransform: "uppercase",
-          letterSpacing: 1.2,
         },
       },
     },
