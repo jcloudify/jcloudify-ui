@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {Button, useTranslate} from "react-admin";
+import {useTranslate} from "react-admin";
 import {
   Theme,
   Box,
@@ -68,7 +68,6 @@ const SubMenu: React.FC<SubMenuProps> = ({
 }) => {
   const translate = useTranslate();
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
-  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const handleOnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
