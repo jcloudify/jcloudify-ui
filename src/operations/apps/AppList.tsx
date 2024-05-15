@@ -108,6 +108,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
         </Stack>
 
         <Link
+          data-testid={`show-${app.id}-app`}
           to={`${app.id}/show`}
           sx={{
             top: 0,

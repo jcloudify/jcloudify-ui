@@ -1,4 +1,4 @@
-import {app1} from "./application.mock";
+import {app1, app2} from "./application.mock";
 
 // app1 envs
 const prod_env = {
@@ -13,4 +13,10 @@ const preprod_env = {
   application_id: app1.id,
 };
 
-export const envs = [prod_env, preprod_env];
+const preprod_env2 = {
+  id: "preprod_env2",
+  environment_type: "PREPROD",
+  application_id: app2.id,
+};
+
+export const envs = [prod_env, preprod_env, preprod_env2];
