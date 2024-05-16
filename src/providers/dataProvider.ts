@@ -51,6 +51,10 @@ export const dataProvider: RADataProvider = {
     const result = await getProvider(resource).delete(params.id);
     return {data: result};
   },
+  async updateMany(resource, params) {
+    const result = await getProvider(resource).saveAll(params.data as any[]);
+    return {data: result};
+  },
   getMany() {
     throw new Error("Function not implemented.");
   },
@@ -58,9 +62,6 @@ export const dataProvider: RADataProvider = {
     throw new Error("Function not implemented.");
   },
   deleteMany() {
-    throw new Error("Function not implemented.");
-  },
-  updateMany() {
     throw new Error("Function not implemented.");
   },
 };

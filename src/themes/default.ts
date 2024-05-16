@@ -58,9 +58,30 @@ export const defaultTheme: RaThemeOptions = {
         },
       },
     },
-    MuiButtonBase: {
+    MuiButton: {
       defaultProps: {
         disableRipple: true,
+      },
+    },
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          textTransform: "none !important",
+          boxShadow: "none !important",
+        },
+      },
+      defaultProps: {
+        disableRipple: true,
+        disableElevation: true,
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&:focus-within": {
+            outline: `5px solid ${colors("gray-0")}`,
+          },
+        },
       },
     },
     MuiPaper: {

@@ -14,6 +14,10 @@ export const envVariablesProvider: PojaDataProvider<any /* TODO: api client type
     save(variable): Promise<any> {
       return Promise.resolve(variable);
     },
+    saveAll(variables): Promise<any[]> {
+      console.log("vars", variables);
+      return Promise.resolve(variables);
+    },
     delete(): Promise<any> {
       throw new Error("Function not implemented.");
     },

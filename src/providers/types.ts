@@ -10,7 +10,8 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
     meta?: Dict<any>
   ) => Promise<Array<R>>;
   getOne: (id: Identifier, meta?: Dict<any>) => Promise<R>;
-  save: (resources: any, meta?: Dict<any>) => Promise<R>;
+  save: (resource: R, meta?: Dict<any>) => Promise<R>;
+  saveAll: (resources: R[], meta?: Dict<any>) => Promise<R[]>;
   delete: (id: Identifier) => Promise<R>;
 }
 
