@@ -1,7 +1,11 @@
 import {DataProvider as RADataProvider} from "react-admin";
 import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
-import {applicationProvider, environmentProvider} from "./";
+import {
+  applicationProvider,
+  envVariablesProvider,
+  environmentProvider,
+} from "./";
 
 const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
@@ -9,6 +13,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return applicationProvider;
     case "environments":
       return environmentProvider;
+    case "env_variables":
+      return envVariablesProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }
@@ -45,6 +51,10 @@ export const dataProvider: RADataProvider = {
     const result = await getProvider(resource).delete(params.id);
     return {data: result};
   },
+  async updateMany(resource, params) {
+    const result = await getProvider(resource).saveAll(params.data as any[]);
+    return {data: result};
+  },
   getMany() {
     throw new Error("Function not implemented.");
   },
@@ -52,9 +62,6 @@ export const dataProvider: RADataProvider = {
     throw new Error("Function not implemented.");
   },
   deleteMany() {
-    throw new Error("Function not implemented.");
-  },
-  updateMany() {
     throw new Error("Function not implemented.");
   },
 };

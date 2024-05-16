@@ -17,6 +17,7 @@
     "test:e2e:ci": "concurrently \"npm run dev\" \"npm run test:e2e\""
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.4.0",
     "axios": "^1.6.5",
     "nanoid": "^5.0.4",
     "react": "^18.2.0",

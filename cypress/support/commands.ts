@@ -15,3 +15,7 @@ Cypress.Commands.add("pathnameEq", (to) => {
 Cypress.Commands.add("getByHref", <Subject = any>(href: string) => {
   return cy.get<Subject>(`[href='#${href}']`);
 });
+
+Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
+  return cy.get<Subject>(`[name='${name}']`);
+});

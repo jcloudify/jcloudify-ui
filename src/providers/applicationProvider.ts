@@ -12,6 +12,9 @@ export const applicationProvider: PojaDataProvider<any /* TODO: api client type 
     save(app): Promise<any> {
       return Promise.resolve(app);
     },
+    saveAll(): Promise<any> {
+      throw new Error("Function not implemented.");
+    },
     delete(): Promise<any> {
       throw new Error("Function not implemented.");
     },
