@@ -169,6 +169,7 @@ const ListEnvEdit: React.FC = () => {
 
       <Stack direction="row" spacing={2}>
         <Button
+          data-testid="AddAnotherEnvVar"
           startIcon={<Add />}
           size="large"
           variant="outlined"
@@ -184,6 +185,7 @@ const ListEnvEdit: React.FC = () => {
           }}
         />
         <Button
+          data-testid="SaveEnvVar"
           startIcon={<Save />}
           type="submit"
           size="large"

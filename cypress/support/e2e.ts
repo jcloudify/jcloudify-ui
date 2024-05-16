@@ -23,6 +23,7 @@ declare global {
       getByTestid<Subject>(testid: string): Chainable<Subject>;
       pathnameEq(to: string): Chainable;
       getByHref<Subject>(href: string): Chainable<Subject>;
+      getByName<Subject>(name: string): Chainable<Subject>;
     }
   }
 }
