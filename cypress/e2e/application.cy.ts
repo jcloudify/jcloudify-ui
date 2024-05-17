@@ -7,10 +7,9 @@ describe("Application", () => {
   });
 
   context("list", () => {
-    it("should show deployed url and healthy flag when state is 'HEALTHY'", () => {
+    it("should show healthy flag when state is 'HEALTHY'", () => {
       cy.getByTestid(`applications-${app1.id}`).contains("healthy");
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name);
-      cy.getByTestid(`applications-${app1.id}`).contains(app1.deployed_url);
       cy.getByTestid(`applications-${app1.id}`).contains(
         app1.github_repository
       );
@@ -19,10 +18,6 @@ describe("Application", () => {
     it("should show unhealthy flag when state is 'UNHEALTHY'", () => {
       cy.getByTestid(`applications-${app2.id}`).contains("unhealthy");
       cy.getByTestid(`applications-${app2.id}`).contains(app2.name);
-      cy.getByTestid(`applications-${app2.id}`).should(
-        "not.contain",
-        app2.deployed_url
-      );
       cy.getByTestid(`applications-${app2.id}`).contains(
         app2.github_repository
       );

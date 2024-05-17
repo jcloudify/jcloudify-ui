@@ -1,6 +1,9 @@
+import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
 import {preprod_env, prod_env} from "./environment.mock";
 
-export const variables = [
+export const variables: (Required<EnvironmentVariable> & {
+  environment_id?: string;
+})[] = [
   {
     id: "var1",
     name: "region",

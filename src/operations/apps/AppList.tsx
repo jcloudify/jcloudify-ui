@@ -1,3 +1,4 @@
+import {ApplicationStateEnum} from "@jcloudify-api/typescript-client";
 import {Title, ListBase, useListContext, Link} from "react-admin";
 import {
   Box,
@@ -14,7 +15,7 @@ import {colors} from "@/themes";
 import {AppProps} from "./types";
 
 const AppFlag: React.FC<AppProps> = ({app}) => {
-  const isHealthy = app.state === "HEALTHY";
+  const isHealthy = app.state === ApplicationStateEnum.HEALTHY;
   return (
     <Chip
       icon={
@@ -33,11 +34,10 @@ const AppFlag: React.FC<AppProps> = ({app}) => {
 };
 
 const AppGridTile: React.FC<AppProps> = ({app}) => {
-  const isHealthy = app.state === "HEALTHY";
-
   return (
     <Grid item xs={12} md={6}>
       <Stack
+        height="100%"
         data-testid={`applications-${app.id}`}
         role="button"
         component={Paper}
@@ -57,7 +57,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
           </Avatar>
           <Stack flex={1}>
             <Typography fontWeight="semibold">{app.name}</Typography>
-            {isHealthy && (
+            {/*isHealthy && (
               <Link
                 to={app.deployed_url}
                 sx={{
@@ -72,7 +72,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
                   {app.deployed_url}
                 </Typography>
               </Link>
-            )}
+            )*/}
           </Stack>
           <Box>
             <IconButton sx={{zIndex: 2}}>

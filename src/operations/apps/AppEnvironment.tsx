@@ -1,3 +1,4 @@
+import {Environment} from "@jcloudify-api/typescript-client";
 import {useGetOne} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {
@@ -22,7 +23,9 @@ export const AppEnvironment: React.FC = () => {
 
   const envId = p.get("env");
 
-  const {data: env} = useGetOne("environments", {id: envId});
+  const {data: env} = useGetOne<Required<Environment>>("environments", {
+    id: envId!,
+  });
   const {appId} = useParams();
 
   if (!appId) return null;

@@ -1,3 +1,4 @@
+import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
 import {useCallback} from "react";
 import {
   Button,
@@ -58,7 +59,7 @@ export const EnvironmentVariablesEdit: React.FC<
 const ListEnvEdit: React.FC = () => {
   const deleteIds = useSet<string>();
   const [p] = useSearchParams();
-  const {data: vars = []} = useListContext({
+  const {data: vars = []} = useListContext<Required<EnvironmentVariable>>({
     resource: "env_variables",
   });
   const [updateMany, {isLoading}] = useUpdateMany();
@@ -130,7 +131,7 @@ const ListEnvEdit: React.FC = () => {
 
       {fields.map((variable, idx) => {
         const {var_id: id} = variable;
-        const isInDeleteState = deleteIds.has(id);
+        const isInDeleteState = deleteIds.has(id!);
         const message = (form.formState.errors.variables || [])[idx];
         return (
           <KVPair
@@ -231,9 +232,9 @@ const KVPair: React.FC<{
 /**
  * react-hook-form uses the 'id' key internally (replaces it) so rename it
  */
-const mapVarIdWithNamedId = (variable: Record<string, any>) => {
+const mapVarIdWithNamedId = (variable: EnvironmentVariable) => {
   return {
-    environment_id: variable.environment_id,
+    environment_id: (variable as any).environment_id,
     var_id: variable.id,
     name: variable.name,
     value: variable.value,
