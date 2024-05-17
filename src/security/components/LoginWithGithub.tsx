@@ -67,7 +67,7 @@ export const LoginWithGithub: React.FC = () => {
             variant="contained"
             startIcon={<GitHub />}
             label="Login with Github"
-            href="https://github.com/login/oauth/authorize?client_id=Ov23litbra3i8e04XWvC"
+            href="/"
           />
           <Octagon top={100} left={-150} color={colors("gray-1")} />
           <Octagon bottom={-30} right={-30} />
