@@ -1,4 +1,16 @@
 import {
+  Form,
+  SelectInput,
+  BooleanInput,
+  TextInput,
+  NumberInput,
+  Toolbar,
+  SaveButton,
+  Button,
+  Link,
+  useCreatePath,
+} from "react-admin";
+import {
   Stack,
   Box,
   Grid,
@@ -8,17 +20,11 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import {
-  Form,
-  SelectInput,
-  BooleanInput,
-  TextInput,
-  NumberInput,
-} from "react-admin";
 import {colors} from "@/themes";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 
 export const AppCreateFromScratch: React.FC = () => {
+  const createPath = useCreatePath();
   return (
     <Stack mt={2.5} mb={2} pt={2} justifyContent="center" width="100%" mx={0}>
       <Form>
@@ -33,6 +39,19 @@ export const AppCreateFromScratch: React.FC = () => {
             <Database />
           </Grid>
         </Grid>
+
+        <Toolbar sx={{mt: 2}}>
+          <Stack direction="row" spacing={2}>
+            <SaveButton />
+            <Button
+              size="medium"
+              label="Return to applications"
+              variant="outlined"
+              to="/applications"
+              component={Link}
+            />
+          </Stack>
+        </Toolbar>
       </Form>
     </Stack>
   );
