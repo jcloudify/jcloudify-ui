@@ -48,7 +48,7 @@ export const AppEnvironment: React.FC = () => {
       </Grid>
 
       <Grid item xs={12} lg={6}>
-        <Card component={Box} minWidth="40rem" height="100%">
+        <Card component={Box} height="100%">
           <CardHeader
             title={`"${env?.environment_type ?? "..."}" Env variables`}
           />

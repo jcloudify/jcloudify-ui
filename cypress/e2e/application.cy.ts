@@ -61,8 +61,26 @@ describe("Application", () => {
         cy.getByName("variables.1.value").should("have.value", "poja-bucket");
       });
 
+      specify(
+        "Save button must is only available when there is a changes made to the en variables",
+        () => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.contains("prod_env").click();
+
+          cy.contains(`"PROD" Env variables`);
+
+          cy.getByTestid("SaveEnvVar").should("be.disabled");
+
+          cy.getByTestid("AddAnotherEnvVar").click();
+          cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
+          cy.getByName("variables.2.value").clear().type("new-env-val");
+
+          cy.getByTestid("SaveEnvVar").should("be.enabled");
+        }
+      );
+
       // TODO: remove field, remove existent env var
-      specify.only(
+      specify(
         "Allows to 'update, add another, delete' variables for an environment",
         () => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});

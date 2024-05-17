@@ -19,14 +19,16 @@ import {
   Box,
   FormHelperText,
   OutlinedInput,
+  Divider,
 } from "@mui/material";
 import {Add, Remove, Cancel, Save} from "@mui/icons-material";
 import {nanoid} from "nanoid";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 import {getIds} from "@/operations/utils/record";
 import {useSet} from "@/hooks";
+import {z} from "zod";
 import {envVariableSchema} from "./schema";
-import z from "zod";
+import {colors} from "@/themes";
 
 export type EnvironmentVariablesEditProps<
   Record extends RaRecord<Identifier> = any,
@@ -48,7 +50,7 @@ export const EnvironmentVariablesEdit: React.FC<
       }}
       {...rest}
     >
-      <ListEnvEdit />
+      <ListEnvEdit key={env_id} />
     </ListBase>
   );
 };
@@ -56,7 +58,9 @@ export const EnvironmentVariablesEdit: React.FC<
 const ListEnvEdit: React.FC = () => {
   const deleteIds = useSet<string>();
   const [p] = useSearchParams();
-  const {data: variables = []} = useListContext();
+  const {data: vars = []} = useListContext({
+    resource: "env_variables",
+  });
   const [updateMany, {isLoading}] = useUpdateMany();
 
   const envId = p.get("env");
@@ -68,7 +72,7 @@ const ListEnvEdit: React.FC = () => {
       })
     ),
     values: {
-      variables: variables.map(mapVarIdWithNamedId),
+      variables: vars.map(mapVarIdWithNamedId),
     },
   });
 
@@ -114,13 +118,15 @@ const ListEnvEdit: React.FC = () => {
       gap={1.5}
       onSubmit={form.handleSubmit(save)}
     >
-      <Box mb={2}>
+      <Box>
         <KVPair
           k={<Typography variant="h6">Key</Typography>}
           v={<Typography variant="h6">value</Typography>}
           tail={<></>}
         />
       </Box>
+
+      <Divider sx={{mb: 2, borderColor: colors("gray-0")}} />
 
       {fields.map((variable, idx) => {
         const {var_id: id} = variable;
@@ -191,7 +197,7 @@ const ListEnvEdit: React.FC = () => {
           size="large"
           variant="contained"
           label="Save"
-          disabled={isLoading}
+          disabled={isLoading || !form.formState.isDirty}
         />
       </Stack>
     </Stack>
