@@ -161,14 +161,16 @@ const ListEnvEdit: React.FC = () => {
               </>
             }
             tail={
-              <IconButtonWithTooltip
-                label={isInDeleteState ? "Cancel removal" : "Remove"}
-                onClick={() => {
-                  rmFieldOrToggleDeletion(id, idx);
-                }}
-              >
-                {isInDeleteState ? <Cancel /> : <Remove />}
-              </IconButtonWithTooltip>
+              <Stack justifyContent="center" alignItems="center">
+                <IconButtonWithTooltip
+                  label={isInDeleteState ? "Cancel removal" : "Remove"}
+                  onClick={() => {
+                    rmFieldOrToggleDeletion(id, idx);
+                  }}
+                >
+                  {isInDeleteState ? <Cancel /> : <Remove />}
+                </IconButtonWithTooltip>
+              </Stack>
             }
           />
         );
@@ -221,7 +223,7 @@ const KVPair: React.FC<{
       </Grid>
 
       {!!tail && (
-        <Grid item xs={1}>
+        <Grid item xs={1} p="0 !important">
           {tail}
         </Grid>
       )}
