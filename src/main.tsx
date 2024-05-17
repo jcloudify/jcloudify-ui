@@ -4,7 +4,7 @@ import {Admin, CustomRoutes, Resource} from "react-admin";
 import {Navigate, Route} from "react-router-dom";
 import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
-import {defaultTheme} from "@/themes";
+import {LoginWithGithub} from "@/security";
 import {apps} from "@/operations";
 import {
   AppCreateLayout,
@@ -12,6 +12,7 @@ import {
   appShowViews,
   appCreateViews,
 } from "@/operations/apps";
+import {defaultTheme} from "@/themes";
 
 export const App = () => (
   <Admin
@@ -19,6 +20,7 @@ export const App = () => (
     authProvider={authProvider}
     theme={defaultTheme}
     layout={Layout}
+    loginPage={LoginWithGithub}
   >
     <Resource {...apps} />
 
