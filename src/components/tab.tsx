@@ -7,6 +7,7 @@ import {
   Tab as MUITab,
   TabProps as MUITabProps,
 } from "@mui/material";
+import {colors} from "@/themes";
 
 export type TabValue = string;
 
@@ -28,12 +29,14 @@ export type TabsProps = Omit<MUITabsProps, "onChange" | "value"> &
     initialValue?: string;
     tabProps?: MUITabProps;
     asLink?: boolean;
+    solid?: boolean;
   }>;
 
 export const Tabs: React.FC<TabsProps> = ({
   tabs,
   children,
   asLink = false,
+  solid = false,
   tabProps = {},
   ...props
 }) => {
@@ -84,12 +87,20 @@ export const Tabs: React.FC<TabsProps> = ({
         {tabs.map((tab) => (
           <MUITab
             key={tab}
+            {...tabProps}
             value={tab}
             label={tab}
             component={asLink ? Link : "div"}
             to={`${tab.toLowerCase()}?${p}`}
             sx={{
-              textTransform: "none",
+              "textTransform": "none",
+              "&.Mui-selected": solid
+                ? {
+                    bgcolor: "#fff !important",
+                    border: `1px solid ${colors("gray-0")}`,
+                  }
+                : {},
+              ...tabProps.sx,
             }}
           />
         ))}

@@ -7,5 +7,7 @@ export const apps: Operation = {
 };
 
 export * from "./AppList";
+export * from "./AppCreateLayout";
 export * from "./AppShowLayout";
 export * from "./appShowViews";
+export * from "./appCreateViews";

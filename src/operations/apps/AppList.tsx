@@ -1,5 +1,12 @@
 import {ApplicationStateEnum} from "@jcloudify-api/typescript-client";
-import {Title, ListBase, useListContext, Link} from "react-admin";
+import {
+  Title,
+  ListBase,
+  useListContext,
+  Link,
+  TopToolbar,
+  Button,
+} from "react-admin";
 import {
   Box,
   Stack,
@@ -10,7 +17,7 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import {Apps, Settings, GitHub, Brightness1} from "@mui/icons-material";
+import {Apps, Settings, GitHub, Brightness1, Add} from "@mui/icons-material";
 import {colors} from "@/themes";
 import {AppProps} from "./types";
 
@@ -140,6 +147,17 @@ const AppGridView: React.FC = () => {
 export const AppList: React.FC = () => (
   <ListBase resource="applications">
     <Title title="Applications" />
+
+    <TopToolbar>
+      <Button
+        label="Create New"
+        startIcon={<Add />}
+        variant="contained"
+        to="create"
+        component={Link}
+      />
+    </TopToolbar>
+
     <AppGridView />
   </ListBase>
 );

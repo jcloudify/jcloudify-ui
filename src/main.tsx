@@ -6,7 +6,12 @@ import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
 import {defaultTheme} from "@/themes";
 import {apps} from "@/operations";
-import {AppShowLayout, appShowViews} from "@/operations/apps";
+import {
+  AppCreateLayout,
+  AppShowLayout,
+  appShowViews,
+  appCreateViews,
+} from "@/operations/apps";
 
 export const App = () => (
   <Admin
@@ -22,6 +27,13 @@ export const App = () => (
         <Route index element={<Navigate to="environments" />} />
         {Object.keys(appShowViews).map((path) => (
           <Route key={path} path={path} element={appShowViews[path]} />
+        ))}
+      </Route>
+
+      <Route path="/applications/create" element={<AppCreateLayout />}>
+        <Route index element={<Navigate to="from-scratch" />} />
+        {Object.keys(appCreateViews).map((path) => (
+          <Route key={path} path={path} element={appCreateViews[path]} />
         ))}
       </Route>
     </CustomRoutes>
