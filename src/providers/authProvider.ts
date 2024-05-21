@@ -1,11 +1,20 @@
+import {Configuration} from "@jcloudify-api/typescript-client";
+import {authTokenCache, clearCaches, whoamiCache} from "@/providers/cache";
 import {PojaAuthProvider} from "./types";
 
 export const authProvider: PojaAuthProvider = {
-  login: () => {
-    return Promise.resolve();
+  login: (_params) => {
+    /* oauth create-token stuff backend call */
+    // params.code
+    // authenticate
+    // authTokenCache.cache()
+    return new Promise((resolve) => {
+      setTimeout(resolve, 3000);
+    });
   },
-  logout: () => {
-    return Promise.resolve();
+  logout: async () => {
+    // sign out
+    clearCaches();
   },
   checkAuth: () => {
     return Promise.resolve();
@@ -13,16 +22,19 @@ export const authProvider: PojaAuthProvider = {
   checkError: () => {
     return Promise.resolve();
   },
-  getIdentity: () => {
-    return Promise.resolve({} as any);
-  },
+  getIdentity: whoamiCache.get()?.user,
   getPermissions: () => {
     return Promise.resolve([]);
   },
-  getCachedWhoami: () => {
-    return {} as any;
-  },
+  getCachedWhoami: whoamiCache.get,
   getCachedAuthConf: () => {
-    return {} as any;
+    const tokens = authTokenCache.get();
+    return new Configuration({
+      baseOptions: {
+        headers: {
+          Authorization: `Bearer ${tokens?.accessToken ?? ""}`,
+        },
+      },
+    });
   },
 };

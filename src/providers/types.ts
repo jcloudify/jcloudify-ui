@@ -15,7 +15,12 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
   delete: (id: Identifier) => Promise<R>;
 }
 
+export interface LoginParams {
+  code: string;
+}
+
 export interface PojaAuthProvider extends AuthProvider {
+  login: (params: LoginParams) => ReturnType<AuthProvider["login"]>;
   getCachedAuthConf: () => object /* openapi::Configuration */;
-  getCachedWhoami: () => object /* api::User::Whoami */;
+  getCachedWhoami: () => object | null /* api::User::Whoami */;
 }
