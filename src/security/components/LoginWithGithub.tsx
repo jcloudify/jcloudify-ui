@@ -1,5 +1,4 @@
-import {Button} from "react-admin";
-import {Stack, Box, Typography, useMediaQuery, Theme} from "@mui/material";
+import {Button, Stack, Box, Typography, useMediaQuery} from "@mui/material";
 import {GitHub} from "@mui/icons-material";
 import {colors} from "@/themes";
 import {gh} from "@/config/env";
@@ -69,13 +68,16 @@ export const LoginWithGithub: React.FC = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Button
-            size="large"
-            variant="contained"
-            startIcon={<GitHub />}
-            label="Login with Github"
-            href={getLoginWithGithubUrl()}
-          />
+          <Box>
+            <Button
+              size="large"
+              variant="contained"
+              startIcon={<GitHub />}
+              href={getLoginWithGithubUrl()}
+            >
+              Login with Github
+            </Button>
+          </Box>
           <Octagon top={100} left={-150} color={colors("gray-1")} />
           <Octagon bottom={-30} right={-30} />
         </Stack>
