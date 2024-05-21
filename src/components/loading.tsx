@@ -1,14 +1,46 @@
-import {Box, CircularProgress} from "@mui/material";
+import {Stack, CircularProgress, Typography, SxProps} from "@mui/material";
 
-export const Loading = () => {
+const sizes = {
+  md: {
+    primary: "h5",
+    secondary: "body2",
+  },
+  lg: {
+    primary: "h4",
+    secondary: "body1",
+  },
+} as const;
+
+export interface LoadingProps {
+  primaryText?: string;
+  secondaryText?: string;
+  sx?: SxProps;
+  size?: keyof typeof sizes;
+}
+
+export const Loading: React.FC<LoadingProps> = ({
+  primaryText,
+  secondaryText,
+  sx,
+  size = "md",
+}) => {
+  const variant = sizes[size];
   return (
-    <Box
-      sx={{
-        height: "100%",
-        width: "100%",
-      }}
+    <Stack
+      height="100%"
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      gap={1}
+      sx={sx}
     >
-      <CircularProgress />
-    </Box>
+      <CircularProgress sx={{color: "#000"}} />
+      <Typography variant={variant.primary} mt={3}>
+        {primaryText}
+      </Typography>
+      <Typography variant={variant.secondary} color="text.secondary">
+        {secondaryText}
+      </Typography>
+    </Stack>
   );
 };

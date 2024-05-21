@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {Admin, CustomRoutes, Resource} from "react-admin";
-import {Navigate, Route} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
-import {LoginWithGithub} from "@/security";
+import {AuthCallback, LoginWithGithub} from "@/security";
 import {apps} from "@/operations";
 import {
   AppCreateLayout,
@@ -14,7 +14,7 @@ import {
 } from "@/operations/apps";
 import {defaultTheme} from "@/themes";
 
-export const App = () => (
+const JCAdmin = () => (
   <Admin
     dataProvider={dataProvider}
     authProvider={authProvider}
@@ -40,6 +40,15 @@ export const App = () => (
       </Route>
     </CustomRoutes>
   </Admin>
+);
+
+export const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="*" element={<JCAdmin />} />
+    </Routes>
+  </BrowserRouter>
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
