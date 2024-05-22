@@ -8,23 +8,10 @@ import {
   SaveButton,
   Button,
   Link,
-  Create,
-  SimpleForm,
-  Labeled,
 } from "react-admin";
-import {
-  Stack,
-  Box,
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Divider,
-} from "@mui/material";
+import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
-import {colors} from "@/themes";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 
 export const AppBootstrap: React.FC = () => {
