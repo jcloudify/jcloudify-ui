@@ -49,7 +49,10 @@ export const AppBootstrap: React.FC = () => {
 
 const CreateGitRepository: React.FC = () => {
   return (
-    <ContainerWithHeading title="Create Git Repository">
+    <ContainerWithHeading
+      title="Create Git Repository"
+      subheader="The generated application code will be pushed to the specified repository."
+    >
       <SelectInput
         variant="outlined"
         choices={makeSelectChoices(["Yume", "Not-Yume"])}
@@ -84,6 +87,7 @@ const ApplicationMetadata: React.FC = () => {
         variant="outlined"
         source="java_facade_it"
         label="Facade IT class name"
+        defaultValue="FacadeIT"
       />
 
       <NumberInput
