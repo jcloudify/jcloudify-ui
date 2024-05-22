@@ -24,12 +24,17 @@ export const ContainerWithHeading: React.FC<
             {title}
           </Typography>
         }
-        subheader={subheader}
       />
 
       <Divider sx={{borderColor: colors("gray-0")}} />
 
       <CardContent>
+        {subheader != null && (
+          <Typography variant="body2" px={2} mt={2} color="text.secondary">
+            {subheader}
+          </Typography>
+        )}
+
         <Stack py={3} px={2} width="100%" height="100%" direction="column">
           {children}
         </Stack>
