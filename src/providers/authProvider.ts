@@ -18,7 +18,7 @@ export const authProvider: PojaAuthProvider = {
         },
       }).then((res) => res.json());
 
-      authTokenCache.cache({
+      authTokenCache.replace({
         accessToken: data.access_token,
         refreshToken: "",
       });

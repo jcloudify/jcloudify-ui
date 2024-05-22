@@ -1,5 +1,5 @@
 export interface CacheObject<T> {
-  cache: (obj: T) => T;
+  replace: (obj: T) => T;
   get: () => T | null;
   invalidate: () => void;
   isPresent: () => boolean;
@@ -8,7 +8,7 @@ export interface CacheObject<T> {
 const createObjectCacher = <T>(key: string, storageFactory: () => Storage) => {
   const storage = storageFactory();
   return {
-    cache: (obj: T) => {
+    replace: (obj: T) => {
       storage.setItem(key, JSON.stringify(obj));
       return obj;
     },
