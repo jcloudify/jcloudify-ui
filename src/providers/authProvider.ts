@@ -1,16 +1,32 @@
 import {Configuration} from "@jcloudify-api/typescript-client";
 import {authTokenCache, clearCaches, whoamiCache} from "@/providers/cache";
+import {REDIRECTION_URL} from "@/utils/constant";
 import {PojaAuthProvider} from "./types";
 
 export const authProvider: PojaAuthProvider = {
-  login: (_params) => {
-    /* oauth create-token stuff backend call */
-    // params.code
-    // authenticate
-    // authTokenCache.cache()
-    return new Promise((resolve) => {
-      setTimeout(resolve, 3000);
-    });
+  login: async ({code}) => {
+    // TODO: replace with poja api client
+    // TODO: test
+    try {
+      const data = await fetch("http://localhost:8080/create-token", {
+        method: "POST",
+        body: JSON.stringify({
+          code,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+
+      authTokenCache.cache({
+        accessToken: data.access_token,
+        refreshToken: "",
+      });
+
+      return REDIRECTION_URL;
+    } catch {
+      return false;
+    }
   },
   logout: async () => {
     // sign out

@@ -11,15 +11,17 @@ export const AuthCallback: React.FC = () => {
   const code = p.get("code");
 
   useEffect(() => {
-    const exchangeCode = async () => {
+    const doLogin = async () => {
       if (code) {
-        await authProvider.login({
+        const redirectionUrl = await authProvider.login({
           code,
         });
-        redirect(window.location.origin);
+        if (redirectionUrl) {
+          redirect(redirectionUrl);
+        }
       }
     };
-    void exchangeCode();
+    void doLogin();
   }, [code]);
 
   return (

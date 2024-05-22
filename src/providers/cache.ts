@@ -9,7 +9,7 @@ const createObjectCacher = <T>(key: string, storageFactory: () => Storage) => {
   const storage = storageFactory();
   return {
     cache: (obj: T) => {
-      storage.set(key, JSON.stringify(obj));
+      storage.setItem(key, JSON.stringify(obj));
       return obj;
     },
     get: () => {

@@ -49,7 +49,10 @@ export const AppBootstrap: React.FC = () => {
 
 const CreateGitRepository: React.FC = () => {
   return (
-    <ContainerWithHeading title="Create Git Repository" subheader="The generated application code will be pushed to the specified repository.">
+    <ContainerWithHeading
+      title="Create Git Repository"
+      subheader="The generated application code will be pushed to the specified repository."
+    >
       <SelectInput
         variant="outlined"
         choices={makeSelectChoices(["Yume", "Not-Yume"])}
