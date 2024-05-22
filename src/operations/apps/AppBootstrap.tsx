@@ -23,6 +23,7 @@ import {
   Divider,
 } from "@mui/material";
 import {Heading} from "@/components/head";
+import {ContainerWithHeading} from "@/components/container";
 import {colors} from "@/themes";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 
@@ -61,7 +62,7 @@ export const AppBootstrap: React.FC = () => {
 
 const CreateGitRepository: React.FC = () => {
   return (
-    <SectionCard title="Create Git Repository">
+    <ContainerWithHeading title="Create Git Repository">
       <SelectInput
         variant="outlined"
         choices={makeSelectChoices(["Yume", "Not-Yume"])}
@@ -77,13 +78,13 @@ const CreateGitRepository: React.FC = () => {
       />
 
       <BooleanInput source="private" />
-    </SectionCard>
+    </ContainerWithHeading>
   );
 };
 
 const ApplicationMetadata: React.FC = () => {
   return (
-    <SectionCard title="Application Metadata">
+    <ContainerWithHeading title="Application Metadata">
       <TextInput variant="outlined" source="app_name" />
 
       <TextInput
@@ -106,13 +107,13 @@ const ApplicationMetadata: React.FC = () => {
       />
 
       <BooleanInput source="with_gen_clients" />
-    </SectionCard>
+    </ContainerWithHeading>
   );
 };
 
 const Database: React.FC = () => {
   return (
-    <SectionCard title="Database">
+    <ContainerWithHeading title="Database">
       <SelectInput
         variant="outlined"
         choices={makeSelectChoices(["sqlite", "postgres"])}
@@ -120,35 +121,6 @@ const Database: React.FC = () => {
         label="database"
         defaultValue="sqlite"
       />
-    </SectionCard>
-  );
-};
-
-const SectionCard: React.FC<
-  React.PropsWithChildren<{title: string; subheader?: string}>
-> = ({title, subheader, children}) => {
-  return (
-    <Card component={Box} width="100%" height="100%">
-      <CardHeader
-        component={Box}
-        sx={{
-          bgcolor: colors("gray"),
-        }}
-        title={
-          <Typography variant="h6" fontWeight="575">
-            {title}
-          </Typography>
-        }
-        subheader={subheader}
-      />
-
-      <Divider sx={{borderColor: colors("gray-0")}} />
-
-      <CardContent>
-        <Stack py={3} px={2} width="100%" height="100%" direction="column">
-          {children}
-        </Stack>
-      </CardContent>
-    </Card>
+    </ContainerWithHeading>
   );
 };
