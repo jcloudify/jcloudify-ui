@@ -30,14 +30,14 @@ export const AppBootstrap: React.FC = () => {
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
       <Heading
-        width={{xs: "100%", md: "auto"}}
+        width={{xs: "100%", md: "60%"}}
         mb={4}
         title="Create New Application"
         subtitle="JCloudify enables you to effortlessly bootstrap a new application, which will be pushed to a GitHub repository of your choice. You can also directly import an existing Git repository."
       />
 
       <Form>
-        <Stack spacing={3} width={{xs: "100%", md: "60%"}}>
+        <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
           <CreateGitRepository />
           <ApplicationMetadata />
           <Database />
