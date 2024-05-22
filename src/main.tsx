@@ -6,12 +6,7 @@ import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
 import {AuthCallback, LoginWithGithub} from "@/security";
 import {apps} from "@/operations";
-import {
-  AppCreateLayout,
-  AppShowLayout,
-  appShowViews,
-  appCreateViews,
-} from "@/operations/apps";
+import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {defaultTheme} from "@/themes";
 
 const JCAdmin = () => (
@@ -32,8 +27,7 @@ const JCAdmin = () => (
         ))}
       </Route>
 
-      <Route path="/applications/create" element={<AppCreateLayout />}>
-        <Route index element={<Navigate to="from-scratch" />} />
+      <Route path="/applications/create">
         {Object.keys(appCreateViews).map((path) => (
           <Route key={path} path={path} element={appCreateViews[path]} />
         ))}

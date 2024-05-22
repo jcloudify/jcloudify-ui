@@ -153,11 +153,17 @@ export const AppList: React.FC = () => (
         label="Create New"
         startIcon={<Add />}
         variant="contained"
-        to="create"
+        to="create/new"
+        component={Link}
+      />
+      <Button
+        label="Import"
+        startIcon={<GitHub />}
+        variant="contained"
+        to="create/import-git-repo"
         component={Link}
       />
     </TopToolbar>
-
     <AppGridView />
   </ListBase>
 );
