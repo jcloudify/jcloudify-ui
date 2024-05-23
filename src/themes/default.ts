@@ -32,7 +32,15 @@ export const defaultTheme: RaThemeOptions = {
     RaSidebar: {
       styleOverrides: {
         root: {
-          paddingInline: "4px",
+          "& .RaSidebar-fixed": {
+            backgroundColor: colors("gray-0"),
+            // paddingInline: "4px",
+            height: "100vh",
+            paddingRight: "4px",
+          },
+          "backgroundColor": colors("gray-0"),
+          "borderRight": `1px solid ${colors("gray-1")}`,
+          "marginRight": "4px",
         },
       },
     },
@@ -136,14 +144,6 @@ export const defaultTheme: RaThemeOptions = {
           boxShadow: "none",
           color: "#000 !important",
           borderBottom: `1px solid ${colors("gray-0")}`,
-        },
-      },
-    },
-    MuiDrawer: {
-      styleOverrides: {
-        root: {
-          backgroundColor: colors("gray-0"),
-          borderRight: `1px solid ${colors("gray-0")}`,
         },
       },
     },
