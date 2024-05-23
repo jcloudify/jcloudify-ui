@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {useSearchParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {Loading} from "@/components/loading";
@@ -8,11 +8,14 @@ import {redirect} from "@/utils/redirect";
 export const AuthCallback: React.FC = () => {
   const [p] = useSearchParams();
 
+  const exchanged = useRef(false);
+
   const code = p.get("code");
 
   useEffect(() => {
     const doLogin = async () => {
-      if (code) {
+      if (code && !exchanged.current) {
+        exchanged.current = true;
         const redirectionUrl = await authProvider.login({
           code,
         });

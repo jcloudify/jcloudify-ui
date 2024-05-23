@@ -1,3 +1,5 @@
+import {Token} from "@/services/poja-api";
+
 export interface CacheObject<T> {
   replace: (obj: T) => T;
   get: () => T | null;
@@ -27,10 +29,7 @@ const createObjectCacher = <T>(key: string, storageFactory: () => Storage) => {
 const inLocalStorage = <T>(key: string) =>
   createObjectCacher<T>(key, () => localStorage);
 
-export const authTokenCache = inLocalStorage<{
-  accessToken: string;
-  refreshToken: string;
-}>("auth_tokens");
+export const authTokenCache = inLocalStorage<Token>("auth_tokens");
 export const whoamiCache = inLocalStorage<{user?: any}>("whoami");
 
 export const clearCaches = () => {
