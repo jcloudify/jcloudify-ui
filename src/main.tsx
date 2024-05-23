@@ -8,6 +8,7 @@ import {AuthCallback, LoginWithGithub} from "@/security";
 import {apps} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {defaultTheme} from "@/themes";
+import {Payment} from "./operations/payment";
 
 const JCAdmin = () => (
   <Admin
@@ -32,6 +33,7 @@ const JCAdmin = () => (
           <Route key={path} path={path} element={appCreateViews[path]} />
         ))}
       </Route>
+      <Route path="/manage-payment" element={<Payment />} />
     </CustomRoutes>
   </Admin>
 );
