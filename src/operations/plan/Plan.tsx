@@ -12,7 +12,7 @@ export const PlanView: React.FC<PlanViewProps> = ({plans}) => {
 
   return (
     <Box sx={{mx: "auto"}}>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={2}>
         {plans.map((plan) => (
           <PlanCard
             plan={plan}

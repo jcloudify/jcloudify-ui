@@ -13,6 +13,7 @@ import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
+import {PlanView} from "../plan";
 
 export const AppBootstrap: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ export const AppBootstrap: React.FC = () => {
 
       <Form>
         <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
+          <ChoosePlan />
           <CreateGitRepository />
           <ApplicationMetadata />
           <Database />
@@ -44,6 +46,24 @@ export const AppBootstrap: React.FC = () => {
         </Toolbar>
       </Form>
     </Stack>
+  );
+};
+
+const ChoosePlan: React.FC = () => {
+  const plans = [
+    {
+      name: "Hobby",
+      cost: 0,
+    },
+    {
+      name: "Pro",
+      cost: 15,
+    },
+  ];
+  return (
+    <ContainerWithHeading title="Choose Plan">
+      <PlanView plans={plans} />
+    </ContainerWithHeading>
   );
 };
 
