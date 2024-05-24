@@ -3,7 +3,7 @@ import {PlanCard} from "./PlanCard";
 import {Plan} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
 
-interface PlanViewProps {
+export interface PlanViewProps {
   plans: Plan[];
 }
 
@@ -16,8 +16,9 @@ export const PlanView: React.FC<PlanViewProps> = ({plans}) => {
         {plans.map((plan) => (
           <PlanCard
             plan={plan}
-            activePlan={activePlan}
-            setActivePlan={setActivePlan}
+            onClick={(_ev, plan) => setActivePlan(plan.name!)}
+            isActive={activePlan === plan.name!}
+            key={plan.id}
           />
         ))}
       </Stack>

@@ -1,30 +1,20 @@
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {MouseEvent, useState} from "react";
 import {Card, CardContent, Typography} from "@mui/material";
 import {Plan} from "@jcloudify-api/typescript-client";
-import {POJA_COLORS} from "@/themes";
+import {colors} from "@/themes";
 
 interface PlanCardProps {
   plan: Plan;
-  // isActive: boolean;
-  activePlan: string;
-  setActivePlan: Dispatch<SetStateAction<string>>;
+  isActive: boolean;
+  onClick: (ev: MouseEvent<HTMLDivElement>, plan: Plan) => void;
 }
 
 export const PlanCard: React.FC<PlanCardProps> = ({
   plan,
-  activePlan,
-  setActivePlan,
+  onClick,
+  isActive,
 }) => {
   const {name, cost} = plan;
-  const [borderColor, setBorderColor] = useState("grey");
-
-  useEffect(() => {
-    if (activePlan === name) {
-      setBorderColor(POJA_COLORS["dark-0"]);
-    } else {
-      setBorderColor("grey");
-    }
-  }, [activePlan]);
 
   return (
     <Card
@@ -32,10 +22,10 @@ export const PlanCard: React.FC<PlanCardProps> = ({
       sx={{
         width: "280px",
         cursor: "pointer",
-        borderColor: borderColor,
+        borderColor: isActive ? colors("dark-0") : colors("gray-0"),
       }}
-      onClick={() => {
-        setActivePlan(name!);
+      onClick={(e) => {
+        onClick(e, plan);
       }}
     >
       <CardContent>

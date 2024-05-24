@@ -13,7 +13,7 @@ import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {PlanView} from "../plan";
+import {PlanView} from "@/operations/plan";
 
 export const AppBootstrap: React.FC = () => {
   return (
