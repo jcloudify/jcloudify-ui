@@ -1,14 +1,20 @@
+import {MouseEvent, useState} from "react";
 import {Box, Stack} from "@mui/material";
 import {PlanCard} from "./PlanCard";
 import {Plan} from "@jcloudify-api/typescript-client";
-import {useState} from "react";
 
 export interface PlanViewProps {
   plans: Plan[];
+  onSelect: (plan: Plan) => void;
 }
 
-export const PlanView: React.FC<PlanViewProps> = ({plans}) => {
+export const PlanView: React.FC<PlanViewProps> = ({plans, onSelect}) => {
   const [activePlan, setActivePlan] = useState(plans[0].name!);
+
+  const handleClick = (_ev: MouseEvent<HTMLDivElement>, plan: Plan) => {
+    setActivePlan(plan.name!);
+    onSelect(plan);
+  };
 
   return (
     <Box sx={{mx: "auto"}}>
@@ -16,7 +22,7 @@ export const PlanView: React.FC<PlanViewProps> = ({plans}) => {
         {plans.map((plan) => (
           <PlanCard
             plan={plan}
-            onClick={(_ev, plan) => setActivePlan(plan.name!)}
+            onClick={handleClick}
             isActive={activePlan === plan.name!}
             key={plan.id}
           />

@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {
   Form,
   SelectInput,
@@ -14,6 +15,7 @@ import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {PlanView} from "@/operations/plan";
+import {Plan} from "@jcloudify-api/typescript-client";
 
 export const AppBootstrap: React.FC = () => {
   return (
@@ -50,6 +52,7 @@ export const AppBootstrap: React.FC = () => {
 };
 
 const ChoosePlan: React.FC = () => {
+  const [_selectedPlan, setSelectedPlan] = useState("");
   const plans = [
     {
       name: "Hobby",
@@ -60,9 +63,14 @@ const ChoosePlan: React.FC = () => {
       cost: 15,
     },
   ];
+
+  const handleSelect = (plan: Plan) => {
+    setSelectedPlan(plan.name!);
+  };
+
   return (
     <ContainerWithHeading title="Choose Plan">
-      <PlanView plans={plans} />
+      <PlanView plans={plans} onSelect={handleSelect} />
     </ContainerWithHeading>
   );
 };
