@@ -20,7 +20,7 @@ export const Heading: React.FC<HeadingProps> = ({
   const typo = typoSizes[size];
   return (
     <Stack direction="column" gap={2} mb={3} {...rest}>
-      <Stack height="100%" width="100%" gap={rest["gap"]}>
+      <Stack height="100%" width="100%" gap={rest["gap"] || 1}>
         {typeof title === "string" ? (
           <Typography
             variant={typo.primary}
