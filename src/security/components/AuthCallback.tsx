@@ -1,39 +1,76 @@
-import {useEffect, useRef} from "react";
-import {useSearchParams} from "react-router-dom";
-import {Box} from "@mui/material";
+import {useEffect, useRef, useState} from "react";
+import {Link, useSearchParams} from "react-router-dom";
+import {Stack, Box, Button} from "@mui/material";
 import {Loading} from "@/components/loading";
+import {Heading} from "@/components/head";
 import {authProvider} from "@/providers";
 import {redirect} from "@/utils/redirect";
 
 export const AuthCallback: React.FC = () => {
+  const [hasError, setHasError] = useState(false);
   const [p] = useSearchParams();
-
-  const exchanged = useRef(false);
 
   const code = p.get("code");
 
+  const isExchanged = useRef(false);
+
   useEffect(() => {
-    const doLogin = async () => {
-      if (code && !exchanged.current) {
-        exchanged.current = true;
-        const redirectionUrl = await authProvider.login({
-          code,
-        });
-        if (redirectionUrl) {
+    const authenticate = async () => {
+      if (code && !isExchanged.current) {
+        isExchanged.current = true;
+        try {
+          const redirectionUrl = await authProvider.login({
+            code,
+          });
           redirect(redirectionUrl);
+        } catch {
+          setHasError(true);
         }
       }
     };
-    void doLogin();
+    void authenticate();
   }, [code]);
 
   return (
     <Box height="100vh">
-      <Loading
-        size="lg"
-        primaryText="Authenticating..."
-        secondaryText="We're verifying your identity. This should only take a few seconds."
-      />
+      {hasError ? (
+        <Stack justifyContent="center" alignItems="center" height="100%" px={3}>
+          <AuthenticationError />
+        </Stack>
+      ) : (
+        <Loading
+          size="lg"
+          primaryText="Authenticating..."
+          secondaryText="We're verifying your identity. This should only take a few seconds."
+        />
+      )}
     </Box>
+  );
+};
+
+const AuthenticationError: React.FC = () => {
+  return (
+    <Heading
+      isError
+      size="lg"
+      title="Authentication Failed!"
+      width={{xs: "100%", md: "50rem"}}
+      subtitle="The authentication process was not successful. The authorization code may have expired."
+      textAlign="center"
+      gap={2}
+      actions={
+        <div>
+          <Button
+            component={Link}
+            to="/login"
+            size="large"
+            variant="text"
+            sx={{textTransform: "none", color: "#000", fontWeight: "bold"}}
+          >
+            Return to login page
+          </Button>
+        </div>
+      }
+    />
   );
 };

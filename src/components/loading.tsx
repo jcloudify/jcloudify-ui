@@ -1,21 +1,11 @@
 import {Stack, CircularProgress, Typography, SxProps} from "@mui/material";
-
-const sizes = {
-  md: {
-    primary: "h5",
-    secondary: "body2",
-  },
-  lg: {
-    primary: "h4",
-    secondary: "body1",
-  },
-} as const;
+import {TypoSizes, typoSizes} from "@/components/typo";
 
 export interface LoadingProps {
   primaryText?: string;
   secondaryText?: string;
   sx?: SxProps;
-  size?: keyof typeof sizes;
+  size?: TypoSizes;
 }
 
 export const Loading: React.FC<LoadingProps> = ({
@@ -24,7 +14,7 @@ export const Loading: React.FC<LoadingProps> = ({
   sx,
   size = "md",
 }) => {
-  const variant = sizes[size];
+  const typo = typoSizes[size];
   return (
     <Stack
       height="100%"
@@ -35,10 +25,10 @@ export const Loading: React.FC<LoadingProps> = ({
       sx={sx}
     >
       <CircularProgress sx={{color: "#000"}} />
-      <Typography variant={variant.primary} mt={3}>
+      <Typography variant={typo.primary} mt={3}>
         {primaryText}
       </Typography>
-      <Typography variant={variant.secondary} color="text.secondary">
+      <Typography variant={typo.secondary} color="text.secondary">
         {secondaryText}
       </Typography>
     </Stack>
