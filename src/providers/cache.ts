@@ -32,6 +32,11 @@ const inLocalStorage = <T>(key: string) =>
 export const authTokenCache = inLocalStorage<Token>("auth_tokens");
 export const whoamiCache = inLocalStorage<{user?: any}>("whoami");
 
+export type AuthProcess = "login" | "signup" | undefined;
+export const authProcess = inLocalStorage<"login" | "signup" | undefined>(
+  "auth_process"
+);
+
 export const clearCaches = () => {
   localStorage.clear();
   sessionStorage.clear();

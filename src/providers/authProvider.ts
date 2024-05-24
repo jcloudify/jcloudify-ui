@@ -1,15 +1,17 @@
 import {Configuration} from "@jcloudify-api/typescript-client";
 import {authTokenCache, clearCaches, whoamiCache} from "@/providers/cache";
-import {REDIRECTION_URL} from "@/utils/constant";
 import {tokenProvider} from "@/providers";
 import {PojaAuthProvider} from "./types";
 
 export const authProvider: PojaAuthProvider = {
-  login: async ({code}) => {
+  login: () => {
+    return Promise.resolve();
+  },
+  exchangeAuthToken: async (code) => {
     const token = await tokenProvider.getOne(code);
     // TODO: spec 'Token' typings is wrong
     authTokenCache.replace(token.data);
-    return REDIRECTION_URL;
+    return token;
   },
   logout: async () => {
     // sign out

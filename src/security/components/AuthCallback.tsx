@@ -5,6 +5,7 @@ import {Loading} from "@/components/loading";
 import {Heading} from "@/components/head";
 import {authProvider} from "@/providers";
 import {redirect} from "@/utils/redirect";
+import {getAuthProcessRedirectUri} from "@/utils/constant";
 
 export const AuthCallback: React.FC = () => {
   const [hasError, setHasError] = useState(false);
@@ -19,10 +20,8 @@ export const AuthCallback: React.FC = () => {
       if (code && !isExchanged.current) {
         isExchanged.current = true;
         try {
-          const redirectionUrl = await authProvider.login({
-            code,
-          });
-          redirect(redirectionUrl);
+          await authProvider.exchangeAuthToken(code);
+          redirect(getAuthProcessRedirectUri());
         } catch {
           setHasError(true);
         }
