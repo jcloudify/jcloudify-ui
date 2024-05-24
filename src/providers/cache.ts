@@ -1,4 +1,4 @@
-import {Token} from "@/services/poja-api";
+import {Token} from "@jcloudify-api/typescript-client";
 
 export interface CacheObject<T> {
   replace: (obj: T) => T;

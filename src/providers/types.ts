@@ -1,3 +1,4 @@
+import {Configuration} from "@jcloudify-api/typescript-client";
 import {AuthProvider, Identifier, RaRecord} from "react-admin";
 
 export type Dict<V> = Record<string, V>;
@@ -21,6 +22,6 @@ export interface LoginParams {
 
 export interface PojaAuthProvider extends AuthProvider {
   login: (params: LoginParams) => ReturnType<AuthProvider["login"]>;
-  getCachedAuthConf: () => object /* openapi::Configuration */;
+  getCachedAuthConf: () => Configuration;
   getCachedWhoami: () => object | null /* api::User::Whoami */;
 }

@@ -8,7 +8,7 @@ export const authProvider: PojaAuthProvider = {
   login: async ({code}) => {
     const token = await tokenProvider.getOne(code);
     // TODO: spec 'Token' typings is wrong
-    authTokenCache.replace((token as any).data);
+    authTokenCache.replace(token.data);
     return REDIRECTION_URL;
   },
   logout: async () => {
