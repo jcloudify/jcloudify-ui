@@ -22,6 +22,7 @@ export const Authentication = () => {
       >
         <Stack direction="column" spacing={2}>
           <Button
+            data-testid="auth:login"
             size="large"
             variant="contained"
             startIcon={<GitHub />}
@@ -31,6 +32,7 @@ export const Authentication = () => {
           </Button>
 
           <Button
+            data-testid="auth:register"
             size="large"
             variant="outlined"
             startIcon={<GitHub />}

@@ -61,6 +61,7 @@ const AuthenticationError: React.FC = () => {
         <div>
           <Button
             component={Link}
+            data-testid="return-to-login-page"
             to="/login"
             size="large"
             variant="text"

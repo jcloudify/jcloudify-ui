@@ -16,7 +16,7 @@ export const AuthRegistration: React.FC = () => {
     },
   });
 
-  const registerUser: InferSubmitHandlerFromUseForm<typeof form> = (data) => {
+  const registerUser: InferSubmitHandlerFromUseForm<typeof form> = () => {
     /* */
   };
 
@@ -50,7 +50,12 @@ export const AuthRegistration: React.FC = () => {
             <TextField variant="outlined" {...form.register("last_name")} />
           </Labeled>
 
-          <Button size="large" variant="contained" type="submit">
+          <Button
+            data-testid="complete-registration"
+            size="large"
+            variant="contained"
+            type="submit"
+          >
             Register
           </Button>
         </Stack>

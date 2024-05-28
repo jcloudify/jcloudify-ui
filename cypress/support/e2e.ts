@@ -13,6 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import {Token} from "@/services/poja-api";
 import "./commands";
 
 import "@cypress/code-coverage/support";
@@ -24,6 +25,11 @@ declare global {
       pathnameEq(to: string): Chainable;
       getByHref<Subject>(href: string): Chainable<Subject>;
       getByName<Subject>(name: string): Chainable<Subject>;
+
+      /**
+       * JCloudify mocking
+       */
+      mockToken: (token: Token) => void;
     }
   }
 }
