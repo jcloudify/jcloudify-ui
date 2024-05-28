@@ -9,12 +9,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import {Add as AddIcon} from "@mui/icons-material";
-import {EnvironmentType} from "@jcloudify-api/typescript-client";
+import {Add as AddIcon, Close as CloseIcon} from "@mui/icons-material";
+import {Environment, EnvironmentType} from "@jcloudify-api/typescript-client";
 import {SelectPlan} from "../plan";
 import {ContainerWithHeading} from "@/components/container";
 
-export const EnvironmentForm: React.FC = () => {
+export interface EnvironmentFormProps {
+  onCancel: () => void;
+  envList: Array<Environment>;
+}
+
+export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
+  envList,
+  onCancel,
+}) => {
   const plans = [
     {
       name: "Hobby",
@@ -58,11 +66,18 @@ export const EnvironmentForm: React.FC = () => {
           </Typography>
           <SelectPlan plans={plans} onSelect={() => {}} />
         </Box>
-        <Box>
+        <Stack direction="row" spacing={1}>
           <Button variant="contained" startIcon={<AddIcon />}>
             Create Env
           </Button>
-        </Box>
+          <Button
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+        </Stack>
       </Stack>
     </ContainerWithHeading>
   );

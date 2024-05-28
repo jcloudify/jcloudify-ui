@@ -1,9 +1,12 @@
+import {useState} from "react";
 import {Environment} from "@jcloudify-api/typescript-client";
-import {useGetOne} from "react-admin";
+import {useGetList, useGetOne} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {
   Grid,
   Box,
+  Button,
+  Fade,
   Stack,
   Divider,
   Card,
@@ -11,7 +14,7 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import {Settings} from "@mui/icons-material";
+import {Add as AddIcon, Settings} from "@mui/icons-material";
 import {
   EnvironmentForm,
   EnvironmentList,
@@ -20,6 +23,8 @@ import {
 import {colors} from "@/themes";
 
 export const AppEnvironment: React.FC = () => {
+  const [createEnv, setCreateEnv] = useState(false);
+
   const [p] = useSearchParams();
 
   const envId = p.get("env");
@@ -27,7 +32,12 @@ export const AppEnvironment: React.FC = () => {
   const {data: env} = useGetOne<Required<Environment>>("environments", {
     id: envId!,
   });
+
   const {appId} = useParams();
+
+  const {data: envList = []} = useGetList("environments", {
+    meta: {application_id: appId},
+  });
 
   if (!appId) return null;
   return (
@@ -46,7 +56,27 @@ export const AppEnvironment: React.FC = () => {
               title=" "
               pagination={false}
             />
-            <EnvironmentForm />
+            <Box mt={2}>
+              {createEnv ? (
+                <EnvironmentForm
+                  envList={envList}
+                  onCancel={() => {
+                    setCreateEnv(false);
+                  }}
+                />
+              ) : (
+                <Fade in={!createEnv}>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => setCreateEnv(true)}
+                    disabled={envList?.length == 2}
+                  >
+                    Create Env
+                  </Button>
+                </Fade>
+              )}
+            </Box>
           </CardContent>
         </Card>
       </Grid>
