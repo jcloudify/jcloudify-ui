@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import {Settings} from "@mui/icons-material";
 import {
+  EnvironmentForm,
   EnvironmentList,
   EnvironmentVariablesEdit,
 } from "@/operations/environments";
@@ -40,12 +41,12 @@ export const AppEnvironment: React.FC = () => {
           <Divider sx={{borderColor: colors("gray-0")}} />
           <CardContent>
             <EnvironmentList
-              hasCreate
               exporter={false}
               appId={appId}
               title=" "
               pagination={false}
             />
+            <EnvironmentForm />
           </CardContent>
         </Card>
       </Grid>

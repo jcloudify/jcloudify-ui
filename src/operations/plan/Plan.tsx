@@ -17,7 +17,7 @@ export const SelectPlan: React.FC<SelectPlanProps> = ({plans, onSelect}) => {
   };
 
   return (
-    <Box sx={{mx: "auto"}}>
+    <Box>
       <Stack direction="row" spacing={2}>
         {plans.map((plan) => (
           <PlanCard
