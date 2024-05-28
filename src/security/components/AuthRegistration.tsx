@@ -1,10 +1,9 @@
 import {Labeled} from "react-admin";
-import {Stack, TextField} from "@mui/material";
+import {Stack, TextField, Button} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {LandContainer, userRegistrationSchema} from "@/security";
 import {Heading} from "@/components/head";
-import {Button} from "@/components/button";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 
 export const AuthRegistration: React.FC = () => {
