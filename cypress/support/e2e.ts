@@ -13,7 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import {Token} from "@/services/poja-api";
+import {Token} from "@jcloudify-api/typescript-client";
 import "./commands";
 
 import "@cypress/code-coverage/support";

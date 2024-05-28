@@ -1,10 +1,6 @@
-import {Button, Stack, Box, Typography, useMediaQuery} from "@mui/material";
-import {GitHub} from "@mui/icons-material";
-import {AuthProcess, authProcess} from "@/providers";
+import {Stack, Typography, useMediaQuery} from "@mui/material";
 import {colors} from "@/themes";
-import {gh} from "@/config/env";
 import {Octagon} from "@/components/shape";
-import {redirect} from "@/utils/redirect";
 
 export const LandContainer: React.FC<React.PropsWithChildren> = ({
   children,
