@@ -5,14 +5,12 @@ import {LandContainer} from "@/security";
 import {gh} from "@/config/env";
 import {redirect} from "@/utils/redirect";
 
-export const Authentication = () => {
-  const authenticate = (process: AuthProcess) => () => {
-    authProcess.replace(process);
-    redirect(
-      `https://github.com/login/oauth/authorize?client_id=${gh.clientId}`
-    );
-  };
+const authenticate = (process: AuthProcess) => () => {
+  authProcess.replace(process);
+  redirect(`https://github.com/login/oauth/authorize?client_id=${gh.clientId}`);
+};
 
+export const Authentication = () => {
   return (
     <LandContainer>
       <Stack
