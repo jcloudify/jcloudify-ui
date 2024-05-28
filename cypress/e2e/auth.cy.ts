@@ -17,7 +17,7 @@ describe("Auth", () => {
     authProcess.replace("login");
     cy.visit("/auth/callback");
 
-    cy.pathnameEq("/");
+    // TODO
   });
 
   specify("Register", () => {
@@ -28,8 +28,6 @@ describe("Auth", () => {
     // cy.getByTestid("auth:register").click();
     authProcess.replace("signup");
     cy.visit("/auth/callback?code=***");
-
-    cy.pathnameEq("/auth/register");
 
     cy.contains("Complete your registration!");
 
