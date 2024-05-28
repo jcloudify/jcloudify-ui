@@ -29,7 +29,7 @@ declare global {
       /**
        * JCloudify mocking
        */
-      mockToken: (token: Token) => void;
+      mockToken: (token: Token) => Chainable;
     }
   }
 }

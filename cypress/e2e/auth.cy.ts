@@ -23,11 +23,13 @@ describe("Auth", () => {
   specify("Register", () => {
     cy.mockToken({
       access_token: "user2",
-    });
+    }).as("getToken");
 
     // cy.getByTestid("auth:register").click();
     authProcess.replace("signup");
     cy.visit("/auth/callback?code=***");
+
+    cy.wait("@getToken");
 
     cy.contains("Complete your registration!");
 
