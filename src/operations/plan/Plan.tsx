@@ -3,12 +3,12 @@ import {Box, Stack} from "@mui/material";
 import {PlanCard} from "./PlanCard";
 import {Plan} from "@jcloudify-api/typescript-client";
 
-export interface PlanViewProps {
+export interface SelectPlanProps {
   plans: Plan[];
   onSelect: (plan: Plan) => void;
 }
 
-export const PlanView: React.FC<PlanViewProps> = ({plans, onSelect}) => {
+export const SelectPlan: React.FC<SelectPlanProps> = ({plans, onSelect}) => {
   const [activePlan, setActivePlan] = useState(plans[0].name!);
 
   const handleClick = (_ev: MouseEvent<HTMLDivElement>, plan: Plan) => {

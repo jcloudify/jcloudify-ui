@@ -14,7 +14,7 @@ import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {PlanView} from "@/operations/plan";
+import {SelectPlan} from "@/operations/plan";
 import {Plan} from "@jcloudify-api/typescript-client";
 
 export const AppBootstrap: React.FC = () => {
@@ -70,7 +70,7 @@ const ChoosePlan: React.FC = () => {
 
   return (
     <ContainerWithHeading title="Choose Plan">
-      <PlanView plans={plans} onSelect={handleSelect} />
+      <SelectPlan plans={plans} onSelect={handleSelect} />
     </ContainerWithHeading>
   );
 };
