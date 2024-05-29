@@ -1,14 +1,14 @@
 import {useEffect, useRef, useState} from "react";
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {Stack, Box, Button} from "@mui/material";
 import {Loading} from "@/components/loading";
 import {Heading} from "@/components/head";
 import {authProvider} from "@/providers";
 import {getAuthProcessRedirectUri} from "@/utils/constant";
+import {redirect} from "@/utils/redirect";
 
 export const AuthCallback: React.FC = () => {
   const [hasError, setHasError] = useState(false);
-  const navigate = useNavigate();
   const [p] = useSearchParams();
 
   const code = p.get("code");
@@ -21,7 +21,7 @@ export const AuthCallback: React.FC = () => {
         isExchanged.current = true;
         try {
           await authProvider.exchangeAuthToken(code);
-          navigate(getAuthProcessRedirectUri());
+          redirect(getAuthProcessRedirectUri());
         } catch {
           setHasError(true);
         }
