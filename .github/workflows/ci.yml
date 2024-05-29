@@ -4,6 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   AWS_REGION: eu-west-3
+  REACT_APP_JCLOUDIFY_API_URL: ${{ vars.REACT_APP_JCLOUDIFY_API_URL }}
 
 jobs:
   style:
