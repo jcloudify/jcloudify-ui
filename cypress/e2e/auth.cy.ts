@@ -5,7 +5,7 @@ import {jcloudify} from "../support/util";
  * auth_process is directly set because we want to skip the real oauth process redirections and stuff
  */
 describe("Auth", () => {
-  const AUTH_CALLBACK_ROUTE = "/auth/callback?code=***";
+  const AUTH_CALLBACK_ROUTE = "/auth/callback?code=anycode";
 
   specify("Login", () => {
     cy.mockToken({
