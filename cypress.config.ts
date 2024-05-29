@@ -4,6 +4,7 @@ import {defineConfig} from "cypress";
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
+  projectId: "q7vvqw",
   env: {
     codeCoverage: {
       exclude: ["cypress/**/*"],
