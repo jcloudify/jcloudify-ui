@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import {jcloudify} from "./util";
+
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
 });
@@ -18,4 +20,11 @@ Cypress.Commands.add("getByHref", <Subject = any>(href: string) => {
 
 Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
   return cy.get<Subject>(`[name='${name}']`);
+});
+
+Cypress.Commands.add("mockToken", (token) => {
+  return cy.intercept("GET", jcloudify("/token?code=*"), {
+    id: "_",
+    data: token,
+  });
 });

@@ -1,13 +1,14 @@
 import {useEffect, useRef, useState} from "react";
-import {Link, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {Stack, Box, Button} from "@mui/material";
 import {Loading} from "@/components/loading";
 import {Heading} from "@/components/head";
 import {authProvider} from "@/providers";
-import {redirect} from "@/utils/redirect";
+import {getAuthProcessRedirectUri} from "@/utils/constant";
 
 export const AuthCallback: React.FC = () => {
   const [hasError, setHasError] = useState(false);
+  const navigate = useNavigate();
   const [p] = useSearchParams();
 
   const code = p.get("code");
@@ -19,10 +20,8 @@ export const AuthCallback: React.FC = () => {
       if (code && !isExchanged.current) {
         isExchanged.current = true;
         try {
-          const redirectionUrl = await authProvider.login({
-            code,
-          });
-          redirect(redirectionUrl);
+          await authProvider.exchangeAuthToken(code);
+          navigate(getAuthProcessRedirectUri());
         } catch {
           setHasError(true);
         }
@@ -62,6 +61,7 @@ const AuthenticationError: React.FC = () => {
         <div>
           <Button
             component={Link}
+            data-testid="return-to-login-page"
             to="/login"
             size="large"
             variant="text"

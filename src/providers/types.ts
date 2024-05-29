@@ -1,3 +1,4 @@
+import {Token} from "@/services/poja-api";
 import {Configuration} from "@jcloudify-api/typescript-client";
 import {AuthProvider, Identifier, RaRecord} from "react-admin";
 
@@ -16,12 +17,8 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
   delete: (id: Identifier) => Promise<R>;
 }
 
-export interface LoginParams {
-  code: string;
-}
-
 export interface PojaAuthProvider extends AuthProvider {
-  login: (params: LoginParams) => ReturnType<AuthProvider["login"]>;
+  exchangeAuthToken: (code: string) => Promise<Token>;
   getCachedAuthConf: () => Configuration;
   getCachedWhoami: () => object | null /* api::User::Whoami */;
 }
