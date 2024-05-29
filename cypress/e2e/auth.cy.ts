@@ -1,12 +1,11 @@
 import {authProcess} from "../../src/providers/cache";
+import {jcloudify} from "../support/util";
 
 /**
  * auth_process is directly set because we want to skip the real oauth process redirections and stuff
  */
 describe("Auth", () => {
-  beforeEach(() => {
-    cy.visit("/login");
-  });
+  const AUTH_CALLBACK_ROUTE = "/auth/callback?code=***";
 
   specify("Login", () => {
     cy.mockToken({
@@ -14,8 +13,8 @@ describe("Auth", () => {
     });
 
     // cy.getByTestid("auth:register").click();
-    authProcess.replace("login");
-    cy.visit("/auth/callback");
+    // authProcess.replace("login");
+    // cy.visit("/auth/callback");
 
     // TODO
   });
@@ -23,13 +22,18 @@ describe("Auth", () => {
   specify("Register", () => {
     cy.mockToken({
       access_token: "user2",
-    }).as("getToken");
+    }).as("exchangeCode");
 
     // cy.getByTestid("auth:register").click();
     authProcess.replace("signup");
-    cy.visit("/auth/callback?code=***");
+    cy.visit(AUTH_CALLBACK_ROUTE);
 
-    cy.wait("@getToken");
+    cy.contains("Authenticating...");
+    cy.contains(
+      "We're verifying your identity. This should only take a few seconds."
+    );
+
+    cy.wait("@exchangeCode");
 
     cy.contains("Complete your registration!");
 
@@ -39,9 +43,20 @@ describe("Auth", () => {
   });
 
   specify("Auth Failed", () => {
+    cy.intercept(jcloudify("/token?code=*"), (req) => {
+      req.reply({
+        statusCode: 400,
+      });
+    });
+
     // cy.getByTestid("auth:login").click();
     authProcess.replace("login");
-    cy.visit("/auth/callback?code=***");
+    cy.visit(AUTH_CALLBACK_ROUTE);
+
+    cy.contains("Authenticating...");
+    cy.contains(
+      "We're verifying your identity. This should only take a few seconds."
+    );
 
     cy.contains("Authentication Failed!");
     cy.contains(
