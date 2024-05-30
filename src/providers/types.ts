@@ -22,3 +22,7 @@ export interface PojaAuthProvider extends AuthProvider {
   getCachedAuthConf: () => Configuration;
   getCachedWhoami: () => object | null /* api::User::Whoami */;
 }
+
+export type ToRecord<T extends object> = T & {
+  id: Required<T>;
+};

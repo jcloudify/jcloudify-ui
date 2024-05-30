@@ -1,12 +1,17 @@
 import {Labeled} from "react-admin";
-import {Stack, TextField, Button} from "@mui/material";
+import {Stack, TextField, Button, FormHelperText} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {LandContainer, userRegistrationSchema} from "@/security";
 import {Heading} from "@/components/head";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
+import {CreateUser} from "@jcloudify-api/typescript-client";
+import {authTokenCache, userProvider} from "@/providers";
+import {useState} from "react";
 
 export const AuthRegistration: React.FC = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(userRegistrationSchema),
     defaultValues: {
@@ -15,8 +20,19 @@ export const AuthRegistration: React.FC = () => {
     },
   });
 
-  const registerUser: InferSubmitHandlerFromUseForm<typeof form> = () => {
-    /* */
+  const registerUser: InferSubmitHandlerFromUseForm<typeof form> = async (
+    details
+  ) => {
+    const user: CreateUser = {
+      ...details,
+      token: authTokenCache.get()?.access_token,
+    };
+    setIsRegistering(true);
+    try {
+      await userProvider.save(user);
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -54,6 +70,7 @@ export const AuthRegistration: React.FC = () => {
             size="large"
             variant="contained"
             type="submit"
+            disabled={isRegistering}
           >
             Register
           </Button>
