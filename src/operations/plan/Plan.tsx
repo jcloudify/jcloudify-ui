@@ -4,11 +4,23 @@ import {PlanCard} from "./PlanCard";
 import {Plan} from "@jcloudify-api/typescript-client";
 
 export interface SelectPlanProps {
-  plans: Plan[];
   onSelect: (plan: Plan) => void;
 }
 
-export const SelectPlan: React.FC<SelectPlanProps> = ({plans, onSelect}) => {
+export const SelectPlan: React.FC<SelectPlanProps> = ({onSelect}) => {
+  const plans = [
+    {
+      id: "plan_1",
+      name: "Hobby",
+      cost: 0,
+    },
+    {
+      id: "plan_2",
+      name: "Pro",
+      cost: 15,
+    },
+  ];
+
   const [activePlan, setActivePlan] = useState(plans[0].name!);
 
   const handleClick = (_ev: MouseEvent<HTMLDivElement>, plan: Plan) => {

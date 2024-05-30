@@ -53,16 +53,6 @@ export const AppBootstrap: React.FC = () => {
 
 const ChoosePlan: React.FC = () => {
   const [_selectedPlan, setSelectedPlan] = useState("");
-  const plans = [
-    {
-      name: "Hobby",
-      cost: 0,
-    },
-    {
-      name: "Pro",
-      cost: 15,
-    },
-  ];
 
   const handleSelect = (plan: Plan) => {
     setSelectedPlan(plan.name!);
@@ -70,7 +60,7 @@ const ChoosePlan: React.FC = () => {
 
   return (
     <ContainerWithHeading title="Choose Plan">
-      <SelectPlan plans={plans} onSelect={handleSelect} />
+      <SelectPlan onSelect={handleSelect} />
     </ContainerWithHeading>
   );
 };
