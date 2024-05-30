@@ -1,5 +1,5 @@
 import {Labeled} from "react-admin";
-import {Stack, TextField, Button, FormHelperText} from "@mui/material";
+import {Stack, TextField, Button} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {LandContainer, userRegistrationSchema} from "@/security";
