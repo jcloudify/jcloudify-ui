@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import {Add as AddIcon, Settings} from "@mui/icons-material";
 import {
-  EnvironmentForm,
+  EnvironmentCreate,
   EnvironmentList,
   EnvironmentVariablesEdit,
 } from "@/operations/environments";
@@ -56,10 +56,12 @@ export const AppEnvironment: React.FC = () => {
               title=" "
               pagination={false}
             />
-            <Box mt={2}>
+            <Box mt={4}>
               {createEnv ? (
-                <EnvironmentForm
-                  envList={envList}
+                <EnvironmentCreate
+                  envTypeList={envList.map(
+                    ({environment_type}) => environment_type
+                  )}
                   onCancel={() => {
                     setCreateEnv(false);
                   }}

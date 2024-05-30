@@ -1,4 +1,4 @@
-import {MouseEvent, useState} from "react";
+import {MouseEvent, useEffect, useState} from "react";
 import {Box, Stack} from "@mui/material";
 import {PlanCard} from "./PlanCard";
 import {Plan} from "@jcloudify-api/typescript-client";
@@ -22,6 +22,10 @@ export const SelectPlan: React.FC<SelectPlanProps> = ({onSelect}) => {
   ];
 
   const [activePlan, setActivePlan] = useState(plans[0].name!);
+
+  useEffect(() => {
+    onSelect(plans[0]);
+  }, []);
 
   const handleClick = (_ev: MouseEvent<HTMLDivElement>, plan: Plan) => {
     setActivePlan(plan.name!);

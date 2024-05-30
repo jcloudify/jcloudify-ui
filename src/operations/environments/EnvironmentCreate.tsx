@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {
   Box,
   Button,
@@ -10,41 +11,51 @@ import {
   Typography,
 } from "@mui/material";
 import {Add as AddIcon, Close as CloseIcon} from "@mui/icons-material";
-import {Environment, EnvironmentType} from "@jcloudify-api/typescript-client";
+import {EnvironmentType, Plan} from "@jcloudify-api/typescript-client";
 import {ContainerWithHeading} from "@/components/container";
 import {SelectPlan} from "@/operations/plan";
 
-export interface EnvironmentFormProps {
+export interface EnvironmentCreateProps {
   onCancel: () => void;
-  envList: Array<Environment>;
+  envTypeList: Array<EnvironmentType>;
 }
 
-export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
-  envList,
+export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
+  envTypeList,
   onCancel,
 }) => {
+  const [_environmentPlan, setEnvironmentPlan] = useState<Plan>();
+  const [environmentType, setEnvironmentType] = useState<string>(
+    envTypeList.includes(EnvironmentType.PROD)
+      ? EnvironmentType.PREPROD
+      : EnvironmentType.PROD
+  );
+
   return (
     <ContainerWithHeading title="Create Env">
       <Stack direction="column" spacing={2}>
         <Box>
           <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
+            <FormLabel id="env-type-radio-label">Type</FormLabel>
             <RadioGroup
               row
-              aria-labelledby="demo-row-radio-buttons-group-label"
+              aria-labelledby="env-type-radio-label"
               name="env-type"
-              defaultValue={EnvironmentType.PROD}
+              value={environmentType}
+              onChange={(e) => setEnvironmentType(e.target.value)}
             >
               <FormControlLabel
                 value={EnvironmentType.PROD}
                 control={<Radio />}
                 label={EnvironmentType.PROD}
+                disabled={envTypeList.includes(EnvironmentType.PROD)}
               />
 
               <FormControlLabel
                 value={EnvironmentType.PREPROD}
                 control={<Radio />}
                 label={EnvironmentType.PREPROD}
+                disabled={envTypeList.includes(EnvironmentType.PREPROD)}
               />
             </RadioGroup>
           </FormControl>
@@ -53,7 +64,11 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
           <Typography variant="subtitle1" color="gray">
             Plan
           </Typography>
-          <SelectPlan onSelect={() => {}} />
+          <SelectPlan
+            onSelect={(plan) => {
+              setEnvironmentPlan(plan);
+            }}
+          />
         </Box>
         <Stack direction="row" spacing={1}>
           <Button variant="contained" startIcon={<AddIcon />}>
