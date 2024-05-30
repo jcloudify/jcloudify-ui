@@ -32,7 +32,7 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
   );
 
   return (
-    <ContainerWithHeading title="Create Env">
+    <ContainerWithHeading title="Create Environment">
       <Stack direction="column" spacing={2}>
         <Box>
           <FormControl>
@@ -49,6 +49,7 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
                 control={<Radio />}
                 label={EnvironmentType.PROD}
                 disabled={envTypeList.includes(EnvironmentType.PROD)}
+                data-testid="prodEnv"
               />
 
               <FormControlLabel
@@ -56,6 +57,7 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
                 control={<Radio />}
                 label={EnvironmentType.PREPROD}
                 disabled={envTypeList.includes(EnvironmentType.PREPROD)}
+                data-testid="preprodEnv"
               />
             </RadioGroup>
           </FormControl>
@@ -78,6 +80,7 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
             variant="outlined"
             startIcon={<CloseIcon />}
             onClick={onCancel}
+            data-testid="cancelCreateEnv"
           >
             Cancel
           </Button>

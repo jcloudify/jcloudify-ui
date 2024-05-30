@@ -68,14 +68,22 @@ export const AppEnvironment: React.FC = () => {
                 />
               ) : (
                 <Fade in={!createEnv}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => setCreateEnv(true)}
-                    disabled={envList?.length == 2}
-                  >
-                    Create Env
-                  </Button>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={() => setCreateEnv(true)}
+                      disabled={envList?.length == 2}
+                      data-testid="createEnv"
+                    >
+                      Create Env
+                    </Button>
+                    {envList?.length == 2 && (
+                      <Typography variant="body2" mt={1}>
+                        Available environments are already created
+                      </Typography>
+                    )}
+                  </Box>
                 </Fade>
               )}
             </Box>

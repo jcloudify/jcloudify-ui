@@ -74,6 +74,31 @@ describe("Application", () => {
         }
       );
 
+      specify(
+        "Disable environment creation when both environments are created",
+        () => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.contains("Available environments are already created");
+        }
+      );
+
+      specify("Allow to create environment", () => {
+        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.get('[data-testid="createEnv"]').click();
+
+        cy.contains("Create Environment");
+        cy.get('[data-testid="preprodEnv"]');
+
+        cy.contains("Hobby");
+        cy.contains("$0 / month");
+
+        cy.getByTestid("plan-plan_2-card").click();
+        cy.contains("Pro");
+        cy.contains("$15 / month");
+
+        cy.getByTestid("cancelCreateEnv").click();
+      });
+
       // TODO: remove field, remove existent env var
       specify(
         "Allows to 'update, add another, delete' variables for an environment",
