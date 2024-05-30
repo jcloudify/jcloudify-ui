@@ -27,12 +27,14 @@ export type Token = {
 
 /* unwrap response */
 
-export type UnwrapResponse<TReturn extends Promise<AxiosResponse<any>>> =
-  TReturn extends Promise<AxiosResponse<infer TData>> ? TData : never;
+export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
+  TReturn extends () => Promise<AxiosResponse<infer Res>>
+    ? Promise<Res>
+    : never;
 
-export const unwrap = async <TReturn extends Promise<AxiosResponse<any>>>(
-  re: () => TReturn
-) => {
-  const _ = await re();
+export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
+  execute: Fn
+): Promise<UnwrapResult<Fn>> => {
+  const _ = await execute();
   return _.data;
 };

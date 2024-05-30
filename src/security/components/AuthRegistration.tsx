@@ -1,3 +1,5 @@
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {Labeled} from "react-admin";
 import {Stack, TextField, Button} from "@mui/material";
 import {useForm} from "react-hook-form";
@@ -7,10 +9,10 @@ import {Heading} from "@/components/head";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 import {CreateUser} from "@jcloudify-api/typescript-client";
 import {authTokenCache, userProvider} from "@/providers";
-import {useState} from "react";
 
 export const AuthRegistration: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(userRegistrationSchema),
@@ -30,6 +32,7 @@ export const AuthRegistration: React.FC = () => {
     setIsRegistering(true);
     try {
       await userProvider.save(user);
+      navigate("/");
     } finally {
       setIsRegistering(false);
     }

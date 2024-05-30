@@ -17,6 +17,7 @@ const JCAdmin = () => (
     theme={defaultTheme}
     layout={Layout}
     loginPage={Authentication}
+    requireAuth
   >
     <Resource {...apps} />
 
