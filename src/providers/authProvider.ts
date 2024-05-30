@@ -14,7 +14,7 @@ export const authProvider: PojaAuthProvider = {
   exchangeAuthToken: async (code) => {
     const token = await tokenProvider.getOne(code);
     // TODO: spec 'Token' typings is wrong
-    authTokenCache.replace(token.data);
+    authTokenCache.replace(token);
     await whoami();
     return token;
   },

@@ -1,12 +1,13 @@
-import {securityApi, Token} from "@/services/poja-api";
-import {PojaDataProvider} from "./types";
+import {Token} from "@jcloudify-api/typescript-client";
+import {securityApi, unwrap} from "@/services/poja-api";
+import {PojaDataProvider, ToRecord} from "./types";
 
-export const tokenProvider: PojaDataProvider<Required<Token>> = {
+export const tokenProvider: PojaDataProvider<ToRecord<Token>> = {
   getList() {
     throw new Error("Function not implemented.");
   },
   getOne(code): Promise<any> {
-    return securityApi().exchangeCode(code as string);
+    return unwrap(() => securityApi().exchangeCode(code as string));
   },
   save(): Promise<any> {
     throw new Error("Function not implemented.");
