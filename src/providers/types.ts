@@ -1,4 +1,4 @@
-import {Token, Configuration} from "@jcloudify-api/typescript-client";
+import {Token, Configuration, Whoami} from "@jcloudify-api/typescript-client";
 import {AuthProvider, Identifier, RaRecord} from "react-admin";
 
 export type Dict<V> = Record<string, V>;
@@ -19,7 +19,8 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
 export interface PojaAuthProvider extends AuthProvider {
   exchangeAuthToken: (code: string) => Promise<ToRecord<Token>>;
   getCachedAuthConf: () => Configuration;
-  getCachedWhoami: () => object | null /* api::User::Whoami */;
+  getCachedWhoami: () => Whoami | null;
+  whoami: () => Promise<Whoami>;
 }
 
 export type ToRecord<T extends object> = T & {

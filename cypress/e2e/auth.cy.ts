@@ -11,6 +11,7 @@ describe("Auth", () => {
     cy.mockToken({
       access_token: "user1",
     });
+    cy.intercept(jcloudify("/whoami"), {user: {}});
 
     // cy.getByTestid("auth:register").click();
     // authProcess.replace("login");
@@ -23,9 +24,6 @@ describe("Auth", () => {
     cy.mockToken({
       access_token: "user2",
     }).as("exchangeCode");
-    cy.intercept(jcloudify("/whoami"), {
-      user: {},
-    });
 
     // cy.getByTestid("auth:register").click();
     authProcess.replace("signup");

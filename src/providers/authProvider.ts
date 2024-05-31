@@ -1,22 +1,21 @@
 import {Configuration} from "@jcloudify-api/typescript-client";
 import {authTokenCache, clearCaches, whoamiCache} from "@/providers/cache";
 import {tokenProvider} from "@/providers";
-import {PojaAuthProvider} from "./types";
+import {PojaAuthProvider} from "@/providers/types";
 import {securityApi, unwrap} from "@/services/poja-api";
 
-const whoami = async () => {
-  const whoami = await unwrap(() => securityApi().whoami());
-  whoamiCache.replace(whoami);
-};
+export const whoami = async () => {};
 
 export const authProvider: PojaAuthProvider = {
   login: () => Promise.resolve(),
-  exchangeAuthToken: async (code) => {
+  whoami: async () => {
+    const whoami = await unwrap(() => securityApi().whoami());
+    return whoamiCache.replace(whoami);
+  },
+  exchangeAuthCode: async (code) => {
     const token = await tokenProvider.getOne(code);
     // TODO: spec 'Token' typings is wrong
-    authTokenCache.replace(token);
-    await whoami();
-    return token;
+    return authTokenCache.replace(token);
   },
   logout: async () => {
     // sign out

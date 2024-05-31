@@ -3,7 +3,7 @@ import {Link, useSearchParams} from "react-router-dom";
 import {Stack, Box, Button} from "@mui/material";
 import {Loading} from "@/components/loading";
 import {Heading} from "@/components/head";
-import {authProvider} from "@/providers";
+import {authProcess, authProvider} from "@/providers";
 import {getAuthProcessRedirectUri} from "@/utils/constant";
 import {redirect} from "@/utils/redirect";
 
@@ -20,7 +20,10 @@ export const AuthCallback: React.FC = () => {
       if (code && !isExchanged.current) {
         isExchanged.current = true;
         try {
-          await authProvider.exchangeAuthToken(code);
+          await authProvider.exchangeAuthCode(code);
+          if (authProcess.get() === "login") {
+            await authProvider.whoami();
+          }
           redirect(getAuthProcessRedirectUri());
         } catch {
           setHasError(true);
