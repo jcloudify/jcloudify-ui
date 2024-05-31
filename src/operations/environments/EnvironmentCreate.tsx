@@ -25,7 +25,7 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
   onCancel,
 }) => {
   const [_environmentPlan, setEnvironmentPlan] = useState<Plan>();
-  const [environmentType, setEnvironmentType] = useState<string>(
+  const [environmentType, setEnvironmentType] = useState(
     envTypeList.includes(EnvironmentType.PROD)
       ? EnvironmentType.PREPROD
       : EnvironmentType.PROD
@@ -42,7 +42,9 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
               aria-labelledby="env-type-radio-label"
               name="env-type"
               value={environmentType}
-              onChange={(e) => setEnvironmentType(e.target.value)}
+              onChange={(e) =>
+                setEnvironmentType(e.target.value as EnvironmentType)
+              }
             >
               <FormControlLabel
                 value={EnvironmentType.PROD}

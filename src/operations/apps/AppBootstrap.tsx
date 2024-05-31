@@ -11,11 +11,11 @@ import {
   Link,
 } from "react-admin";
 import {Stack} from "@mui/material";
+import {Plan} from "@jcloudify-api/typescript-client";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {SelectPlan} from "@/operations/plan";
-import {Plan} from "@jcloudify-api/typescript-client";
 
 export const AppBootstrap: React.FC = () => {
   return (
