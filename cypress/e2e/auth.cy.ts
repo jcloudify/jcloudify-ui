@@ -1,4 +1,4 @@
-import {authProcess} from "../../src/providers/cache";
+import {user1} from "../fixtures/user.mock";
 import {jcloudify} from "../support/util";
 
 /**
@@ -8,25 +8,31 @@ describe("Auth", () => {
   const AUTH_CALLBACK_ROUTE = "/auth/callback?code=anycode";
 
   specify("Login", () => {
-    cy.mockToken({
-      access_token: "user1",
-    });
-    cy.intercept(jcloudify("/whoami"), {user: {}});
+    cy.fakeLogin(user1);
 
-    // cy.getByTestid("auth:register").click();
-    // authProcess.replace("login");
-    // cy.visit("/auth/callback");
-
-    // TODO
+    cy.contains("Applications");
   });
 
   specify("Register", () => {
     cy.mockToken({
-      access_token: "user2",
+      access_token: user1.token,
     }).as("exchangeCode");
 
+    cy.intercept("POST", jcloudify("/users"), (req) => {
+      const [user] = req.body;
+      expect(user).to.deep.eq({
+        first_name: user1.first_name,
+        last_name: user1.last_name,
+        token: user1.token,
+      });
+      req.reply({
+        statusCode: 201,
+        body: req.body,
+      });
+    });
+
     // cy.getByTestid("auth:register").click();
-    authProcess.replace("signup");
+    localStorage.setItem("auth_process", "signup");
     cy.visit(AUTH_CALLBACK_ROUTE);
 
     cy.contains("Authenticating...");
@@ -38,9 +44,12 @@ describe("Auth", () => {
 
     cy.contains("Complete your registration!");
 
-    cy.getByName("first_name").type("example");
-    cy.getByName("last_name").type("test");
+    cy.getByName("first_name").type(user1.first_name!);
+    cy.getByName("last_name").type(user1.last_name!);
     cy.getByTestid("complete-registration").click();
+
+    // TODO: userMenu
+    cy.contains("Applications");
   });
 
   specify("Auth Failed", () => {
@@ -51,7 +60,7 @@ describe("Auth", () => {
     });
 
     // cy.getByTestid("auth:login").click();
-    authProcess.replace("login");
+    localStorage.setItem("auth_process", "login");
     cy.visit(AUTH_CALLBACK_ROUTE);
 
     cy.contains("Authenticating...");

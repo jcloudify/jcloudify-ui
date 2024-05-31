@@ -6,7 +6,7 @@ export const tokenProvider: PojaDataProvider<ToRecord<Token>> = {
   getList() {
     throw new Error("Function not implemented.");
   },
-  getOne(code): Promise<any> {
+  async getOne(code): Promise<any> {
     return unwrap(() => securityApi().exchangeCode(code as string));
   },
   save(): Promise<any> {

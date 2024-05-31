@@ -13,7 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import {Token} from "@jcloudify-api/typescript-client";
+import {Token, User} from "@jcloudify-api/typescript-client";
 import "./commands";
 
 import "@cypress/code-coverage/support";
@@ -30,6 +30,7 @@ declare global {
        * JCloudify mocking
        */
       mockToken: (token: Token) => Chainable;
+      fakeLogin: (user: User) => Chainable;
     }
   }
 }

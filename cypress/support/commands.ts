@@ -23,8 +23,21 @@ Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
 });
 
 Cypress.Commands.add("mockToken", (token) => {
-  return cy.intercept("GET", jcloudify("/token?code=*"), {
-    id: "_",
-    data: token,
+  return cy.intercept("GET", jcloudify("/token?code=*"), token);
+});
+
+Cypress.Commands.add("fakeLogin", (user) => {
+  // Clicking the login button initiates the GitHub OAuth login challenge.
+  // To avoid this, directly set the auth_process to handle the login and proceed to the code exchange and whoami steps.
+  localStorage.setItem("auth_process", "login");
+  cy.mockToken({
+    access_token: user.token,
+    token_type: "bearer",
   });
+
+  cy.intercept("GET", jcloudify("/whoami"), {
+    user,
+  });
+
+  cy.visit("/auth/callback?code=fakecode");
 });

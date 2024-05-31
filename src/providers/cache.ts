@@ -18,7 +18,11 @@ const createObjectCacher = <T>(key: string, storageFactory: () => Storage) => {
     get: () => {
       const obj = storage.getItem(key);
       if (!obj) return null;
-      return JSON.parse(obj) as T;
+      try {
+        return JSON.parse(obj) as T;
+      } catch {
+        return obj as T;
+      }
     },
     invalidate: () => {
       storage.removeItem(key);

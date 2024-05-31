@@ -17,7 +17,7 @@ export interface PojaDataProvider<R extends RaRecord<Identifier>> {
 }
 
 export interface PojaAuthProvider extends AuthProvider {
-  exchangeAuthToken: (code: string) => Promise<ToRecord<Token>>;
+  exchangeAuthCode: (code: string) => Promise<ToRecord<Token>>;
   getCachedAuthConf: () => Configuration;
   getCachedWhoami: () => Whoami | null;
   whoami: () => Promise<Whoami>;

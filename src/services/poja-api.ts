@@ -5,9 +5,11 @@ import {
   ApplicationApi,
   EnvironmentApi,
   Token as ApiToken,
+  UserRoleEnum,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
+import {getEnumValues} from "@/utils/enum";
 
 // TODO: impl auth configurations
 export const healthApi = () => new HealthApi(authProvider.getCachedAuthConf());
@@ -28,9 +30,7 @@ export type Token = {
 /* unwrap response */
 
 export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
-  TReturn extends () => Promise<AxiosResponse<infer Res>>
-    ? Promise<Res>
-    : never;
+  TReturn extends () => Promise<AxiosResponse<infer Res>> ? Res : never;
 
 export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   execute: Fn
@@ -38,3 +38,5 @@ export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   const _ = await execute();
   return _.data;
 };
+
+export const userRoles = getEnumValues(UserRoleEnum);
