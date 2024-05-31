@@ -62,24 +62,35 @@ export const PlanCardDetails: React.FC<PlanCardProps> = ({
         mt: 1,
         cursor: "pointer",
         bgcolor: isActive ? colors("gray-0") : colors("light"),
+        borderRadius: 2,
       }}
       onClick={(e) => {
         onClick(e, plan);
       }}
     >
-      <CardContent>
-        <Box sx={{mb: 2}}>
-          <Typography variant="h5">{name}</Typography>
-          <Typography variant="body1">{description}</Typography>
-        </Box>
+      <CardContent
+        sx={{
+          color: colors("light"),
+          bgcolor: colors("dark-0"),
+          mb: 1,
+          borderBottomRightRadius: 70,
+        }}
+      >
         <Box>
-          <Stack direction="row" spacing={1} alignItems="flex-end">
-            <Typography variant="h4">${cost}</Typography>
-            <Typography variant="body1">/ month</Typography>
-          </Stack>
-          <Typography variant="body2">billed once yearly</Typography>
+          <Box sx={{mb: 2}}>
+            <Typography variant="h5">{name}</Typography>
+            <Typography variant="body1">{description}</Typography>
+          </Box>
+          <Box>
+            <Stack direction="row" spacing={1} alignItems="flex-end">
+              <Typography variant="h4">${cost}</Typography>
+              <Typography variant="body1">/ month</Typography>
+            </Stack>
+            <Typography variant="body2">billed once yearly</Typography>
+          </Box>
         </Box>
-        <Divider sx={{my: 2}} />
+      </CardContent>
+      <CardContent>
         <Box>
           <Typography variant="h6">Standout features</Typography>
           <List>
