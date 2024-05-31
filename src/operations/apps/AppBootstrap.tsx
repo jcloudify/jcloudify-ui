@@ -11,11 +11,11 @@ import {
   Link,
 } from "react-admin";
 import {Stack} from "@mui/material";
+import {Plan} from "@jcloudify-api/typescript-client";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {PlanView} from "@/operations/plan";
-import {Plan} from "@jcloudify-api/typescript-client";
+import {SelectPlan} from "@/operations/plan";
 
 export const AppBootstrap: React.FC = () => {
   return (
@@ -53,16 +53,6 @@ export const AppBootstrap: React.FC = () => {
 
 const ChoosePlan: React.FC = () => {
   const [_selectedPlan, setSelectedPlan] = useState("");
-  const plans = [
-    {
-      name: "Hobby",
-      cost: 0,
-    },
-    {
-      name: "Pro",
-      cost: 15,
-    },
-  ];
 
   const handleSelect = (plan: Plan) => {
     setSelectedPlan(plan.name!);
@@ -70,7 +60,7 @@ const ChoosePlan: React.FC = () => {
 
   return (
     <ContainerWithHeading title="Choose Plan">
-      <PlanView plans={plans} onSelect={handleSelect} />
+      <SelectPlan onSelect={handleSelect} />
     </ContainerWithHeading>
   );
 };

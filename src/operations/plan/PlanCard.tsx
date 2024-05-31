@@ -27,6 +27,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
       onClick={(e) => {
         onClick(e, plan);
       }}
+      data-testid={`plan-${plan.id}-card`}
     >
       <CardContent>
         <Typography variant="h6">{name}</Typography>

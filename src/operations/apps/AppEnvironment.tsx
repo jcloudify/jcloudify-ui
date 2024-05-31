@@ -1,9 +1,12 @@
+import {useState} from "react";
 import {Environment} from "@jcloudify-api/typescript-client";
-import {useGetOne} from "react-admin";
+import {useGetList, useGetOne} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {
   Grid,
   Box,
+  Button,
+  Fade,
   Stack,
   Divider,
   Card,
@@ -11,14 +14,17 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import {Settings} from "@mui/icons-material";
+import {Add as AddIcon, Settings} from "@mui/icons-material";
 import {
+  EnvironmentCreate,
   EnvironmentList,
   EnvironmentVariablesEdit,
 } from "@/operations/environments";
 import {colors} from "@/themes";
 
 export const AppEnvironment: React.FC = () => {
+  const [createEnv, setCreateEnv] = useState(false);
+
   const [p] = useSearchParams();
 
   const envId = p.get("env");
@@ -26,7 +32,12 @@ export const AppEnvironment: React.FC = () => {
   const {data: env} = useGetOne<Required<Environment>>("environments", {
     id: envId!,
   });
+
   const {appId} = useParams();
+
+  const {data: envList = []} = useGetList("environments", {
+    meta: {application_id: appId},
+  });
 
   if (!appId) return null;
   return (
@@ -40,12 +51,42 @@ export const AppEnvironment: React.FC = () => {
           <Divider sx={{borderColor: colors("gray-0")}} />
           <CardContent>
             <EnvironmentList
-              hasCreate
               exporter={false}
               appId={appId}
               title=" "
               pagination={false}
             />
+            <Box mt={4}>
+              {createEnv ? (
+                <EnvironmentCreate
+                  envTypeList={envList.map(
+                    ({environment_type}) => environment_type
+                  )}
+                  onCancel={() => {
+                    setCreateEnv(false);
+                  }}
+                />
+              ) : (
+                <Fade in={!createEnv}>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={() => setCreateEnv(true)}
+                      disabled={envList?.length == 2}
+                      data-testid="createEnv"
+                    >
+                      Create Env
+                    </Button>
+                    {envList?.length == 2 && (
+                      <Typography variant="body2" mt={1}>
+                        Available environments are already created
+                      </Typography>
+                    )}
+                  </Box>
+                </Fade>
+              )}
+            </Box>
           </CardContent>
         </Card>
       </Grid>
