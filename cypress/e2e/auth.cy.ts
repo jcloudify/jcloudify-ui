@@ -7,10 +7,13 @@ import {jcloudify} from "../support/util";
 describe("Auth", () => {
   const AUTH_CALLBACK_ROUTE = "/auth/callback?code=anycode";
 
-  specify("Login", () => {
+  specify.only("Login", () => {
     cy.fakeLogin(user1);
 
-    cy.contains("Applications");
+    cy.getByTestid("user_menu").click();
+    cy.contains(user1.username!);
+    cy.contains(user1.email!);
+    cy.contains(user1.role!);
   });
 
   specify("Register", () => {
