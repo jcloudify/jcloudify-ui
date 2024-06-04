@@ -1,8 +1,9 @@
+import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 
 describe("Application", () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.fakeLogin(user1);
     cy.getByHref(`/applications`).click();
   });
 

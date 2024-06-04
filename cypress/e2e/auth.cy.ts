@@ -7,7 +7,7 @@ import {jcloudify} from "../support/util";
 describe("Auth", () => {
   const AUTH_CALLBACK_ROUTE = "/auth/callback?code=anycode";
 
-  specify.only("Login", () => {
+  specify("Login", () => {
     cy.fakeLogin(user1);
 
     cy.getByTestid("user_menu").click();
