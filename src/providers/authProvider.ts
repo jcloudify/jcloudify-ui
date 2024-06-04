@@ -22,7 +22,6 @@ export const authProvider: PojaAuthProvider = {
     clearCaches();
   },
   checkAuth: () => {
-    return Promise.resolve();
     if (whoamiCache.isPresent()) return Promise.resolve();
     return Promise.reject();
   },
