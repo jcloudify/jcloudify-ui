@@ -14,6 +14,7 @@ import {
   Typography,
   Avatar,
   Chip,
+  Stack,
 } from "@mui/material";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
@@ -29,6 +30,7 @@ const UserMenu: React.FC = () => {
       <RAUserMenu
         icon={
           <Avatar
+            src={user.avatar}
             sx={{
               height: 20,
               width: 20,
@@ -36,17 +38,36 @@ const UserMenu: React.FC = () => {
           />
         }
       >
-        <Typography color="primary" fontWeight="560" px={2} py={1}>
-          {user.username}
-        </Typography>
+        <Stack
+          px={2}
+          py={1}
+          direction="row"
+          alignItems="flex-start"
+          spacing={1}
+        >
+          <Avatar
+            src={user.avatar}
+            sx={{
+              height: 40,
+              width: 40,
+            }}
+          />
+          <Stack>
+            <Typography color="primary" fontWeight="560" flex={1}>
+              {user.username}
+            </Typography>
 
-        <Typography color="text.secondary" fontWeight="500" px={2} pb={1}>
-          {user.email}
-        </Typography>
+            <Typography color="text.secondary" fontWeight="400">
+              {user.email}
+            </Typography>
 
-        <Box px={2} pb={1}>
-          <Chip label={user.role} size="small" color="primary" />
-        </Box>
+            <Box mt={0.5}>
+              <Chip label={user.role} size="small" color="primary" />
+            </Box>
+          </Stack>
+        </Stack>
+
+        <Box px={2} pb={1}></Box>
 
         <Divider sx={{mb: 1}} />
 
