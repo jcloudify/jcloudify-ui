@@ -107,11 +107,19 @@ describe("Application", () => {
         cy.get('[data-testid="preprodEnv"]');
 
         cy.contains("Hobby");
-        cy.contains("$0 / month");
+        cy.contains("$0");
+        cy.contains("billed once yearly");
 
-        cy.getByTestid("plan-plan_2-card").click();
+        cy.contains("Standout feature");
+        cy.contains("Up to 45% shipping discount");
+        cy.contains("10 Inventory locations");
+        cy.contains("24/7 chat support");
+        cy.contains("Localized global selling");
+        cy.contains("POS Lite");
+
+        cy.getByTestid("plan-plan_1-card").click();
         cy.contains("Pro");
-        cy.contains("$15 / month");
+        cy.contains("$15");
 
         cy.getByTestid("cancelCreateEnv").click();
       });

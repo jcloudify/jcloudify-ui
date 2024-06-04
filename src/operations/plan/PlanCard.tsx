@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  Divider,
   List,
   ListItem,
   ListItemIcon,
@@ -67,6 +66,7 @@ export const PlanCardDetails: React.FC<PlanCardProps> = ({
       onClick={(e) => {
         onClick(e, plan);
       }}
+      data-testid={`plan-${plan.id}-card`}
     >
       <CardContent
         sx={{
