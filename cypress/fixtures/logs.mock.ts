@@ -1,7 +1,7 @@
 import {faker as m} from "@faker-js/faker";
 import {Log, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
 
-const log = (id: string): Log => ({
+const log = (id: string): Required<Log> => ({
   id,
   log_datetime: m.date.past({years: 1, refDate: new Date()}),
   log_type: LogLogTypeEnum.APPLICATION_LOG,
@@ -38,4 +38,4 @@ export const log6 = {
   log_type: LogLogTypeEnum.APPLICATION_LOG,
 };
 
-export const logs: Log[] = [log1, log2, log3, log4, log5, log6];
+export const logs: Required<Log>[] = [log1, log2, log3, log4, log5, log6];

@@ -8,5 +8,6 @@ export * from "./envVariablesProvider";
 export * from "./userProvider";
 export * from "./deploymentProvider";
 export * from "./tokenProvider";
+export * from "./logsProvider";
 
 export * from "./cache";
