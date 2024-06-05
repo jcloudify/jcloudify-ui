@@ -4,7 +4,7 @@ import {Stack, Box, Button} from "@mui/material";
 import {Loading} from "@/components/loading";
 import {Heading} from "@/components/head";
 import {authProcess, authProvider} from "@/providers";
-import {getAuthProcessRedirectUri} from "@/utils/constant";
+import {getAuthProcessRedirectUri} from "@/security";
 import {redirect} from "@/utils/redirect";
 
 export const AuthCallback: React.FC = () => {
