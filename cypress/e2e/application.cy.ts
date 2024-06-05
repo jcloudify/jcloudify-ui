@@ -103,7 +103,7 @@ describe("Application", () => {
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
         cy.get('[data-testid="createEnv"]').click();
 
-        cy.contains("Create Environment");
+        cy.contains("Create environment");
         cy.get('[data-testid="preprodEnv"]');
 
         cy.contains("Hobby");
