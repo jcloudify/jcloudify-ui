@@ -56,7 +56,8 @@ export const AppEnvironment: React.FC = () => {
               title=" "
               pagination={false}
             />
-            <Box mt={4}>
+            <Box>
+              <Divider sx={{my: 4}} />
               {createEnv ? (
                 <EnvironmentCreate
                   envTypeList={envList.map(

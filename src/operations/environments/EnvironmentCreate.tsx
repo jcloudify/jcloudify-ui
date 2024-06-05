@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import {Add as AddIcon, Close as CloseIcon} from "@mui/icons-material";
 import {EnvironmentType, Plan} from "@jcloudify-api/typescript-client";
-import {ContainerWithHeading} from "@/components/container";
 import {SelectPlan} from "@/operations/plan";
 
 export interface EnvironmentCreateProps {
@@ -32,7 +31,10 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
   );
 
   return (
-    <ContainerWithHeading title="Create Environment">
+    <Box>
+      <Typography variant="h5" mb={1}>
+        Create environment
+      </Typography>
       <Stack direction="column" spacing={2}>
         <Box>
           <FormControl>
@@ -88,6 +90,6 @@ export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
           </Button>
         </Stack>
       </Stack>
-    </ContainerWithHeading>
+    </Box>
   );
 };
