@@ -20,6 +20,8 @@ import {
 import {Apps, Settings, GitHub, Brightness1, Add} from "@mui/icons-material";
 import {colors} from "@/themes";
 import {AppProps} from "./types";
+import {stripPrefix} from "@/utils/str";
+import {GITHUB_URL_PREFIX} from "@/utils/constant";
 
 const AppFlag: React.FC<AppProps> = ({app}) => {
   const isHealthy = app.state === ApplicationStateEnum.HEALTHY;
@@ -97,7 +99,9 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
             <Chip
               icon={<GitHub />}
               label={
-                <Typography variant="body2">{app.github_repository}</Typography>
+                <Typography variant="body2">
+                  {stripPrefix(app.github_repository, GITHUB_URL_PREFIX)}
+                </Typography>
               }
               sx={{
                 "width": "fit-content",

@@ -1,5 +1,6 @@
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
+import {stripPrefix} from "../../src/utils/str";
 
 describe("Application", () => {
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe("Application", () => {
       cy.getByTestid(`applications-${app1.id}`).contains("healthy");
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name);
       cy.getByTestid(`applications-${app1.id}`).contains(
-        app1.github_repository
+        stripPrefix(app1.github_repository, "https://github.com/")
       );
     });
 
@@ -20,7 +21,7 @@ describe("Application", () => {
       cy.getByTestid(`applications-${app2.id}`).contains("unhealthy");
       cy.getByTestid(`applications-${app2.id}`).contains(app2.name);
       cy.getByTestid(`applications-${app2.id}`).contains(
-        app2.github_repository
+        stripPrefix(app2.github_repository, "https://github.com/")
       );
     });
   });
