@@ -1,5 +1,6 @@
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
+import {depl1, depl2} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 
 describe("Application", () => {
@@ -134,6 +135,36 @@ describe("Application", () => {
           cy.getByName("variables.2.value").should("have.value", "new-env-val");
         }
       );
+    });
+
+    context.only("deployment", () => {
+      specify("Show depl metadata (success, warning)", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+
+        cy.contains("prod");
+        cy.contains("preprod");
+
+        cy.getByHref(
+          `https://github.com/${depl1.github_meta.org}/${depl1.github_meta.repo}/tree/prod`
+        ).should("exist");
+        cy.getByHref(
+          `https://github.com/${depl2.github_meta.org}/${depl2.github_meta.repo}/tree/preprod`
+        ).should("exist");
+
+        cy.getByHref(
+          `https://github.com/${depl1.github_meta.org}/${depl1.github_meta.repo}/commit/${depl1.github_meta.commit_sha}`
+        ).should("exist");
+        cy.getByHref(
+          `https://github.com/${depl2.github_meta.org}/${depl2.github_meta.repo}/commit/${depl2.github_meta.commit_sha}`
+        ).should("exist");
+
+        cy.getByHref(`https://github.com/${depl2.creator.username}`).should(
+          "exist"
+        );
+        cy.contains(`by ${depl1.creator.username}`);
+        cy.contains(`by ${depl2.creator.username}`);
+      });
     });
   });
 });
