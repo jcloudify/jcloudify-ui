@@ -2,6 +2,7 @@ import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
+import {log1, log2} from "../fixtures/logs.mock";
 
 describe("Application", () => {
   beforeEach(() => {
@@ -24,6 +25,19 @@ describe("Application", () => {
       cy.getByTestid(`applications-${app2.id}`).contains(
         stripPrefix(app2.github_repository, "https://github.com/")
       );
+    });
+
+    context("logs", () => {
+      specify("Show all available logs", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.get('[href="/applications/app1/show/logs"]').click();
+        cy.contains(log1.id);
+        cy.contains(log1.log_type);
+        cy.contains(log1.log_file_uri);
+        cy.contains(log2.id);
+        cy.contains(log2.log_type);
+        cy.contains(log2.log_file_uri);
+      });
     });
   });
 
