@@ -3,6 +3,7 @@ import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
 import {
   applicationProvider,
+  deploymentProvider,
   envVariablesProvider,
   environmentProvider,
   userProvider,
@@ -12,6 +13,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
     case "applications":
       return applicationProvider;
+    case "deployments":
+      return deploymentProvider;
     case "environments":
       return environmentProvider;
     case "env_variables":

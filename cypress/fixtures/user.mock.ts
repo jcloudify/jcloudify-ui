@@ -4,12 +4,12 @@ import {nanoid} from "nanoid";
 
 export const user1: User = {
   id: "user1",
-  username: m.internet.userName(),
+  username: "user1",
   email: m.internet.email(),
   role: UserRoleEnum.USER,
-  plan: undefined,
   github_id: nanoid(),
   first_name: m.person.firstName(),
   last_name: m.person.lastName(),
+  avatar: m.image.avatarGitHub(),
   token: nanoid(),
 };
