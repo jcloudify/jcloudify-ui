@@ -12,7 +12,13 @@ import {colors} from "@/themes";
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   const url = getURLComponent(depl.github_meta.org, depl.github_meta.repo);
   return (
-    <Grid container alignItems="center" p={1} component={Paper}>
+    <Grid
+      container
+      data-testid={`depl-${depl.id}`}
+      alignItems="center"
+      p={1}
+      component={Paper}
+    >
       <Grid item xs>
         <Stack spacing={0.5}>
           <Typography fontWeight="520">{depl.id}</Typography>

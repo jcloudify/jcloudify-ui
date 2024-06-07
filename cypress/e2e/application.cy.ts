@@ -1,6 +1,6 @@
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
-import {depl1, depl2} from "../fixtures/deployment.mock";
+import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 
 describe("Application", () => {
@@ -137,13 +137,22 @@ describe("Application", () => {
       );
     });
 
-    context.only("deployment", () => {
-      specify("Show depl metadata (success, warning)", () => {
+    context("deployment", () => {
+      specify("depl metadata (warning, success)", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
 
-        cy.contains("prod");
-        cy.contains("preprod");
+        cy.getByTestid(`depl-${depl1.id}`).contains("prod");
+        cy.getByTestid(`depl-${depl1.id}`).contains(
+          `by ${depl1.creator.username}`
+        );
+        cy.getByTestid(`depl-${depl1.id}`).contains("Ready");
+
+        cy.getByTestid(`depl-${depl2.id}`).contains("preprod");
+        cy.getByTestid(`depl-${depl2.id}`).contains(
+          `by ${depl2.creator.username}`
+        );
+        cy.getByTestid(`depl-${depl2.id}`).contains("In Progress");
 
         cy.getByHref(
           `https://github.com/${depl1.github_meta.org}/${depl1.github_meta.repo}/tree/prod`
@@ -162,8 +171,20 @@ describe("Application", () => {
         cy.getByHref(`https://github.com/${depl2.creator.username}`).should(
           "exist"
         );
-        cy.contains(`by ${depl1.creator.username}`);
-        cy.contains(`by ${depl2.creator.username}`);
+        cy.getByHref(`https://github.com/${depl1.creator.username}`).should(
+          "exist"
+        );
+      });
+
+      specify("depl metadata (failed)", () => {
+        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app2.id}/show/deployments`).click();
+
+        cy.getByTestid(`depl-${depl3.id}`).contains("prod");
+        cy.getByTestid(`depl-${depl3.id}`).contains(
+          `by ${depl3.creator.username}`
+        );
+        cy.getByTestid(`depl-${depl3.id}`).contains("Failed");
       });
     });
   });
