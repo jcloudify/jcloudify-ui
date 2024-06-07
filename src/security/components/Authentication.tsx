@@ -1,12 +1,12 @@
 import {Stack, Button} from "@mui/material";
 import {GitHub} from "@mui/icons-material";
 import {AuthProcess, authProcess} from "@/providers";
-import {LandContainer, createLoginWithGithubURI} from "@/security";
+import {LandContainer, makeRedirectURI} from "@/security";
 import {redirect} from "@/utils/redirect";
 
 const authenticate = (process: AuthProcess) => () => {
   authProcess.replace(process);
-  redirect(createLoginWithGithubURI());
+  redirect(makeRedirectURI());
 };
 
 export const Authentication = () => {
