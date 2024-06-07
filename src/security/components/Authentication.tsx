@@ -1,13 +1,12 @@
 import {Stack, Button} from "@mui/material";
 import {GitHub} from "@mui/icons-material";
 import {AuthProcess, authProcess} from "@/providers";
-import {LandContainer} from "@/security";
-import {gh} from "@/config/env";
+import {LandContainer, createLoginWithGithubURI} from "@/security";
 import {redirect} from "@/utils/redirect";
 
 const authenticate = (process: AuthProcess) => () => {
   authProcess.replace(process);
-  redirect(`https://github.com/login/oauth/authorize?client_id=${gh.clientId}`);
+  redirect(createLoginWithGithubURI());
 };
 
 export const Authentication = () => {
