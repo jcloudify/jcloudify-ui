@@ -1,3 +1,5 @@
+import {green, red, amber} from "@mui/material/colors";
+
 export const POJA_COLORS = {
   "dark-0": "#09090b",
   "light": "#fff",
@@ -6,6 +8,10 @@ export const POJA_COLORS = {
   "gray-1": "#d1d5db",
 
   "spring-boot": "#43a047",
+
+  "success": green[700],
+  "error": red[700],
+  "warning": amber[700],
 };
 
 export const colors = (key: keyof typeof POJA_COLORS) => POJA_COLORS[key];

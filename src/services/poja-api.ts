@@ -4,8 +4,8 @@ import {
   UserApi,
   ApplicationApi,
   EnvironmentApi,
-  Token as ApiToken,
   UserRoleEnum,
+  EnvironmentType,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
@@ -21,14 +21,36 @@ export const applicationApi = () =>
 export const environmentApi = () =>
   new EnvironmentApi(authProvider.getCachedAuthConf());
 
-/* spec wrong typings */
-export type Token = {
-  id?: string;
-  data: ApiToken;
-};
+export interface TODO_Deployment {
+  id: string;
+  createdAt: Date;
+  creator: {
+    email: string;
+    username: string;
+    github_id: string;
+    avatar: string;
+  };
+  application_id: string;
+  target_env_type: EnvironmentType;
+  state: "READY" | "IN_PROGRESS" | "FAILED";
+  url?: string;
+  github_meta: {
+    commit_branch: string;
+    commit_author_name: string;
+    commit_message: string;
+    commit_org: string;
+    commit_repo: string;
+    commit_sha: string;
+    commit_repo_id: string;
+    org: string;
+    repo: string;
+    repo_owner_type: string;
+    repo_id: string;
+    repo_visibility: string;
+  };
+}
 
 /* unwrap response */
-
 export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
   TReturn extends () => Promise<AxiosResponse<infer Res>> ? Res : never;
 
