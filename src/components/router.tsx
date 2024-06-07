@@ -24,7 +24,11 @@ export const renderRouteMap = (rm: RouteMap) => {
       );
     }
 
-    return <Route path={key}>{renderRouteMap(v as RouteMap)}</Route>;
+    return (
+      <Route key={key} path={key}>
+        {renderRouteMap(v as RouteMap)}
+      </Route>
+    );
   });
 };
 
