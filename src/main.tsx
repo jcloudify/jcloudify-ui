@@ -9,6 +9,7 @@ import {AuthCallback, AuthRegistration, Authentication} from "@/security";
 import {apps} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {defaultTheme} from "@/themes";
+import {renderRouteMap} from "@/components/router";
 
 const JCAdmin = () => (
   <Admin
@@ -24,15 +25,11 @@ const JCAdmin = () => (
     <CustomRoutes>
       <Route path="/applications/:appId/show" element={<AppShowLayout />}>
         <Route index element={<Navigate to="environments" />} />
-        {Object.keys(appShowViews).map((path) => (
-          <Route key={path} path={path} element={appShowViews[path]} />
-        ))}
+        {renderRouteMap(appShowViews)}
       </Route>
 
       <Route path="/applications/create">
-        {Object.keys(appCreateViews).map((path) => (
-          <Route key={path} path={path} element={appCreateViews[path]} />
-        ))}
+        {renderRouteMap(appCreateViews)}
       </Route>
     </CustomRoutes>
   </Admin>

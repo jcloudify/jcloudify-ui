@@ -2,6 +2,7 @@ import {Link, ListBase, TopToolbar, useListContext} from "react-admin";
 import {Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
 import {Commit} from "@mui/icons-material";
 import {FaCodeBranch as Branch} from "react-icons/fa";
+import {TopLink} from "@/components/link";
 import {DeploymentState} from "@/operations/deployments";
 import {TODO_Deployment} from "@/services/poja-api";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
@@ -18,6 +19,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       alignItems="center"
       p={1}
       component={Paper}
+      position="relative"
     >
       <Grid item xs>
         <Stack spacing={0.5}>
@@ -47,6 +49,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
               flex={1}
               target="_blank"
               component={Link}
+              zIndex={3}
               to={url.branch(depl.github_meta.commit_branch)}
             >
               {depl.github_meta.commit_branch}
@@ -57,6 +60,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
             direction="row"
             spacing={1}
             component={Link}
+            zIndex={3}
             to={url.commit(depl.github_meta.commit_sha)}
           >
             <Commit />
@@ -73,7 +77,11 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       </Grid>
 
       <Grid item xs>
-        <Link to={GITHUB_URL_PREFIX + depl.creator.username} target="_blank">
+        <Link
+          to={GITHUB_URL_PREFIX + depl.creator.username}
+          target="_blank"
+          sx={{zIndex: 3, position: "relative"}}
+        >
           <Stack direction="row" spacing={1} alignItems="center">
             <div>
               by{" "}
@@ -92,6 +100,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
           </Stack>
         </Link>
       </Grid>
+      <TopLink to={`${depl.id}`} />
     </Grid>
   );
 };
@@ -99,7 +108,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 const DeploymentListView: React.FC = () => {
   const {data = []} = useListContext();
   return (
-    <Stack spacing={1} direction="column">
+    <Stack spacing={1} direction="column" my={4}>
       {data.map((depl) => (
         <DeploymentListItem depl={depl} key={depl.id} />
       ))}
@@ -112,7 +121,6 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => (
     resource="deployments"
     queryOptions={{meta: {application_id: appId}}}
   >
-    <TopToolbar />
     <DeploymentListView />
   </ListBase>
 );

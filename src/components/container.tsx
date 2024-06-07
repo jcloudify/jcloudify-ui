@@ -10,14 +10,14 @@ import {
 import {colors} from "@/themes";
 
 export const ContainerWithHeading: React.FC<
-  React.PropsWithChildren<{title: string; subheader?: string}>
-> = ({title, subheader, children}) => {
+  React.PropsWithChildren<{title: string; subheader?: string; hcolor?: string}>
+> = ({title, subheader, hcolor = colors("gray"), children}) => {
   return (
     <Card component={Box} width="100%" height="100%">
       <CardHeader
         component={Box}
         sx={{
-          bgcolor: colors("gray"),
+          bgcolor: hcolor,
         }}
         title={
           <Typography variant="h6" fontWeight="575">

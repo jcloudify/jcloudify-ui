@@ -105,8 +105,17 @@ export const Tabs: React.FC<TabsProps> = ({
           />
         ))}
       </MUITabs>
+      {children}
     </TabContext.Provider>
   );
+};
+
+export const WithTab: React.FC<React.PropsWithChildren<{tab: string}>> = ({
+  tab,
+  children,
+}) => {
+  useTabContext().setValue(tab);
+  return children;
 };
 
 export type TabViewProps = React.PropsWithChildren<{

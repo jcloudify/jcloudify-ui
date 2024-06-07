@@ -16,9 +16,10 @@ export const AppShowLayout: React.FC = () => {
       </ShowBase>
 
       <Box borderBottom={`1px solid ${colors("gray-0")}`}>
-        <Tabs tabs={tabList} variant="scrollable" asLink />
+        <Tabs tabs={tabList} variant="scrollable" asLink>
+          <Outlet />
+        </Tabs>
       </Box>
-      <Outlet />
     </Box>
   );
 };
