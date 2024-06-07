@@ -38,4 +38,20 @@ export const log6 = {
   log_type: LogLogTypeEnum.APPLICATION_LOG,
 };
 
-export const logs: Required<Log>[] = [log1, log2, log3, log4, log5, log6];
+export const logs = (envId: string) => {
+  switch (envId) {
+    case "prod_env":
+      return [log1, log2, log3];
+
+    case "preprod_env":
+      return [log4, log5];
+
+    case "preprod_env2":
+      return [log6];
+
+    default:
+      return [];
+  }
+};
+
+// export const logs: Required<Log>[] = [log1, log2, log3, log4, log5, log6];

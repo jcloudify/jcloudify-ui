@@ -3,13 +3,12 @@ import {PojaDataProvider} from "./types";
 import {logs} from "#/logs.mock";
 
 export const logsProvider: PojaDataProvider<Required<Log>> = {
-  getList(_page, _perPage, filter, meta) {
-    console.log("filter: ", filter);
-    console.log("meta: ", meta);
-    return Promise.resolve(logs);
+  getList(_page, _perPage, _filter, meta) {
+    return Promise.resolve(logs(meta!.environment_id));
   },
-  getOne(id): Promise<any> {
-    return Promise.resolve(logs.find((log) => log.id === id));
+  getOne(): Promise<any> {
+    throw new Error("Function not implemented.");
+    // return Promise.resolve(logs.find((log) => log.id === id));
   },
   save(): Promise<any> {
     throw new Error("Function not implemented.");
