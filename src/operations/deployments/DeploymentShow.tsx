@@ -1,4 +1,4 @@
-import {ShowBase, useShowContext, TextField, Labeled} from "react-admin";
+import {ShowBase, TextField, Labeled} from "react-admin";
 import {
   Box,
   Divider,
@@ -8,12 +8,9 @@ import {
   CardContent,
 } from "@mui/material";
 import {ShowLayout} from "@/operations/components/show";
-import {ContainerWithHeading} from "@/components/container";
 import {colors} from "@/themes";
 
 const DeploymentShowView: React.FC = () => {
-  const {record: depl} = useShowContext();
-
   return (
     <Stack mt={4}>
       <Card
@@ -46,7 +43,7 @@ const DeploymentShowView: React.FC = () => {
 
 export const DeploymentShow: React.FC<{deplId: string}> = ({deplId}) => {
   return (
-    <ShowBase title=" " resource="deployments" id={deplId}>
+    <ShowBase resource="deployments" id={deplId}>
       <ShowLayout>
         <DeploymentShowView />
       </ShowLayout>
