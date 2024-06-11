@@ -1,30 +1,17 @@
 import {MouseEvent, useEffect, useState} from "react";
 import {Box, Stack} from "@mui/material";
-import {PlanCard} from "./PlanCard";
-import {Plan} from "@jcloudify-api/typescript-client";
+import {PlanCardDetails} from "./PlanCard";
+import {Plan, planList} from "./constant";
 
 export interface SelectPlanProps {
   onSelect: (plan: Plan) => void;
 }
 
 export const SelectPlan: React.FC<SelectPlanProps> = ({onSelect}) => {
-  const plans = [
-    {
-      id: "plan_1",
-      name: "Hobby",
-      cost: 0,
-    },
-    {
-      id: "plan_2",
-      name: "Pro",
-      cost: 15,
-    },
-  ];
-
-  const [activePlan, setActivePlan] = useState(plans[0].name!);
+  const [activePlan, setActivePlan] = useState(planList[0].name);
 
   useEffect(() => {
-    onSelect(plans[0]);
+    onSelect(planList[0]);
   }, []);
 
   const handleClick = (_ev: MouseEvent<HTMLDivElement>, plan: Plan) => {
@@ -34,9 +21,9 @@ export const SelectPlan: React.FC<SelectPlanProps> = ({onSelect}) => {
 
   return (
     <Box>
-      <Stack direction="row" spacing={2}>
-        {plans.map((plan) => (
-          <PlanCard
+      <Stack direction="row" spacing={2} alignItems="stretch">
+        {planList.map((plan) => (
+          <PlanCardDetails
             plan={plan}
             onClick={handleClick}
             isActive={activePlan === plan.name!}
