@@ -3,7 +3,6 @@ import {
   TextField,
   Labeled,
   useShowContext,
-  DateField,
   FunctionField,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
