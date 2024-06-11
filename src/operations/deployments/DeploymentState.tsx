@@ -12,7 +12,7 @@ const INDICATOR_COLORS = {
   FAILED: colors("error"),
 } as const;
 
-const TEXT_VIEW = {
+export const DEPLOYMENT_STATE_TEXT = {
   READY: "Ready",
   IN_PROGRESS: "In Progress",
   FAILED: "Failed",
@@ -22,7 +22,9 @@ export const DeploymentState: React.FC<DeploymentStateProps> = ({value}) => {
   return (
     <Chip
       size="small"
-      label={<Typography variant="body2">{TEXT_VIEW[value]}</Typography>}
+      label={
+        <Typography variant="body2">{DEPLOYMENT_STATE_TEXT[value]}</Typography>
+      }
       variant="filled"
       sx={{
         width: "fit-content",
