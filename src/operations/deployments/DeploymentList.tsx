@@ -1,5 +1,5 @@
 import {Link, ListBase, useListContext} from "react-admin";
-import {Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
+import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
 import {TopLink} from "@/components/link";
 import {DeploymentState} from "@/operations/deployments";
 import {TODO_Deployment} from "@/services/poja-api";
@@ -13,6 +13,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
     <Grid
       container
       data-testid={`depl-${depl.id}`}
+      role="button"
       alignItems="center"
       p={1}
       component={Paper}
@@ -39,14 +40,16 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       </Grid>
 
       <Grid item xs>
-        <VCS {...depl.github_meta} />
+        <Box zIndex={2} position="relative">
+          <VCS {...depl.github_meta} />
+        </Box>
       </Grid>
 
       <Grid item xs>
         <Link
           to={GITHUB_URL_PREFIX + depl.creator.username}
           target="_blank"
-          sx={{zIndex: 3, position: "relative"}}
+          sx={{zIndex: 2, position: "relative"}}
         >
           <Stack direction="row" spacing={1} alignItems="center">
             <div>
@@ -66,7 +69,11 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
           </Stack>
         </Link>
       </Grid>
-      <TopLink to={`${depl.id}`} />
+      <TopLink
+        data-testid={`show-${depl.id}-depl`}
+        to={`${depl.id}`}
+        index={1}
+      />
     </Grid>
   );
 };
