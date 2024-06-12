@@ -26,6 +26,7 @@ describe("Auth", () => {
       expect(user).to.deep.eq({
         first_name: user1.first_name,
         last_name: user1.last_name,
+        email: user1.email,
         token: user1.token,
       });
       req.reply({
@@ -49,6 +50,7 @@ describe("Auth", () => {
 
     cy.getByName("first_name").type(user1.first_name!);
     cy.getByName("last_name").type(user1.last_name!);
+    cy.getByName("email").type(user1.email!);
     cy.getByTestid("complete-registration").click();
 
     // TODO: userMenu

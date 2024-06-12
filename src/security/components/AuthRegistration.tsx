@@ -19,6 +19,7 @@ export const AuthRegistration: React.FC = () => {
     defaultValues: {
       first_name: "",
       last_name: "",
+      email: "",
     },
   });
 
@@ -66,6 +67,10 @@ export const AuthRegistration: React.FC = () => {
 
           <Labeled label="Last name">
             <TextField variant="outlined" {...form.register("last_name")} />
+          </Labeled>
+
+          <Labeled label="Email">
+            <TextField variant="outlined" {...form.register("email")} />
           </Labeled>
 
           <Button
