@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useGetList} from "react-admin";
+import {ShowBase, useGetList} from "react-admin";
 import {useParams} from "react-router-dom";
 import {
   Box,
@@ -13,8 +13,9 @@ import {
   Select,
   Stack,
 } from "@mui/material";
+import {LogList, LogShow} from "@/operations/logs";
+import {ShowLayout} from "@/operations/components/show";
 import {colors} from "@/themes";
-import {LogList} from "@/operations/logs";
 
 export const AppLogList: React.FC = () => {
   const {appId} = useParams();
@@ -53,5 +54,16 @@ export const AppLogList: React.FC = () => {
 };
 
 export const AppLogShow: React.FC = () => {
-  return <h1>Tepr</h1>;
+  const {envId, logId} = useParams();
+  return (
+    <ShowBase
+      resource="logs"
+      id={logId}
+      queryOptions={{meta: {environment_id: envId}}}
+    >
+      <ShowLayout>
+        <LogShow />
+      </ShowLayout>
+    </ShowBase>
+  );
 };

@@ -54,7 +54,7 @@ export const LogList: React.FC<LogListProps> = ({
       filters={logFilters}
       {...rest}
     >
-      <Datagrid rowClick={(id) => `${id}`}>
+      <Datagrid rowClick={(id) => `${environment_id}/${id}`}>
         <TextField source="id" />
         <TextField label="Type" source="log_type" />
         <DateField label="Date" source="log_datetime" showTime />
