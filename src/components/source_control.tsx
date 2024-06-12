@@ -23,7 +23,6 @@ export const VCS: React.FC<VCSProps> = ({
           flex={1}
           target="_blank"
           component={Link}
-          zIndex={3}
           to={url.branch(commit_branch)}
         >
           {commit_branch}
@@ -34,7 +33,6 @@ export const VCS: React.FC<VCSProps> = ({
         direction="row"
         spacing={0.5}
         component={Link}
-        zIndex={3}
         to={url.commit(commit_sha)}
       >
         <Commit />

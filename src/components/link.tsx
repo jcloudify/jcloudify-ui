@@ -3,7 +3,11 @@ import {Link as RALink, LinkProps as RALinkProps} from "react-admin";
 import {Box} from "@mui/material";
 import {OpenInNew} from "@mui/icons-material";
 
-export const TopLink: React.FC<RALinkProps> = ({sx, ...props}) => {
+export const TopLink: React.FC<RALinkProps & {index?: number}> = ({
+  sx,
+  index = 10,
+  ...props
+}) => {
   return (
     <RALink
       sx={{
@@ -12,7 +16,7 @@ export const TopLink: React.FC<RALinkProps> = ({sx, ...props}) => {
         height: "100%",
         width: "100%",
         position: "absolute",
-        zIndex: 2,
+        zIndex: index,
         ...sx,
       }}
       {...props}
