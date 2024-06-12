@@ -118,9 +118,7 @@ const DeploymentShowView: React.FC = () => {
               label="URL"
               render={(depl) =>
                 depl.url ? (
-                  <TypographyLink target="_blank" to={depl.url!}>
-                    {depl.url}
-                  </TypographyLink>
+                  <TypographyLink target="_blank" to={depl.url!} />
                 ) : (
                   "not available"
                 )
