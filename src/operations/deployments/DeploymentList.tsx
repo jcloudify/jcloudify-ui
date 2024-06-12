@@ -1,12 +1,12 @@
 import {Link, ListBase, useListContext} from "react-admin";
 import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
 import {TopLink} from "@/components/link";
+import {VCS} from "@/components/source_control";
 import {DeploymentState} from "@/operations/deployments";
 import {TODO_Deployment} from "@/services/poja-api";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
 import {colors} from "@/themes";
-import {VCS} from "@/components/source_control";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   return (
