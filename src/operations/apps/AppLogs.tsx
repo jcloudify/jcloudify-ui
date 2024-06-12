@@ -16,7 +16,7 @@ import {
 import {colors} from "@/themes";
 import {LogList} from "@/operations/logs";
 
-export const AppLogs: React.FC = () => {
+export const AppLogList: React.FC = () => {
   const {appId} = useParams();
 
   const {data: envList = []} = useGetList("environments", {
@@ -50,4 +50,8 @@ export const AppLogs: React.FC = () => {
       </CardContent>
     </Card>
   );
+};
+
+export const AppLogShow: React.FC = () => {
+  return <h1>Tepr</h1>;
 };
