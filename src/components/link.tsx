@@ -2,6 +2,7 @@ import React from "react";
 import {Link as RALink, LinkProps as RALinkProps} from "react-admin";
 import {Box} from "@mui/material";
 import {OpenInNew} from "@mui/icons-material";
+import {CopyToClipboard} from "@/components/copy";
 
 export const TopLink: React.FC<RALinkProps & {index?: number}> = ({
   sx,
@@ -25,11 +26,12 @@ export const TopLink: React.FC<RALinkProps & {index?: number}> = ({
 };
 
 export interface TypographyLink extends RALinkProps {
+  copiable?: boolean;
   disableOpenIcon?: boolean;
 }
 
 export const TypographyLink: React.FC<TypographyLink> = ({
-  copiable,
+  copiable = true,
   disableOpenIcon = false,
   noCopy = false,
   children,
@@ -37,23 +39,18 @@ export const TypographyLink: React.FC<TypographyLink> = ({
   ...rest
 }) => {
   return (
-    <Box
-      display="inline-flex"
-      alignItems="center"
-      gap={0.5}
-      sx={{
-        ":hover": {
-          textDecoration: "underline",
-        },
-      }}
-    >
+    <Box display="inline-flex" alignItems="center" gap={0.5}>
+      {copiable && <CopyToClipboard size="small" text={rest.to as string} />}
       <RALink
         {...rest}
         sx={{
           ...sx,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 0.5,
+          "display": "inline-flex",
+          "alignItems": "center",
+          "gap": 0.5,
+          ":hover": {
+            textDecoration: "underline",
+          },
         }}
       >
         {children || String(rest.to)}
