@@ -17,6 +17,7 @@ export const depl1: TODO_Deployment = {
   application_id: app1.id,
   target_env_type: prod_env.environment_type,
   state: "READY",
+  url: "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod",
   github_meta: {
     commit_author_name: user1.username!,
     commit_message: "poja: bootstrap",

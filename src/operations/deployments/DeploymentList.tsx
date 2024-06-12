@@ -1,23 +1,23 @@
-import {Link, ListBase, TopToolbar, useListContext} from "react-admin";
-import {Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
-import {Commit} from "@mui/icons-material";
-import {FaCodeBranch as Branch} from "react-icons/fa";
+import {Link, ListBase, useListContext} from "react-admin";
+import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
+import {TopLink} from "@/components/link";
 import {DeploymentState} from "@/operations/deployments";
 import {TODO_Deployment} from "@/services/poja-api";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
-import {getURLComponent} from "@/utils/github_url";
 import {colors} from "@/themes";
+import {VCS} from "@/components/source_control";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
-  const url = getURLComponent(depl.github_meta.org, depl.github_meta.repo);
   return (
     <Grid
       container
       data-testid={`depl-${depl.id}`}
+      role="button"
       alignItems="center"
       p={1}
       component={Paper}
+      position="relative"
     >
       <Grid item xs>
         <Stack spacing={0.5}>
@@ -40,40 +40,17 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       </Grid>
 
       <Grid item xs>
-        <Stack spacing={0.5}>
-          <Stack direction="row" spacing={1.5}>
-            <Branch size="16px" />
-            <Typography
-              flex={1}
-              target="_blank"
-              component={Link}
-              to={url.branch(depl.github_meta.commit_branch)}
-            >
-              {depl.github_meta.commit_branch}
-            </Typography>
-          </Stack>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            component={Link}
-            to={url.commit(depl.github_meta.commit_sha)}
-          >
-            <Commit />
-            <Stack direction="row" spacing={1}>
-              <Typography fontWeight="520">
-                {depl.github_meta.commit_sha.slice(0, 7)}
-              </Typography>
-              <Typography color="text.secondary" fontWeight="500" flex={1}>
-                {depl.github_meta.commit_message}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Stack>
+        <Box zIndex={2} position="relative">
+          <VCS {...depl.github_meta} />
+        </Box>
       </Grid>
 
       <Grid item xs>
-        <Link to={GITHUB_URL_PREFIX + depl.creator.username} target="_blank">
+        <Link
+          to={GITHUB_URL_PREFIX + depl.creator.username}
+          target="_blank"
+          sx={{zIndex: 2, position: "relative"}}
+        >
           <Stack direction="row" spacing={1} alignItems="center">
             <div>
               by{" "}
@@ -92,6 +69,11 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
           </Stack>
         </Link>
       </Grid>
+      <TopLink
+        data-testid={`show-${depl.id}-depl`}
+        to={`${depl.id}`}
+        index={1}
+      />
     </Grid>
   );
 };
@@ -99,7 +81,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 const DeploymentListView: React.FC = () => {
   const {data = []} = useListContext();
   return (
-    <Stack spacing={1} direction="column">
+    <Stack spacing={1} direction="column" my={4}>
       {data.map((depl) => (
         <DeploymentListItem depl={depl} key={depl.id} />
       ))}
@@ -112,7 +94,6 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => (
     resource="deployments"
     queryOptions={{meta: {application_id: appId}}}
   >
-    <TopToolbar />
     <DeploymentListView />
   </ListBase>
 );

@@ -1,10 +1,14 @@
 import {AppEnvironment} from "./AppEnvironment";
-import {AppDeployment} from "./AppDeployment";
+import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 import {AppLogs} from "./AppLogs";
+import {RouteMap} from "@/components/router";
 
-export const appShowViews: Record<string, React.ReactNode> = {
+export const appShowViews: RouteMap = {
   environments: <AppEnvironment />,
-  deployments: <AppDeployment />,
+  deployments: {
+    "$$index": <AppDeploymentList />,
+    ":deplId": <AppDeploymentShow />,
+  },
   analytics: <h1>analytics</h1>,
   logs: <AppLogs />,
 };

@@ -208,6 +208,46 @@ describe("Application", () => {
         );
         cy.getByTestid(`depl-${depl3.id}`).contains("Failed");
       });
+
+      specify("depl details are shown when an entry is clicked [READY]", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+        cy.getByTestid(`show-${depl1.id}-depl`).click({force: true});
+
+        cy.contains(depl1.id);
+        cy.contains("Ready");
+        cy.contains("PROD");
+        cy.contains("prod");
+        cy.contains("fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef".slice(0, 7));
+        cy.contains("poja: bootstrap");
+        cy.contains(
+          "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod"
+        );
+        cy.contains("by user1");
+
+        // TODO: depl logs
+      });
+
+      specify(
+        "depl details are shown when an entry is clicked [IN_PROGRESS]",
+        () => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+          cy.getByTestid(`show-${depl2.id}-depl`).click({force: true});
+
+          cy.contains(depl2.id);
+          cy.contains("In Progress");
+          cy.contains("PREPROD");
+          cy.contains("preprod");
+          cy.contains("eccf28034eafdb9774e721d122cbdf2c2bbfaed2".slice(0, 7));
+          cy.contains("style: reformat");
+          // url
+          cy.contains("not available");
+          cy.contains("by user1");
+
+          // TODO: depl logs
+        }
+      );
     });
   });
 });
