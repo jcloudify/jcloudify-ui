@@ -48,6 +48,7 @@ const TerminalLogComponent: React.FC<TerminalLogProps> = ({
         "color": "#121212",
         "fontFamily": "consolas",
         "fontSize": "1.1rem",
+        "border": `1px solid ${colors("gray-1")}`,
         "borderRadius": "4px",
         "overflowY": "auto",
         width,

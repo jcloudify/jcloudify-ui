@@ -6,13 +6,13 @@ import {
   FunctionField,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
-import {ShowLayout} from "@/operations/components/show";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {TerminalLog} from "@/components/terminal";
+import {ShowLayout} from "@/operations/components/show";
+import {DeploymentState} from "@/operations/deployments";
 import {fromToNow} from "@/utils/date";
 import {TODO_Deployment} from "@/services/poja-api";
-import {DEPLOYMENT_STATE_TEXT} from ".";
 
 const LOG_CONTENT = [
   "2024-06-11 08:00:00 INFO Deployment initiated by user 'devops_01'",
@@ -55,9 +55,7 @@ const DeploymentShowView: React.FC = () => {
           <Labeled>
             <FunctionField<TODO_Deployment>
               label="state"
-              render={(depl) => (
-                <Typography>{DEPLOYMENT_STATE_TEXT[depl.state]}</Typography>
-              )}
+              render={(depl) => <DeploymentState value={depl.state} />}
             />
           </Labeled>
 
