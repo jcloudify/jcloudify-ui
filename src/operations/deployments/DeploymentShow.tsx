@@ -1,18 +1,16 @@
-import {
-  ShowBase,
-  TextField,
-  Labeled,
-  useShowContext,
-  FunctionField,
-} from "react-admin";
-import {Stack, Typography} from "@mui/material";
+import {ShowBase, TextField, Labeled, FunctionField, Link} from "react-admin";
+import {Avatar, Stack, Box, Typography} from "@mui/material";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {TerminalLog} from "@/components/terminal";
+import {TypographyLink} from "@/components/link";
+import {VCS} from "@/components/source_control";
 import {ShowLayout} from "@/operations/components/show";
 import {DeploymentState} from "@/operations/deployments";
-import {fromToNow} from "@/utils/date";
 import {TODO_Deployment} from "@/services/poja-api";
+import {colors} from "@/themes";
+import {fromToNow} from "@/utils/date";
+import {GITHUB_URL_PREFIX} from "@/utils/constant";
 
 const LOG_CONTENT = [
   "2024-06-11 08:00:00 INFO Deployment initiated by user 'devops_01'",
@@ -43,31 +41,93 @@ const LOG_CONTENT = [
 ];
 
 const DeploymentShowView: React.FC = () => {
-  const {record: depl} = useShowContext();
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "50%", md: "70%"}}>
-      <ContainerWithHeading title={`Deployment: ${depl?.id}`}>
-        <GridLayout xs={12} sm={6} sx={{fontSize: "1.2rem"}}>
-          <Labeled>
-            <TextField label="Environment" source="target_env_type" />
-          </Labeled>
+      <ContainerWithHeading title="Deployment" sx={{fontSize: "1.2rem"}}>
+        <Stack gap={1.5}>
+          <GridLayout xs={12} sm={4}>
+            <Labeled>
+              <TextField label="Deployment ID" source="id" />
+            </Labeled>
+
+            <Labeled>
+              <TextField label="Environment" source="target_env_type" />
+            </Labeled>
+          </GridLayout>
+
+          <GridLayout xs={12} md={4}>
+            <Labeled>
+              <FunctionField<TODO_Deployment>
+                label="Created"
+                render={(depl) => (
+                  <Stack direction="row" alignItems="center">
+                    <Typography>{fromToNow(depl.createdAt)}</Typography>
+                    &nbsp;
+                    <Link
+                      to={GITHUB_URL_PREFIX + depl.creator.username}
+                      target="_blank"
+                      sx={{zIndex: 3, position: "relative"}}
+                    >
+                      <Stack
+                        direction="row"
+                        alignItems="flex-start"
+                        spacing={1}
+                      >
+                        <Box>
+                          by{" "}
+                          <Typography fontWeight="510" component="b">
+                            {depl.creator.username}
+                          </Typography>
+                        </Box>
+                        <Avatar
+                          src={depl.creator.avatar}
+                          sx={{
+                            height: 20,
+                            width: 20,
+                            border: `1px solid ${colors("gray-1")}`,
+                          }}
+                        />
+                      </Stack>
+                    </Link>
+                  </Stack>
+                )}
+              />
+            </Labeled>
+
+            <Labeled>
+              <FunctionField<TODO_Deployment>
+                label="State"
+                render={(depl) => <DeploymentState value={depl.state} />}
+              />
+            </Labeled>
+
+            <Labeled>
+              <FunctionField<TODO_Deployment>
+                label="Source"
+                render={(depl) => (
+                  <Box mt={0.5}>
+                    <VCS {...depl.github_meta} />
+                  </Box>
+                )}
+              />
+            </Labeled>
+          </GridLayout>
 
           <Labeled>
             <FunctionField<TODO_Deployment>
-              label="state"
-              render={(depl) => <DeploymentState value={depl.state} />}
+              label="URL"
+              render={(depl) =>
+                depl.url ? (
+                  <TypographyLink target="_blank" to={depl.url!}>
+                    {depl.url}
+                  </TypographyLink>
+                ) : (
+                  "not available"
+                )
+              }
             />
           </Labeled>
-
-          <Labeled>
-            <FunctionField<TODO_Deployment>
-              label="Created"
-              render={(depl) => (
-                <Typography>{fromToNow(depl.createdAt)}</Typography>
-              )}
-            />
-          </Labeled>
-        </GridLayout>
+        </Stack>
       </ContainerWithHeading>
 
       <ContainerWithHeading title="Logs">

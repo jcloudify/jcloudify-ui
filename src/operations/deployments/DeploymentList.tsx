@@ -1,7 +1,5 @@
 import {Link, ListBase, useListContext} from "react-admin";
 import {Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
-import {Commit} from "@mui/icons-material";
-import {FaCodeBranch as Branch} from "react-icons/fa";
 import {TopLink} from "@/components/link";
 import {DeploymentState} from "@/operations/deployments";
 import {TODO_Deployment} from "@/services/poja-api";
@@ -9,6 +7,7 @@ import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
 import {getURLComponent} from "@/utils/github_url";
 import {colors} from "@/themes";
+import {VCS} from "@/components/source_control";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   const url = getURLComponent(depl.github_meta.org, depl.github_meta.repo);
@@ -42,38 +41,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       </Grid>
 
       <Grid item xs>
-        <Stack spacing={0.5}>
-          <Stack direction="row" spacing={1.5}>
-            <Branch size="16px" />
-            <Typography
-              flex={1}
-              target="_blank"
-              component={Link}
-              zIndex={3}
-              to={url.branch(depl.github_meta.commit_branch)}
-            >
-              {depl.github_meta.commit_branch}
-            </Typography>
-          </Stack>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            component={Link}
-            zIndex={3}
-            to={url.commit(depl.github_meta.commit_sha)}
-          >
-            <Commit />
-            <Stack direction="row" spacing={1}>
-              <Typography fontWeight="520">
-                {depl.github_meta.commit_sha.slice(0, 7)}
-              </Typography>
-              <Typography color="text.secondary" fontWeight="500" flex={1}>
-                {depl.github_meta.commit_message}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Stack>
+        <VCS {...depl.github_meta} />
       </Grid>
 
       <Grid item xs>
