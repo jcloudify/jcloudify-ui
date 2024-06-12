@@ -2,14 +2,13 @@ import {useState} from "react";
 import {IconButton, IconButtonProps} from "@mui/material";
 import {ContentCopy, Check} from "@mui/icons-material";
 
-export interface CopyToClipboardProps {
+export type CopyToClipboardProps = {
   text: string;
-  size?: IconButtonProps["size"];
-}
+} & Pick<IconButtonProps, "size" | "sx">;
 
 export const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   text,
-  size,
+  ...rest
 }) => {
   const [isCopied, setIsCopied] = useState(false);
 
@@ -27,7 +26,7 @@ export const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   };
 
   return (
-    <IconButton size={size} onClick={doCopy} disabled={isCopied}>
+    <IconButton onClick={doCopy} disabled={isCopied} {...rest}>
       {isCopied ? <Check /> : <ContentCopy />}
     </IconButton>
   );

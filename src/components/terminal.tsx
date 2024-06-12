@@ -1,6 +1,7 @@
 import {memo, useMemo} from "react";
 import {Box, Stack} from "@mui/material";
 import {colors} from "@/themes";
+import {CopyToClipboard} from "./copy";
 
 export interface LineProps {
   content: string;
@@ -51,6 +52,7 @@ const TerminalLogComponent: React.FC<TerminalLogProps> = ({
         "border": `1px solid ${colors("gray-1")}`,
         "borderRadius": "4px",
         "overflowY": "auto",
+        "position": "relative",
         width,
         height,
         "&::-webkit-scrollbar": {
@@ -62,6 +64,25 @@ const TerminalLogComponent: React.FC<TerminalLogProps> = ({
         },
       }}
     >
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+        }}
+      >
+        <CopyToClipboard
+          text={text}
+          sx={{
+            "border": `1px solid ${colors("gray-1")}`,
+            "bgcolor": colors("gray-0"),
+            "ml": 1,
+            ":hover, :disabled": {
+              bgcolor: colors("gray-0"),
+            },
+          }}
+        />
+      </Box>
+
       {lines.map((line, idx) => (
         <Line
           key={"line" + idx}
