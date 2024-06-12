@@ -47,7 +47,7 @@ export const AppLogList: React.FC = () => {
             </Select>
           </FormControl>
         </Stack>
-        <LogList exporter={false} envId={envId} pagination={false} />
+        <LogList exporter={false} envId={envId} pagination={false} title=" " />
       </CardContent>
     </Card>
   );

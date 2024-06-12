@@ -1,14 +1,16 @@
 import {
   DateField,
+  FunctionField,
   Labeled,
   TextField,
-  UrlField,
   useShowContext,
 } from "react-admin";
 import {Stack} from "@mui/material";
+import {Log} from "@jcloudify-api/typescript-client";
 import {ContainerWithHeading} from "@/components/container";
 import {TerminalLog} from "@/components/terminal";
 import {LOG_CONTENT} from "#/logs.mock";
+import {TypographyLink} from "@/components/link";
 
 export const LogShow: React.FC = () => {
   const {record: log} = useShowContext();
@@ -26,7 +28,16 @@ export const LogShow: React.FC = () => {
           </Labeled>
 
           <Labeled>
-            <UrlField label="File URI" source="log_file_uri" />
+            <FunctionField<Log>
+              label="URL"
+              render={(log) =>
+                log.log_file_uri ? (
+                  <TypographyLink target="_blank" to={log.log_file_uri!} />
+                ) : (
+                  "not available"
+                )
+              }
+            />
           </Labeled>
           <TerminalLog text={LOG_CONTENT.join("\n")} height="500px" />
         </Stack>
