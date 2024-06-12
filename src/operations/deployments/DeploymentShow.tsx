@@ -42,7 +42,7 @@ const LOG_CONTENT = [
 
 const DeploymentShowView: React.FC = () => {
   return (
-    <Stack mt={4} mb={3} spacing={3} width={{lg: "50%", md: "70%"}}>
+    <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
       <ContainerWithHeading title="Deployment" sx={{fontSize: "1.2rem"}}>
         <Stack gap={1.5}>
           <GridLayout xs={12} sm={4}>
