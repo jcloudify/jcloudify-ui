@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {ShowBase, useGetList} from "react-admin";
+import {useGetList} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   Stack,
 } from "@mui/material";
 import {LogList, LogShow} from "@/operations/logs";
-import {ShowLayout} from "@/operations/components/show";
 import {colors} from "@/themes";
 
 export const AppLogList: React.FC = () => {
@@ -58,14 +57,8 @@ export const AppLogShow: React.FC = () => {
   const [p] = useSearchParams();
 
   return (
-    <ShowBase
-      resource="logs"
-      id={logId}
-      queryOptions={{meta: {environment_id: p.get("envId")}}}
-    >
-      <ShowLayout>
-        <LogShow />
-      </ShowLayout>
-    </ShowBase>
+    <Box>
+      <LogShow envId={p.get("envId")!} logId={logId!} />
+    </Box>
   );
 };

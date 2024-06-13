@@ -2,6 +2,7 @@ import {
   DateField,
   FunctionField,
   Labeled,
+  ShowBase,
   TextField,
   useShowContext,
 } from "react-admin";
@@ -10,9 +11,10 @@ import {Log} from "@jcloudify-api/typescript-client";
 import {ContainerWithHeading} from "@/components/container";
 import {TerminalLog} from "@/components/terminal";
 import {TypographyLink} from "@/components/link";
+import {ShowLayout} from "@/operations/components/show";
 import {LOG_CONTENT} from "#/logs.mock";
 
-export const LogShow: React.FC = () => {
+const LogShowView: React.FC = () => {
   const {record: log} = useShowContext();
 
   return (
@@ -43,5 +45,22 @@ export const LogShow: React.FC = () => {
         </Stack>
       </ContainerWithHeading>
     </Stack>
+  );
+};
+
+export const LogShow: React.FC<{logId: string; envId: string}> = ({
+  logId,
+  envId,
+}) => {
+  return (
+    <ShowBase
+      resource="logs"
+      id={logId}
+      queryOptions={{meta: {environment_id: envId}}}
+    >
+      <ShowLayout>
+        <LogShowView />
+      </ShowLayout>
+    </ShowBase>
   );
 };
