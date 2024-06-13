@@ -9,8 +9,8 @@ import {Stack} from "@mui/material";
 import {Log} from "@jcloudify-api/typescript-client";
 import {ContainerWithHeading} from "@/components/container";
 import {TerminalLog} from "@/components/terminal";
-import {LOG_CONTENT} from "#/logs.mock";
 import {TypographyLink} from "@/components/link";
+import {LOG_CONTENT} from "#/logs.mock";
 
 export const LogShow: React.FC = () => {
   const {record: log} = useShowContext();
