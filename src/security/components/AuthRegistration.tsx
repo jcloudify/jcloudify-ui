@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Labeled} from "react-admin";
-import {Stack, TextField, Button} from "@mui/material";
+import {Stack, TextField, Button, Snackbar, Alert} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {LandContainer, userRegistrationSchema} from "@/security";
@@ -12,6 +12,7 @@ import {authTokenCache, userProvider} from "@/providers";
 
 export const AuthRegistration: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const form = useForm({
@@ -34,6 +35,8 @@ export const AuthRegistration: React.FC = () => {
     try {
       await userProvider.save(user);
       navigate("/");
+    } catch (e: any) {
+      setErrorMessage(e.response.data.message);
     } finally {
       setIsRegistering(false);
     }
@@ -41,6 +44,18 @@ export const AuthRegistration: React.FC = () => {
 
   return (
     <LandContainer>
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={1000 * 5}
+        onClose={() => {
+          setErrorMessage("");
+        }}
+      >
+        <Alert severity="error" variant="filled" sx={{width: "100%"}}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+
       <Stack
         flex={1}
         height="100%"
