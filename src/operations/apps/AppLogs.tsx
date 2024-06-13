@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {ShowBase, useGetList} from "react-admin";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {
   Box,
   Card,
@@ -54,12 +54,14 @@ export const AppLogList: React.FC = () => {
 };
 
 export const AppLogShow: React.FC = () => {
-  const {envId, logId} = useParams();
+  const {logId} = useParams();
+  const [p] = useSearchParams();
+
   return (
     <ShowBase
       resource="logs"
       id={logId}
-      queryOptions={{meta: {environment_id: envId}}}
+      queryOptions={{meta: {environment_id: p.get("envId")}}}
     >
       <ShowLayout>
         <LogShow />

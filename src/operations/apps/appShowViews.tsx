@@ -12,6 +12,6 @@ export const appShowViews: RouteMap = {
   analytics: <h1>analytics</h1>,
   logs: {
     "$$index": <AppLogList />,
-    ":envId/:logId": <AppLogShow />,
+    ":logId": <AppLogShow />,
   },
 };
