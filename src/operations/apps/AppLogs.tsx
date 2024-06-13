@@ -14,6 +14,7 @@ import {
   Stack,
 } from "@mui/material";
 import {LogList, LogShow} from "@/operations/logs";
+import {WithTab} from "@/components/tab";
 import {colors} from "@/themes";
 
 export const AppLogList: React.FC = () => {
@@ -55,10 +56,13 @@ export const AppLogList: React.FC = () => {
 export const AppLogShow: React.FC = () => {
   const {logId} = useParams();
   const [p] = useSearchParams();
+  const envId = p.get("envId");
+
+  if (!logId || !envId) return;
 
   return (
-    <Box>
-      <LogShow envId={p.get("envId")!} logId={logId!} />
-    </Box>
+    <WithTab tab="Logs">
+      <LogShow envId={envId} logId={logId} />
+    </WithTab>
   );
 };
