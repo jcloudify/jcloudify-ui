@@ -3,25 +3,21 @@ import {Grid, GridProps} from "@mui/material";
 
 export type GridLayoutProps = {
   children: React.ReactNode;
-} & Pick<GridProps, "sx" | "xs" | "sm" | "lg" | "md" | "spacing">;
-
-export const getOffset = (col: number) => {
-  return 12 / col;
-};
+} & GridProps;
 
 /**
  * UNFINISHED
  */
 export const GridLayout: React.FC<GridLayoutProps> = ({
   children,
-  sx,
   sm,
   xs,
   md,
   lg,
+  ...rest
 }) => {
   return (
-    <Grid container spacing={1} sx={sx}>
+    <Grid container {...rest}>
       {React.Children.map(children, (node) => (
         <Grid item xs={xs} sm={sm} md={md} lg={lg}>
           {node}

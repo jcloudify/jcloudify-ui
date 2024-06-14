@@ -6,6 +6,11 @@ import {
   useGetList,
   useListContext,
   required,
+  useListFilterContext,
+  DateInput,
+  maxValue,
+  Filter,
+  minValue,
 } from "react-admin";
 import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
 import {TopLink} from "@/components/link";
@@ -16,6 +21,9 @@ import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
 import {colors} from "@/themes";
 import {makeSelectChoices} from "../utils/ra-props";
+import React, {memo} from "react";
+import {GridLayout} from "@/components/grid";
+import {Environment} from "@jcloudify-api/typescript-client";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   return (
@@ -98,6 +106,55 @@ const DeploymentListView: React.FC = () => {
   );
 };
 
+const _DeploymentListFilter: React.FC<{
+  alwaysOn?: boolean;
+  envs: Environment[];
+}> = ({envs}) => {
+  const {filterValues = {}} = useListFilterContext();
+  return (
+    <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>
+      <SelectInput
+        label="Environment"
+        source="env_type"
+        validate={required()}
+        choices={[{id: "_", environment_type: "All Environments"}, ...envs]}
+        optionText="environment_type"
+        optionValue="environment_type"
+        variant="outlined"
+        fullWidth
+      />
+
+      <SelectInput
+        label="Status"
+        source="status"
+        choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
+        variant="outlined"
+        alwaysOn
+        fullWidth
+      />
+
+      <DateInput
+        source="from"
+        variant="outlined"
+        validate={maxValue(filterValues.to || new Date())}
+        fullWidth
+      />
+      <DateInput
+        source="to"
+        variant="outlined"
+        validate={
+          filterValues.from
+            ? [minValue(filterValues.from), maxValue(new Date())]
+            : maxValue(new Date())
+        }
+        fullWidth
+      />
+    </GridLayout>
+  );
+};
+
+const DeploymentListFilter = memo(_DeploymentListFilter);
+
 export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
   const {data: envs = []} = useGetList("environments", {
     meta: {
@@ -114,28 +171,11 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
       <Box mt={1}>
         <ListToolbar
           title=" "
-          filters={[
-            <SelectInput
-              label="Environment"
-              source="env_type"
-              validate={required()}
-              choices={[
-                {id: "_", environment_type: "All Environments"},
-                ...envs,
-              ]}
-              optionText="environment_type"
-              optionValue="environment_type"
-              variant="outlined"
-              alwaysOn
-            />,
-            <SelectInput
-              label="Status"
-              source="status"
-              choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
-              variant="outlined"
-              alwaysOn
-            />,
-          ]}
+          filters={
+            <Filter>
+              <DeploymentListFilter alwaysOn envs={envs} />
+            </Filter>
+          }
         />
       </Box>
       <DeploymentListView />
