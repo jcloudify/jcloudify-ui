@@ -16,7 +16,7 @@ describe("Auth", () => {
     cy.contains(user1.role!);
   });
 
-  specify("Register", () => {
+  specify("Register (success)", () => {
     cy.mockToken({
       access_token: user1.token,
     }).as("exchangeCode");
@@ -55,6 +55,49 @@ describe("Auth", () => {
 
     // TODO: userMenu
     cy.contains("Applications");
+  });
+
+  specify.only("Register (failure)", () => {
+    cy.mockToken({
+      access_token: user1.token,
+    }).as("exchangeCode");
+
+    cy.intercept("POST", jcloudify("/users"), (req) => {
+      const [user] = req.body;
+      expect(user).to.deep.eq({
+        first_name: user1.first_name,
+        last_name: user1.last_name,
+        email: user1.email,
+        token: user1.token,
+      });
+      req.reply({
+        statusCode: 400,
+        body: {
+          type: "BadRequest",
+          message: "This mail address is already used by another account",
+        },
+      });
+    });
+
+    // cy.getByTestid("auth:register").click();
+    localStorage.setItem("auth_process", "signup");
+    cy.visit(AUTH_CALLBACK_ROUTE);
+
+    cy.contains("Authenticating...");
+    cy.contains(
+      "We're verifying your identity. This should only take a few seconds."
+    );
+
+    cy.wait("@exchangeCode");
+
+    cy.contains("Complete your registration!");
+
+    cy.getByName("first_name").type(user1.first_name!);
+    cy.getByName("last_name").type(user1.last_name!);
+    cy.getByName("email").type(user1.email!);
+    cy.getByTestid("complete-registration").click();
+
+    cy.contains("This mail address is already used by another account");
   });
 
   specify("Auth Failed", () => {
