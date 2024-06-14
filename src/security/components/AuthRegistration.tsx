@@ -44,18 +44,6 @@ export const AuthRegistration: React.FC = () => {
 
   return (
     <LandContainer>
-      <Snackbar
-        open={!!errorMessage}
-        autoHideDuration={1000 * 5}
-        onClose={() => {
-          setErrorMessage("");
-        }}
-      >
-        <Alert severity="error" variant="filled" sx={{width: "100%"}}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
-
       <Stack
         flex={1}
         height="100%"
@@ -63,6 +51,19 @@ export const AuthRegistration: React.FC = () => {
         alignItems="center"
         justifyContent="center"
       >
+        <Snackbar
+          open={!!errorMessage}
+          autoHideDuration={1000 * 5}
+          anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+          onClose={() => {
+            setErrorMessage("");
+          }}
+        >
+          <Alert severity="error" variant="filled" sx={{width: "100%"}}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+
         <Heading
           textAlign="center"
           title="Complete your registration!"
