@@ -132,7 +132,6 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
               label="Status"
               source="status"
               choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
-              emptyText="Status"
               variant="outlined"
               alwaysOn
             />,
