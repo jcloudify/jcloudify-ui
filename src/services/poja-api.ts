@@ -50,6 +50,12 @@ export interface TODO_Deployment {
   };
 }
 
+export enum TODO_DeploymentStateEnum {
+  READY = "Ready",
+  IN_PROGRESS = "In Progress",
+  FAILED = "Failed",
+}
+
 /* unwrap response */
 export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
   TReturn extends () => Promise<AxiosResponse<infer Res>> ? Res : never;

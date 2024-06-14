@@ -24,7 +24,7 @@ export const defaultTheme: RaThemeOptions = {
             height: "calc(100vh - 4em)",
           },
           "& .RaLayout-content": {
-            marginTop: "2rem",
+            paddingTop: "2rem",
           },
         },
       },
@@ -87,7 +87,14 @@ export const defaultTheme: RaThemeOptions = {
       styleOverrides: {
         root: {
           "&:focus-within": {
-            outline: `5px solid ${colors("gray-0")}`,
+            // outline: `5px solid ${colors("gray-0")}`,
+          },
+          "backgroundColor": "#fff",
+          ":hover, :focus-visible": {
+            backgroundColor: colors("gray-0"),
+          },
+          "& fieldset": {
+            borderColor: `${colors("gray-1")} !important`,
           },
         },
       },

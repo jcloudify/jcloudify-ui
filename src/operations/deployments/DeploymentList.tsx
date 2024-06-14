@@ -1,4 +1,12 @@
-import {Link, ListBase, useListContext} from "react-admin";
+import {
+  Link,
+  ListBase,
+  ListToolbar,
+  SelectInput,
+  useGetList,
+  useListContext,
+  required,
+} from "react-admin";
 import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
@@ -7,6 +15,7 @@ import {TODO_Deployment} from "@/services/poja-api";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
 import {colors} from "@/themes";
+import {makeSelectChoices} from "../utils/ra-props";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   return (
@@ -81,7 +90,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 const DeploymentListView: React.FC = () => {
   const {data = []} = useListContext();
   return (
-    <Stack spacing={1} direction="column" my={4}>
+    <Stack spacing={1} direction="column">
       {data.map((depl) => (
         <DeploymentListItem depl={depl} key={depl.id} />
       ))}
@@ -89,11 +98,48 @@ const DeploymentListView: React.FC = () => {
   );
 };
 
-export const DeploymentList: React.FC<{appId: string}> = ({appId}) => (
-  <ListBase
-    resource="deployments"
-    queryOptions={{meta: {application_id: appId}}}
-  >
-    <DeploymentListView />
-  </ListBase>
-);
+export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
+  const {data: envs = []} = useGetList("environments", {
+    meta: {
+      application_id: appId,
+    },
+  });
+
+  return (
+    <ListBase
+      resource="deployments"
+      queryOptions={{meta: {application_id: appId}}}
+      filterDefaultValues={{env_type: "All Environments"}}
+    >
+      <Box mt={1}>
+        <ListToolbar
+          title=" "
+          filters={[
+            <SelectInput
+              label="Environment"
+              source="env_type"
+              validate={required()}
+              choices={[
+                {id: "_", environment_type: "All Environments"},
+                ...envs,
+              ]}
+              optionText="environment_type"
+              optionValue="environment_type"
+              variant="outlined"
+              alwaysOn
+            />,
+            <SelectInput
+              label="Status"
+              source="status"
+              choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
+              emptyText="Status"
+              variant="outlined"
+              alwaysOn
+            />,
+          ]}
+        />
+      </Box>
+      <DeploymentListView />
+    </ListBase>
+  );
+};
