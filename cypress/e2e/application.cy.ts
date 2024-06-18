@@ -3,6 +3,7 @@ import {app1, app2} from "../fixtures/application.mock";
 import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 import {log1, log2} from "../fixtures/logs.mock";
+import {preprod_env, prod_env} from "../fixtures/environment.mock";
 
 describe("Application", () => {
   beforeEach(() => {
@@ -160,6 +161,89 @@ describe("Application", () => {
     });
 
     context("deployment", () => {
+      context("Filter", () => {
+        beforeEach(() => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+        });
+
+        specify("Environment", () => {
+          cy.muiSelect("#env_type", "PROD");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
+
+          cy.muiSelect("#env_type", "PREPROD");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.muiSelect("#env_type", "All Environments");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+        });
+
+        specify("Status", () => {
+          cy.muiSelect("#status", "Ready");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
+
+          cy.muiSelect("#status", "In Progress");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.muiSelect("#status", "Failed");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
+
+          cy.muiClear("#status");
+
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+        });
+
+        specify("Date Range", () => {
+          cy.get("#from").type("2024-01-01");
+          cy.get("#to").type("2024-01-05");
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.get("#from").type("2024-01-01");
+          cy.get("#to").type("2024-01-03");
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
+
+          cy.get("#from").type("2024-01-04");
+          cy.get("#to").type("2024-01-10");
+          cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.get("#from").clear();
+          cy.get("#to").type("2024-01-04");
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.get("#from").clear();
+          cy.get("#to").type("2024-01-02");
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
+
+          cy.get("#from").type("2024-01-02");
+          cy.get("#to").clear();
+          cy.getByTestid(`depl-${depl1.id}`).should("exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+
+          cy.get("#from").type("2024-01-04");
+          cy.get("#to").clear();
+          cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
+          cy.getByTestid(`depl-${depl2.id}`).should("exist");
+        });
+      });
+
       specify("depl metadata (warning, success)", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
