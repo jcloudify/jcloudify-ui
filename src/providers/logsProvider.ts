@@ -3,8 +3,8 @@ import {PojaDataProvider} from "./types";
 import {logs} from "#/logs.mock";
 
 export const logsProvider: PojaDataProvider<Required<Log>> = {
-  getList(_page, _perPage, _filter, meta) {
-    return Promise.resolve(logs(meta!.environment_id));
+  getList(_page, _perPage, filter, _meta) {
+    return Promise.resolve(logs(filter?.environment_id));
   },
   getOne(id, meta): Promise<any> {
     return Promise.resolve(
