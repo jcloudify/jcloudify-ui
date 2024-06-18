@@ -3,7 +3,6 @@ import {app1, app2} from "../fixtures/application.mock";
 import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 import {log1, log2} from "../fixtures/logs.mock";
-import {preprod_env, prod_env} from "../fixtures/environment.mock";
 
 describe("Application", () => {
   beforeEach(() => {
