@@ -29,6 +29,15 @@ export const defaultTheme: RaThemeOptions = {
         },
       },
     },
+    RaFilterForm: {
+      styleOverrides: {
+        root: {
+          "& .RaFilterFormInput-spacer": {
+            display: "none",
+          },
+        },
+      },
+    },
     RaSidebar: {
       styleOverrides: {
         root: {

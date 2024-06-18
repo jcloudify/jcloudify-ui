@@ -1,29 +1,36 @@
+import React from "react";
+import {Environment} from "@jcloudify-api/typescript-client";
 import {
   Link,
   ListBase,
-  ListToolbar,
+  ListToolbar as RAListToolbar,
   SelectInput,
   useGetList,
   useListContext,
   required,
-  useListFilterContext,
   DateInput,
-  maxValue,
   Filter,
-  minValue,
+  maxValue,
 } from "react-admin";
-import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
+import {
+  Box,
+  Stack,
+  Grid,
+  Paper,
+  Typography,
+  Avatar,
+  styled,
+} from "@mui/material";
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
+import {GridLayout} from "@/components/grid";
 import {DeploymentState} from "@/operations/deployments";
+import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {TODO_Deployment} from "@/services/poja-api";
+import {Dict} from "@/providers";
+import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
-import {colors} from "@/themes";
-import {makeSelectChoices} from "../utils/ra-props";
-import React, {memo} from "react";
-import {GridLayout} from "@/components/grid";
-import {Environment} from "@jcloudify-api/typescript-client";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   return (
@@ -106,11 +113,25 @@ const DeploymentListView: React.FC = () => {
   );
 };
 
-const _DeploymentListFilter: React.FC<{
+// TODO: make util for date range inputs
+const from = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.to || v <= filterValues.to) {
+    return undefined;
+  }
+  return " ";
+};
+
+const to = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.from || v >= filterValues.from) {
+    return undefined;
+  }
+  return " ";
+};
+
+const DeploymentListFilter: React.FC<{
   alwaysOn?: boolean;
   envs: Environment[];
 }> = ({envs}) => {
-  const {filterValues = {}} = useListFilterContext();
   return (
     <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>
       <SelectInput
@@ -136,24 +157,20 @@ const _DeploymentListFilter: React.FC<{
       <DateInput
         source="from"
         variant="outlined"
-        validate={maxValue(filterValues.to || new Date())}
+        validate={[from, maxValue(new Date())]}
         fullWidth
       />
-      <DateInput
-        source="to"
-        variant="outlined"
-        validate={
-          filterValues.from
-            ? [minValue(filterValues.from), maxValue(new Date())]
-            : maxValue(new Date())
-        }
-        fullWidth
-      />
+      <DateInput source="to" variant="outlined" validate={to} fullWidth />
     </GridLayout>
   );
 };
 
-const DeploymentListFilter = memo(_DeploymentListFilter);
+const ListToolbar = styled(RAListToolbar)({
+  "display": "block",
+  "& .RaFilter-form .filter-field": {
+    width: "100%",
+  },
+});
 
 export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
   const {data: envs = []} = useGetList("environments", {
