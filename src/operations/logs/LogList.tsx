@@ -8,11 +8,13 @@ import {
   SelectInput,
   TextField,
   UrlField,
+  maxValue,
   required,
 } from "react-admin";
 import {Box, Stack, styled} from "@mui/material";
 import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
 import {GridLayout} from "../../components/grid";
+import {Dict} from "../../providers";
 
 const logFilters = [
   <SelectInput
@@ -35,6 +37,21 @@ const ListToolbar = styled(RAListToolbar)({
     width: "100%",
   },
 });
+
+// TODO: make util for date range inputs
+const from = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.to || v <= filterValues.to) {
+    return undefined;
+  }
+  return " ";
+};
+
+const to = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.from || v >= filterValues.from) {
+    return undefined;
+  }
+  return " ";
+};
 
 const LogListView: React.FC = () => {
   return (
@@ -66,13 +83,20 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
         <SelectInput
           alwaysOn
           label="Type"
-          source="log_type"
+          source="type"
           optionValue="name"
+          fullWidth
           choices={[
             {name: LogLogTypeEnum.APPLICATION_LOG},
             {name: LogLogTypeEnum.DEPLOYMENT_LOG},
           ]}
         />
+        <DateInput
+          source="from"
+          validate={[from, maxValue(new Date())]}
+          fullWidth
+        />
+        <DateInput source="to" validate={to} fullWidth />
       </GridLayout>
     </Stack>
   );
