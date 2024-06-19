@@ -10,6 +10,7 @@ import {
   UrlField,
   maxValue,
   required,
+  useListFilterContext,
 } from "react-admin";
 import {Box, Stack, styled} from "@mui/material";
 import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
@@ -54,8 +55,9 @@ const to = (v: Date, filterValues: Dict<any>) => {
 };
 
 const LogListView: React.FC = () => {
+  const {filterValues} = useListFilterContext();
   return (
-    <Datagrid>
+    <Datagrid rowClick={(id) => `${id}?envId=${filterValues?.environment_id}`}>
       <TextField source="id" />
       <TextField label="Type" source="log_type" />
       <DateField label="Date" source="log_datetime" showTime />
