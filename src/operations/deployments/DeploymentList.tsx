@@ -25,6 +25,7 @@ import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
 import {DeploymentState} from "@/operations/deployments";
+import {Pagination} from "@/operations/components/list";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {TODO_Deployment} from "@/services/poja-api";
 import {Dict} from "@/providers";
@@ -196,6 +197,10 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
         />
       </Box>
       <DeploymentListView />
+
+      <Box mt={2}>
+        <Pagination />
+      </Box>
     </ListBase>
   );
 };

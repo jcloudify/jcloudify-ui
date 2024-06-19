@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import {Apps, Settings, GitHub, Brightness1, Add} from "@mui/icons-material";
 import {colors} from "@/themes";
+import {Pagination} from "@/operations/components/list";
 import {AppProps} from "./types";
 import {stripPrefix} from "@/utils/str";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
@@ -169,5 +170,9 @@ export const AppList: React.FC = () => (
       />
     </TopToolbar>
     <AppGridView />
+
+    <Box mt={2}>
+      <Pagination />
+    </Box>
   </ListBase>
 );
