@@ -2,22 +2,13 @@ import {
   Datagrid,
   DateField,
   DateInput,
-  Identifier,
-  List,
-  ListProps,
-  RaRecord,
+  ListBase,
   SelectInput,
   TextField,
   UrlField,
 } from "react-admin";
-import {LogLogTypeEnum} from "@jcloudify-api/typescript-client";
-
-export type LogListProps<Record extends RaRecord<Identifier> = any> = Omit<
-  ListProps<Record>,
-  "resource" | "children"
-> & {
-  envId: string;
-};
+import {Box} from "@mui/material";
+import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
 
 const logFilters = [
   <SelectInput
@@ -34,32 +25,26 @@ const logFilters = [
   <DateInput source="end_date_time" />,
 ];
 
-export const LogList: React.FC<LogListProps> = ({
-  envId: environment_id,
-  queryOptions = {},
-  ...rest
-}) => {
-  queryOptions.meta ||= {};
-
+const LogListView: React.FC = () => {
   return (
-    <List
+    <Datagrid>
+      <TextField source="id" />
+      <TextField label="Type" source="log_type" />
+      <DateField label="Date" source="log_datetime" showTime />
+      <UrlField label="File uri" source="log_file_uri" target="_blank" />
+    </Datagrid>
+  );
+};
+
+export const LogList: React.FC<{envs: Environment[]}> = ({envs}) => {
+  return (
+    <ListBase
       resource="logs"
-      queryOptions={{
-        ...queryOptions,
-        meta: {
-          ...queryOptions.meta,
-          environment_id,
-        },
-      }}
-      filters={logFilters}
-      {...rest}
+      queryOptions={{meta: {environment_id: envs[0].id}}}
     >
-      <Datagrid>
-        <TextField source="id" />
-        <TextField label="Type" source="log_type" />
-        <DateField label="Date" source="log_datetime" showTime />
-        <UrlField label="File uri" source="log_file_uri" target="_blank" />
-      </Datagrid>
-    </List>
+      <Box mt={1}>
+        <LogListView />
+      </Box>
+    </ListBase>
   );
 };
