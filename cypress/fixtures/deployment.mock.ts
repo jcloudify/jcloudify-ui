@@ -1,4 +1,3 @@
-import {faker as m} from "@faker-js/faker/locale/en";
 import {TODO_Deployment} from "@/services/poja-api";
 import {user1} from "./user.mock";
 import {preprod_env, preprod_env2, prod_env} from "./environment.mock";
@@ -7,7 +6,7 @@ import {app1, app2} from "./application.mock";
 
 export const depl1: TODO_Deployment = {
   id: "depl1",
-  createdAt: m.date.recent(),
+  createdAt: new Date(2024, 0, 2),
   creator: {
     email: user1.email!,
     username: user1.username!,
@@ -36,7 +35,7 @@ export const depl1: TODO_Deployment = {
 
 export const depl2: TODO_Deployment = {
   id: "depl2",
-  createdAt: m.date.recent(),
+  createdAt: new Date(2024, 0, 4),
   creator: {
     email: user1.email!,
     username: user1.username!,
@@ -64,7 +63,7 @@ export const depl2: TODO_Deployment = {
 
 export const depl3: TODO_Deployment = {
   id: "depl3",
-  createdAt: m.date.recent(),
+  createdAt: new Date(2024, 0, 10),
   creator: {
     email: user1.email!,
     username: user1.username!,

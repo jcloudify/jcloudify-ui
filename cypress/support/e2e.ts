@@ -26,6 +26,9 @@ declare global {
       getByHref<Subject>(href: string): Chainable<Subject>;
       getByName<Subject>(name: string): Chainable<Subject>;
 
+      muiSelect(selector: string, value: string): Chainable;
+      muiClear(selector: string): Chainable;
+
       /**
        * JCloudify mocking
        */

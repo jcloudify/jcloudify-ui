@@ -22,6 +22,16 @@ Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
   return cy.get<Subject>(`[name='${name}']`);
 });
 
+Cypress.Commands.add("muiSelect", (selector, value) => {
+  cy.get(selector).click();
+  cy.get(`[data-value="${value}"]`).click();
+});
+
+Cypress.Commands.add("muiClear", (selector) => {
+  cy.get(selector).click();
+  cy.get('[aria-label="Clear value"]').click();
+});
+
 Cypress.Commands.add("mockToken", (token) => {
   return cy.intercept("GET", jcloudify("/token?code=*"), token);
 });

@@ -1,12 +1,36 @@
-import {Link, ListBase, useListContext} from "react-admin";
-import {Box, Stack, Grid, Paper, Typography, Avatar} from "@mui/material";
+import React from "react";
+import {Environment} from "@jcloudify-api/typescript-client";
+import {
+  Link,
+  ListBase,
+  ListToolbar as RAListToolbar,
+  SelectInput,
+  useGetList,
+  useListContext,
+  required,
+  DateInput,
+  Filter,
+  maxValue,
+} from "react-admin";
+import {
+  Box,
+  Stack,
+  Grid,
+  Paper,
+  Typography,
+  Avatar,
+  styled,
+} from "@mui/material";
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
+import {GridLayout} from "@/components/grid";
 import {DeploymentState} from "@/operations/deployments";
+import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {TODO_Deployment} from "@/services/poja-api";
+import {Dict} from "@/providers";
+import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
-import {colors} from "@/themes";
 
 const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
   return (
@@ -81,7 +105,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 const DeploymentListView: React.FC = () => {
   const {data = []} = useListContext();
   return (
-    <Stack spacing={1} direction="column" my={4}>
+    <Stack spacing={1} direction="column">
       {data.map((depl) => (
         <DeploymentListItem depl={depl} key={depl.id} />
       ))}
@@ -89,11 +113,89 @@ const DeploymentListView: React.FC = () => {
   );
 };
 
-export const DeploymentList: React.FC<{appId: string}> = ({appId}) => (
-  <ListBase
-    resource="deployments"
-    queryOptions={{meta: {application_id: appId}}}
-  >
-    <DeploymentListView />
-  </ListBase>
-);
+// TODO: make util for date range inputs
+const from = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.to || v <= filterValues.to) {
+    return undefined;
+  }
+  return " ";
+};
+
+const to = (v: Date, filterValues: Dict<any>) => {
+  if (!v || !filterValues.from || v >= filterValues.from) {
+    return undefined;
+  }
+  return " ";
+};
+
+const DeploymentListFilter: React.FC<{
+  alwaysOn?: boolean;
+  envs: Environment[];
+}> = ({envs}) => {
+  return (
+    <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>
+      <SelectInput
+        label="Environment"
+        source="env_type"
+        validate={required()}
+        choices={[{id: "_", environment_type: "All Environments"}, ...envs]}
+        optionText="environment_type"
+        optionValue="environment_type"
+        variant="outlined"
+        fullWidth
+      />
+
+      <SelectInput
+        label="Status"
+        source="status"
+        choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
+        variant="outlined"
+        alwaysOn
+        fullWidth
+      />
+
+      <DateInput
+        source="from"
+        variant="outlined"
+        validate={[from, maxValue(new Date())]}
+        fullWidth
+      />
+      <DateInput source="to" variant="outlined" validate={to} fullWidth />
+    </GridLayout>
+  );
+};
+
+const ListToolbar = styled(RAListToolbar)({
+  "display": "block",
+  "& .RaFilter-form .filter-field": {
+    width: "100%",
+  },
+});
+
+export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
+  const {data: envs = []} = useGetList("environments", {
+    meta: {
+      application_id: appId,
+    },
+  });
+
+  return (
+    <ListBase
+      resource="deployments"
+      queryOptions={{meta: {application_id: appId}}}
+      filterDefaultValues={{env_type: "All Environments"}}
+    >
+      <Box mt={1}>
+        <ListToolbar
+          title=" "
+          filters={
+            <Filter>
+              <DeploymentListFilter alwaysOn envs={envs} />
+            </Filter>
+          }
+        />
+      </Box>
+      <DeploymentListView />
+    </ListBase>
+  );
+};
