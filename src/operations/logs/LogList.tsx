@@ -12,6 +12,7 @@ import {
 } from "react-admin";
 import {Box, Stack, styled} from "@mui/material";
 import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
+import {GridLayout} from "../../components/grid";
 
 const logFilters = [
   <SelectInput
@@ -59,7 +60,20 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
         optionValue="id"
         optionText="environment_type"
         choices={envs}
+        variant="outlined"
       />
+      <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>
+        <SelectInput
+          alwaysOn
+          label="Type"
+          source="log_type"
+          optionValue="name"
+          choices={[
+            {name: LogLogTypeEnum.APPLICATION_LOG},
+            {name: LogLogTypeEnum.DEPLOYMENT_LOG},
+          ]}
+        />
+      </GridLayout>
     </Stack>
   );
 };
