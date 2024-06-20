@@ -1,6 +1,15 @@
-import {Stack} from "@mui/material";
+import {
+  InputAdornment,
+  ListItemIcon,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
+import {GitHub as GitHubIcon, Search as SearchIcon} from "@mui/icons-material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
+import {ghOrg} from "#/github.mock";
 
 export const AppGithubImport: React.FC = () => {
   return (
@@ -21,7 +30,31 @@ export const AppGithubImport: React.FC = () => {
 const ImportGhRepository = () => {
   return (
     <ContainerWithHeading title="Import Git Repository">
-      Tepr
+      <Stack direction="row" spacing={2}>
+        <Select fullWidth defaultValue={ghOrg[0].id}>
+          {ghOrg.map((org) => (
+            <MenuItem value={org.id} key={`org-${org.id}`}>
+              <ListItemIcon>
+                <GitHubIcon />
+              </ListItemIcon>
+              {org.username}
+            </MenuItem>
+          ))}
+        </Select>
+        <TextField
+          label="Search"
+          size="medium"
+          fullWidth
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
     </ContainerWithHeading>
   );
 };
