@@ -43,6 +43,7 @@ export const ghRepository = [
     forks_count: 100,
     open_issues_count: 5,
     language: "JavaScript",
+    visibility: "private",
   },
   {
     id: 20000002,
@@ -62,6 +63,7 @@ export const ghRepository = [
     forks_count: 200,
     open_issues_count: 10,
     language: "Python",
+    visibility: "public",
   },
   {
     id: 20000003,
@@ -81,6 +83,7 @@ export const ghRepository = [
     forks_count: 300,
     open_issues_count: 20,
     language: "Python",
+    visibility: "public",
   },
   {
     id: 20000004,
@@ -100,6 +103,7 @@ export const ghRepository = [
     forks_count: 250,
     open_issues_count: 15,
     language: "Java",
+    visibility: "private",
   },
   {
     id: 20000005,
@@ -119,5 +123,6 @@ export const ghRepository = [
     forks_count: 180,
     open_issues_count: 8,
     language: "Ruby",
+    visibility: "private",
   },
 ];

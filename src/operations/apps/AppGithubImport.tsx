@@ -11,7 +11,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {GitHub as GitHubIcon, Search as SearchIcon} from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  GitHub as GitHubIcon,
+  Lock as LockIcon,
+  Public as PublicIcon,
+  Search as SearchIcon,
+} from "@mui/icons-material";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {fromToNow} from "@/utils/date";
@@ -36,24 +42,32 @@ export const AppGithubImport: React.FC = () => {
 
 const ImportGhRepository = () => {
   return (
-    <ContainerWithHeading title="Import Git Repository">
+    <ContainerWithHeading title="Git Repository">
       <Stack direction="column" spacing={2}>
         <Stack direction="row" spacing={2}>
           <Select fullWidth defaultValue={ghOrg[0].id}>
             {ghOrg.map((org) => (
-              <MenuItem value={org.id} key={`org-${org.id}`}>
+              <MenuItem value={org.id} key={`org-${org.id}`} sx={{my: 1}}>
                 <ListItemIcon>
                   <GitHubIcon />
                 </ListItemIcon>
                 {org.username}
               </MenuItem>
             ))}
+            <Divider />
+            <MenuItem>
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              Add Github Account
+            </MenuItem>
           </Select>
           <TextField
             label="Search"
             size="medium"
             fullWidth
             variant="outlined"
+            placeholder="Search..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -88,6 +102,11 @@ const RepositoryView: React.FC<{repo: any}> = ({repo}) => {
           <GitHubIcon />
         </Avatar>
         <Typography variant="h6">{repo.name}</Typography>
+        {repo.visibility === "private" ? (
+          <LockIcon fontSize="small" />
+        ) : (
+          <PublicIcon fontSize="small" />
+        )}
         <Typography variant="body2">{fromToNow(repo.created_at)}</Typography>
       </Stack>
       <Button variant="contained">Import</Button>
