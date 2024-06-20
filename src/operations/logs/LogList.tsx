@@ -14,23 +14,9 @@ import {
 } from "react-admin";
 import {Box, Stack, styled} from "@mui/material";
 import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
-import {GridLayout} from "../../components/grid";
-import {Dict} from "../../providers";
-
-const logFilters = [
-  <SelectInput
-    alwaysOn
-    label="Type"
-    source="log_type"
-    optionValue="name"
-    choices={[
-      {name: LogLogTypeEnum.APPLICATION_LOG},
-      {name: LogLogTypeEnum.DEPLOYMENT_LOG},
-    ]}
-  />,
-  <DateInput source="start_date_time" />,
-  <DateInput source="end_date_time" />,
-];
+import {Pagination} from "@/operations/components/list";
+import {GridLayout} from "@/components/grid";
+import {Dict} from "@/providers";
 
 const ListToolbar = styled(RAListToolbar)({
   "display": "block",
@@ -122,6 +108,9 @@ export const LogList: React.FC<{envs: Environment[]}> = ({envs}) => {
         />
       </Box>
       <LogListView />
+      <Box mt={2}>
+        <Pagination />
+      </Box>
     </ListBase>
   );
 };
