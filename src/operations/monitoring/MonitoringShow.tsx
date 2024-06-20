@@ -2,7 +2,7 @@ import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
 import {Stack} from "@mui/material";
 import {useRef, useState} from "react";
-import {PerformanceMetricsChart} from "./charts";
+import {InvocationSummaryChart, PerformanceMetricsChart} from "./charts";
 
 const data = {
   Label: "Duration",
@@ -271,6 +271,16 @@ export const MonitoringShow: React.FC<{appId: string}> = ({appId}) => {
       <GridLayout xs={12} lg={6} spacing={2}>
         <ContainerWithHeading title="Duration" headerColor="#fff">
           <PerformanceMetricsChart data={data} />
+        </ContainerWithHeading>
+
+        <ContainerWithHeading title="Invocation" headerColor="#fff">
+          <InvocationSummaryChart
+            data={{
+              "2XX": 97,
+              "5XX": 3,
+              "timestamp": new Date(2024, 0, 1, 10, 0, 0),
+            }}
+          />
         </ContainerWithHeading>
       </GridLayout>
     </Stack>
