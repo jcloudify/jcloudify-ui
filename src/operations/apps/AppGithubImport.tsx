@@ -45,7 +45,7 @@ const ImportGhRepository = () => {
     <ContainerWithHeading title="Git Repository">
       <Stack direction="column" spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Select fullWidth defaultValue={ghOrg[0].id}>
+          <Select fullWidth defaultValue={ghOrg[0].id} size="small">
             {ghOrg.map((org) => (
               <MenuItem value={org.id} key={`org-${org.id}`} sx={{my: 1}}>
                 <ListItemIcon>
