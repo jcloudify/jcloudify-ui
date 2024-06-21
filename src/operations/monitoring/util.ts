@@ -11,5 +11,9 @@ export const makeLineChartSeriesFromDatapoints = (
     data: datapoints.map((dp) => dp[nth]),
     valueFormatter: (t) => `${Math.round(t!)}ms`,
     showMark: false,
+    highlightScope: {
+      fade: "global",
+      highlight: "series",
+    },
   }));
 };
