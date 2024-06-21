@@ -1,49 +1,58 @@
-import {ms} from "@/utils/format";
-import {LineChart, ChartsYAxis, ChartsXAxis} from "@mui/x-charts";
 import {useMemo} from "react";
+import {LineChart, LineChartProps, axisClasses} from "@mui/x-charts";
+import {ChartProps, Datapoint} from "@/operations/monitoring/types";
+import {makeLineChartSeriesFromDatapoints} from "@/operations/monitoring/util";
+import {colors} from "@/themes";
 
-export const PerformanceMetricsChart: React.FC<{data: any}> = ({data}: any) => {
-  const {Datapoints: datapoints} = data;
+const settings: Partial<LineChartProps> = {
+  yAxis: [{label: "Milliseconds (ms)"}],
+  grid: {
+    horizontal: true,
+  },
+  slotProps: {
+    legend: {
+      direction: "row",
+      position: {
+        horizontal: "right",
+        vertical: "top",
+      },
+    },
+  },
+  height: 400,
+  sx: {
+    [`& .${axisClasses.left} .${axisClasses.label} text`]: {
+      transform: "rotate(0deg) translate(-10px, -180px)",
+      textAnchor: "start",
+      bottom: -90,
+    },
+    p: 0.5,
+    bgcolor: colors("gray-0"),
+  },
+};
 
-  const stats = useMemo(() => {
-    const stats = ["p20", "p50", "p95", "p99", "average"].reduce((o, px) => {
-      o[px] = [];
-      return o;
-    }, {} as any);
-    datapoints.forEach(({ExtendedStatistics: dpStats, Average}: any) => {
-      const {p20, p50, p95, p99} = dpStats;
-      stats.p20.push(p20);
-      stats.p50.push(p50);
-      stats.p95.push(p95);
-      stats.p99.push(p99);
-      stats.average.push(Average);
-    });
-    return stats;
-  }, []);
-
+export const PerformanceMetricsChart: React.FC<ChartProps<Datapoint[]>> = ({
+  data,
+}) => {
   const timestamps = useMemo(
-    () => datapoints.map((dp: any) => new Date(dp.Timestamp)),
-    [datapoints]
+    () => data.map(({timestamp}) => new Date(timestamp)),
+    [data]
   );
 
-  const msFormatter = (v: number | null) => ms(v!);
+  const series = useMemo(() => makeLineChartSeriesFromDatapoints(data), [data]);
 
   return (
     <LineChart
-      series={[
-        {label: "p20", data: stats.p20, valueFormatter: msFormatter},
-        {label: "p50", data: stats.p50, valueFormatter: msFormatter},
-        {label: "p95", data: stats.p95, valueFormatter: msFormatter},
-        {label: "p99", data: stats.p99, valueFormatter: msFormatter},
-      ]}
+      series={series}
+      onAxisClick={() => {
+        console.log("axis_click");
+      }}
       xAxis={[
         {
           data: timestamps,
-          valueFormatter: (date: Date) => date.toLocaleTimeString(),
-          scaleType: "point",
+          scaleType: "time",
         },
       ]}
-      height={400}
+      {...settings}
     ></LineChart>
   );
 };
