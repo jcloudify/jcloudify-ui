@@ -14,7 +14,7 @@ export const depl1: TODO_Deployment = {
     github_id: user1.github_id!,
   },
   application_id: app1.id,
-  target_env_type: prod_env.environment_type,
+  target_env_type: prod_env.environment_type!,
   state: "READY",
   url: "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod",
   github_meta: {
@@ -43,7 +43,7 @@ export const depl2: TODO_Deployment = {
     github_id: user1.github_id!,
   },
   application_id: app1.id,
-  target_env_type: preprod_env.environment_type,
+  target_env_type: preprod_env.environment_type!,
   state: "IN_PROGRESS",
   github_meta: {
     commit_author_name: user1.username!,
@@ -71,7 +71,7 @@ export const depl3: TODO_Deployment = {
     github_id: user1.github_id!,
   },
   application_id: app2.id,
-  target_env_type: preprod_env2.environment_type,
+  target_env_type: preprod_env2.environment_type!,
   state: "FAILED",
   github_meta: {
     commit_author_name: user1.username!,

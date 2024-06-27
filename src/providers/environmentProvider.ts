@@ -1,11 +1,13 @@
 import {envs} from "#/environment.mock";
 import {Environment} from "@jcloudify-api/typescript-client";
-import {PojaDataProvider} from "./types";
+import {PojaDataProvider, ToRecord} from "./types";
+import {apps} from "#/application.mock";
 
-export const environmentProvider: PojaDataProvider<Required<Environment>> = {
+export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
   getList(_page, _perPage, _filter, meta) {
     return Promise.resolve(
-      envs.filter((env) => env.application_id === meta?.application_id)
+      apps.find((app) => app.id === meta?.application_id)
+        ?.environments as ToRecord<Environment>[]
     );
   },
   getOne(id): Promise<any> {

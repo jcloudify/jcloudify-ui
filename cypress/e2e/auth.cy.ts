@@ -57,7 +57,7 @@ describe("Auth", () => {
     cy.contains("Applications");
   });
 
-  specify.only("Register (failure)", () => {
+  specify("Register (failure)", () => {
     cy.mockToken({
       access_token: user1.token,
     }).as("exchangeCode");

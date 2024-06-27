@@ -1,8 +1,8 @@
 import {apps} from "#/application.mock";
 import {Application} from "@jcloudify-api/typescript-client";
-import {PojaDataProvider} from "./types";
+import {PojaDataProvider, ToRecord} from "./types";
 
-export const applicationProvider: PojaDataProvider<Required<Application>> = {
+export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
   getList() {
     return Promise.resolve(apps);
   },
