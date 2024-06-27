@@ -1,6 +1,6 @@
 import {Datapoint} from "@/operations/monitoring";
 
-const generateSampleDatapoints = (
+export const genDatapoints = (
   startDate: Date,
   n: number,
   options: {baseResTime?: number; tinterval?: number} = {}
@@ -31,8 +31,7 @@ const generateSampleDatapoints = (
   return data;
 };
 
-export const datapoints1 = generateSampleDatapoints(
-  new Date(2024, 0, 5),
-  19 /* n */,
-  {baseResTime: 220, tinterval: 1000 * 60 * 60 * 24}
-);
+export const datapoints1 = genDatapoints(new Date(2024, 0, 5), 19 /* n */, {
+  baseResTime: 220,
+  tinterval: 1000 * 60 * 60 * 24,
+});
