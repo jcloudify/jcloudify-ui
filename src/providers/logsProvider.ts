@@ -6,9 +6,10 @@ export const logsProvider: PojaDataProvider<Required<Log>> = {
   getList(_page, _perPage, filter, _meta) {
     return Promise.resolve(logs(filter?.environment_id));
   },
-  getOne(): Promise<any> {
-    throw new Error("Function not implemented.");
-    // return Promise.resolve(logs.find((log) => log.id === id));
+  getOne(id, meta): Promise<any> {
+    return Promise.resolve(
+      logs(meta?.environment_id).find((log) => log.id === id)
+    );
   },
   save(): Promise<any> {
     throw new Error("Function not implemented.");
