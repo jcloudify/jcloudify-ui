@@ -74,6 +74,7 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
           source="type"
           optionValue="name"
           fullWidth
+          variant="outlined"
           choices={[
             {name: LogLogTypeEnum.APPLICATION_LOG},
             {name: LogLogTypeEnum.DEPLOYMENT_LOG},
@@ -83,8 +84,9 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
           source="from"
           validate={[from, maxValue(new Date())]}
           fullWidth
+          variant="outlined"
         />
-        <DateInput source="to" validate={to} fullWidth />
+        <DateInput source="to" validate={to} fullWidth variant="outlined" />
       </GridLayout>
     </Stack>
   );
