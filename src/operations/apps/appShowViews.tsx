@@ -1,6 +1,6 @@
 import {AppEnvironment} from "./AppEnvironment";
 import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
-import {AppLogs} from "./AppLogs";
+import {AppLogList, AppLogShow} from "./AppLogs";
 import {RouteMap} from "@/components/router";
 
 export const appShowViews: RouteMap = {
@@ -10,5 +10,8 @@ export const appShowViews: RouteMap = {
     ":deplId": <AppDeploymentShow />,
   },
   analytics: <h1>analytics</h1>,
-  logs: <AppLogs />,
+  logs: {
+    "$$index": <AppLogList />,
+    ":logId": <AppLogShow />,
+  },
 };
