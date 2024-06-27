@@ -3,7 +3,6 @@ import {
   SecurityApi,
   UserApi,
   ApplicationApi,
-  EnvironmentApi,
   UserRoleEnum,
   EnvironmentType,
 } from "@jcloudify-api/typescript-client";
@@ -18,8 +17,6 @@ export const securityApi = () =>
 export const userApi = () => new UserApi(authProvider.getCachedAuthConf());
 export const applicationApi = () =>
   new ApplicationApi(authProvider.getCachedAuthConf());
-export const environmentApi = () =>
-  new EnvironmentApi(authProvider.getCachedAuthConf());
 
 export interface TODO_Deployment {
   id: string;

@@ -1,4 +1,3 @@
-import {ApplicationStateEnum} from "@jcloudify-api/typescript-client";
 import {
   Title,
   ListBase,
@@ -17,31 +16,12 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import {Apps, Settings, GitHub, Brightness1, Add} from "@mui/icons-material";
+import {Apps, Settings, GitHub, Add} from "@mui/icons-material";
 import {colors} from "@/themes";
 import {Pagination} from "@/operations/components/list";
 import {AppProps} from "./types";
 import {stripPrefix} from "@/utils/str";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
-
-const AppFlag: React.FC<AppProps> = ({app}) => {
-  const isHealthy = app.state === ApplicationStateEnum.HEALTHY;
-  return (
-    <Chip
-      icon={
-        <Brightness1 fontSize="small" color={isHealthy ? "success" : "error"} />
-      }
-      label={<Typography variant="body2">{app.state.toLowerCase()}</Typography>}
-      sx={{
-        width: "fit-content",
-        height: "2rem",
-        bgcolor: colors("gray-0"),
-        border: "1px solid #e0e0e0",
-        zIndex: 2,
-      }}
-    />
-  );
-};
 
 const AppGridTile: React.FC<AppProps> = ({app}) => {
   return (
@@ -67,22 +47,6 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
           </Avatar>
           <Stack flex={1}>
             <Typography fontWeight="semibold">{app.name}</Typography>
-            {/*isHealthy && (
-              <Link
-                to={app.deployed_url}
-                sx={{
-                  ":hover": {
-                    textDecoration: "underline",
-                  },
-                  "zIndex": 2,
-                  "width": "fit-content",
-                }}
-              >
-                <Typography fontWeight="light" color="gray">
-                  {app.deployed_url}
-                </Typography>
-              </Link>
-            )*/}
           </Stack>
           <Box>
             <IconButton sx={{zIndex: 2}}>
@@ -113,10 +77,6 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
               }}
             />
           </Link>
-        </Stack>
-
-        <Stack direction="row" justifyContent="flex-end" height="2rem">
-          <AppFlag app={app} />
         </Stack>
 
         <Link
