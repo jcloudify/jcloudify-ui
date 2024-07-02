@@ -5,7 +5,8 @@ export const POJA_COLORS = {
   "light": "#fff",
   "gray": "#f9fafb",
   "gray-0": "#f3f4f6",
-  "gray-1": "#d1d5db",
+  "gray-1": "#ebebeb",
+  "gray-2": "#d1d5db",
 
   "spring-boot": "#43a047",
 
