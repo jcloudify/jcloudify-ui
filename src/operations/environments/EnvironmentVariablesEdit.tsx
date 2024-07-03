@@ -30,6 +30,7 @@ import {useSet} from "@/hooks";
 import {z} from "zod";
 import {envVariableSchema} from "./schema";
 import {colors} from "@/themes";
+import {GridLayout} from "@/components/grid";
 
 export type EnvironmentVariablesEditProps<
   Record extends RaRecord<Identifier> = any,
@@ -120,11 +121,10 @@ const ListEnvEdit: React.FC = () => {
       onSubmit={form.handleSubmit(save)}
     >
       <Box>
-        <KVPair
-          k={<Typography variant="h6">Key</Typography>}
-          v={<Typography variant="h6">value</Typography>}
-          tail={<></>}
-        />
+        <GridLayout xs={4} spacing={2}>
+          <Typography variant="h6">Key</Typography>
+          <Typography variant="h6">value</Typography>
+        </GridLayout>
       </Box>
 
       <Divider sx={{mb: 2, borderColor: colors("gray-0")}} />
@@ -134,45 +134,39 @@ const ListEnvEdit: React.FC = () => {
         const isInDeleteState = deleteIds.has(id!);
         const message = (form.formState.errors.variables || [])[idx];
         return (
-          <KVPair
-            key={`variables.${idx}`}
-            k={
-              <>
-                <OutlinedInput
-                  placeholder="e.g: CLIENT_KEY"
-                  fullWidth
-                  {...form.register(`variables.${idx}.name`)}
-                />
-                <FormHelperText error>
-                  {message?.name?.message?.toString() ?? " "}
-                </FormHelperText>
-              </>
-            }
-            v={
-              <>
-                <OutlinedInput
-                  placeholder="XXX"
-                  fullWidth
-                  {...form.register(`variables.${idx}.value`)}
-                />
-                <FormHelperText error>
-                  {message?.value?.message?.toString() ?? " "}
-                </FormHelperText>
-              </>
-            }
-            tail={
-              <Stack justifyContent="center" alignItems="center">
-                <IconButtonWithTooltip
-                  label={isInDeleteState ? "Cancel removal" : "Remove"}
-                  onClick={() => {
-                    rmFieldOrToggleDeletion(id, idx);
-                  }}
-                >
-                  {isInDeleteState ? <Cancel /> : <Remove />}
-                </IconButtonWithTooltip>
-              </Stack>
-            }
-          />
+          <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
+            <>
+              <OutlinedInput
+                placeholder="e.g: CLIENT_KEY"
+                fullWidth
+                {...form.register(`variables.${idx}.name`)}
+              />
+              <FormHelperText error>
+                {message?.name?.message?.toString() ?? " "}
+              </FormHelperText>
+            </>
+
+            <>
+              <OutlinedInput
+                placeholder="XXX"
+                fullWidth
+                {...form.register(`variables.${idx}.value`)}
+              />
+              <FormHelperText error>
+                {message?.value?.message?.toString() ?? " "}
+              </FormHelperText>
+            </>
+            <Stack justifyContent="center" alignItems="center">
+              <IconButtonWithTooltip
+                label={isInDeleteState ? "Cancel removal" : "Remove"}
+                onClick={() => {
+                  rmFieldOrToggleDeletion(id, idx);
+                }}
+              >
+                {isInDeleteState ? <Cancel /> : <Remove />}
+              </IconButtonWithTooltip>
+            </Stack>
+          </GridLayout>
         );
       })}
 
@@ -200,36 +194,12 @@ const ListEnvEdit: React.FC = () => {
           size="large"
           variant="contained"
           label="Save"
-          disabled={isLoading || !form.formState.isDirty}
+          disabled={isLoading || (!form.formState.isDirty && !deleteIds.size)}
         />
       </Stack>
     </Stack>
   );
 };
-
-const KVPair: React.FC<{
-  k: React.ReactNode;
-  v: React.ReactNode;
-  tail?: React.ReactNode;
-}> = ({k, v, tail}) => (
-  <>
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs>
-        {k}
-      </Grid>
-
-      <Grid item xs>
-        {v}
-      </Grid>
-
-      {!!tail && (
-        <Grid item xs={1} p="0 !important">
-          {tail}
-        </Grid>
-      )}
-    </Grid>
-  </>
-);
 
 /**
  * react-hook-form uses the 'id' key internally (replaces it) so rename it

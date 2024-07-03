@@ -18,11 +18,13 @@ import {Add as AddIcon, Settings} from "@mui/icons-material";
 import {
   EnvironmentCreate,
   EnvironmentList,
+  EnvironmentShow,
   EnvironmentVariablesEdit,
 } from "@/operations/environments";
 import {colors} from "@/themes";
+import {WithTab} from "@/components/tab";
 
-export const AppEnvironment: React.FC = () => {
+export const AppEnvironmentList: React.FC = () => {
   const [createEnv, setCreateEnv] = useState(false);
 
   const [p] = useSearchParams();
@@ -112,6 +114,18 @@ export const AppEnvironment: React.FC = () => {
         </Card>
       </Grid>
     </Grid>
+  );
+};
+
+export const AppEnvironmentShow = () => {
+  const {envId} = useParams();
+
+  if (!envId) return;
+
+  return (
+    <WithTab tab="Environments">
+      <EnvironmentShow envId={envId} />
+    </WithTab>
   );
 };
 
