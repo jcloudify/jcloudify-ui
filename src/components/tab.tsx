@@ -114,7 +114,10 @@ export const WithTab: React.FC<React.PropsWithChildren<{tab: string}>> = ({
   tab,
   children,
 }) => {
-  useTabContext().setValue(tab);
+  const {setValue} = useTabContext();
+  useEffect(() => {
+    setValue(tab);
+  }, [tab]);
   return children;
 };
 
