@@ -16,12 +16,19 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
-import {Logout as LogoutIcon} from "@mui/icons-material";
+import {
+  CardMembership as CardMembershipIcon,
+  Logout as LogoutIcon,
+  Payment as PaymentIcon,
+} from "@mui/icons-material";
 import {authProvider} from "@/providers";
+import {useNavigate} from "react-router-dom";
 
 const UserMenu: React.FC = () => {
   const logout = useLogout();
   const {user} = authProvider.getCachedWhoami()!;
+
+  const navigate = useNavigate();
 
   if (!user) return null;
 
@@ -67,7 +74,32 @@ const UserMenu: React.FC = () => {
           </Stack>
         </Stack>
 
-        <Box px={2} pb={1}></Box>
+        <Divider sx={{mb: 1}} />
+
+        <Box pb={1}>
+          <MenuItem
+            onClick={() => {
+              navigate("/payment-method");
+            }}
+          >
+            <ListItemIcon>
+              <PaymentIcon fontSize="small" />
+            </ListItemIcon>
+
+            <ListItemText>Payment</ListItemText>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate("/plan-info");
+            }}
+          >
+            <ListItemIcon>
+              <CardMembershipIcon fontSize="small" />
+            </ListItemIcon>
+
+            <ListItemText>Plan Info</ListItemText>
+          </MenuItem>
+        </Box>
 
         <Divider sx={{mb: 1}} />
 

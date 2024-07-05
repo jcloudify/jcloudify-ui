@@ -32,6 +32,8 @@ const JCAdmin = () => (
       <Route path="/applications/create">
         {renderRouteMap(appCreateViews)}
       </Route>
+      <Route path="/payment-method" element={<>Payment Method</>} />
+      <Route path="/plan-info" element={<>Plan</>} />
     </CustomRoutes>
   </Admin>
 );
