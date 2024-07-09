@@ -4,7 +4,13 @@ import {Outlet, useParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {Tabs} from "@/components/tab";
 
-const tabList = ["Environments", "Deployments", "Monitoring", "Logs"];
+const tabList = [
+  "Environments",
+  "Deployments",
+  "Monitoring",
+  "Logs",
+  "Metadata",
+];
 
 export const AppShowLayout: React.FC = () => {
   const {appId} = useParams();

@@ -5,6 +5,8 @@ import {
   ApplicationApi,
   UserRoleEnum,
   EnvironmentType,
+  Application,
+  PojaMetadata,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
@@ -52,6 +54,10 @@ export enum TODO_DeploymentStateEnum {
   IN_PROGRESS = "In Progress",
   FAILED = "Failed",
 }
+
+export type TODO_Application = Application & {
+  metadata: PojaMetadata;
+};
 
 /* unwrap response */
 export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =

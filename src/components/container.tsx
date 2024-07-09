@@ -11,8 +11,8 @@ import {
 import {colors} from "@/themes";
 
 export interface ContainerProps {
-  title: string;
-  subheader?: string;
+  title: React.ReactNode;
+  subheader?: React.ReactNode;
   headerColor?: string;
   sx?: SxProps;
 }
@@ -28,20 +28,27 @@ export const ContainerWithHeading: React.FC<
           bgcolor: headerColor,
         }}
         title={
-          <Typography variant="h6" fontWeight="575">
-            {title}
-          </Typography>
+          typeof title === "string" ? (
+            <Typography variant="h6" fontWeight="575">
+              {title}
+            </Typography>
+          ) : (
+            title
+          )
         }
       />
 
       <Divider sx={{borderColor: colors("gray-0")}} />
 
       <CardContent>
-        {subheader != null && (
-          <Typography variant="body2" px={2} mt={2} color="text.secondary">
-            {subheader}
-          </Typography>
-        )}
+        {subheader != null &&
+          (typeof subheader === "string" ? (
+            <Typography variant="body2" px={2} mt={2} color="text.secondary">
+              {subheader}
+            </Typography>
+          ) : (
+            subheader
+          ))}
 
         <Stack py={3} px={2} width="100%" height="100%" direction="column">
           {children}
