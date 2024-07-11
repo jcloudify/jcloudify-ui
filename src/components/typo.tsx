@@ -1,4 +1,8 @@
 export const typoSizes = {
+  sm: {
+    primary: "h6",
+    secondary: "body2",
+  },
   md: {
     primary: "h5",
     secondary: "body2",
