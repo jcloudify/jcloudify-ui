@@ -7,8 +7,8 @@ import {ShowLayout} from "@/operations/components/show";
 import {
   EnvironmentState,
   EnvironmentVariablesEdit,
+  EnvironmentConfEdit,
 } from "@/operations/environments";
-import {capitalize, humanizeSnakeStr} from "@/utils/str";
 
 const EnvironmentShowView: React.FC = () => {
   return (
@@ -40,26 +40,13 @@ const EnvironmentShowView: React.FC = () => {
         />
       </ContainerWithHeading>
 
-      <ContainerWithHeading title="Metadata" sx={{fontSize: "1.2rem"}}>
-        <Stack gap={1.5}>
-          <FunctionField<Environment>
-            label="State"
-            render={(env) => {
-              return (
-                <GridLayout xs={12} sm={6} md={4} spacing={2}>
-                  {Object.keys(env.metadata!).map((key) => (
-                    <Labeled
-                      key={`metadata.${key}`}
-                      label={capitalize(humanizeSnakeStr(key))}
-                    >
-                      <TextField source={`metadata.${key}`} label={key} />
-                    </Labeled>
-                  ))}
-                </GridLayout>
-              );
-            }}
-          />
-        </Stack>
+      <ContainerWithHeading
+        title="Poja Configuration"
+        sx={{fontSize: "1.2rem"}}
+      >
+        <FunctionField<Environment>
+          render={(env) => <EnvironmentConfEdit envId={env.id!} />}
+        />
       </ContainerWithHeading>
     </Stack>
   );
