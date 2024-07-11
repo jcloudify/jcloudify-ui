@@ -1,6 +1,13 @@
 import {Environment} from "@jcloudify-api/typescript-client";
-import {ShowBase, TextField, Labeled, FunctionField} from "react-admin";
-import {Stack} from "@mui/material";
+import {
+  ShowBase,
+  TextField,
+  Labeled,
+  useRecordContext,
+  IconButtonWithTooltip,
+} from "react-admin";
+import {Stack, Typography} from "@mui/material";
+import {Cancel, Edit} from "@mui/icons-material";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
@@ -8,9 +15,13 @@ import {
   EnvironmentState,
   EnvironmentVariablesEdit,
   EnvironmentConfShow,
+  EnvironmentConfEdit,
 } from "@/operations/environments";
+import {useState} from "react";
 
 const EnvironmentShowView: React.FC = () => {
+  const [isEditConf, setIsEditConf] = useState(false);
+  const record = useRecordContext<Environment>();
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
       <ContainerWithHeading title="Environment" sx={{fontSize: "1.2rem"}}>
@@ -25,28 +36,37 @@ const EnvironmentShowView: React.FC = () => {
             </Labeled>
 
             <Labeled label="state">
-              <FunctionField<Environment>
-                label="State"
-                render={(env) => <EnvironmentState value={env.state!} />}
-              />
+              <EnvironmentState value={record.state!} />
             </Labeled>
           </GridLayout>
         </Stack>
       </ContainerWithHeading>
 
       <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
-        <FunctionField<Environment>
-          render={(env) => <EnvironmentVariablesEdit envId={env.id!} />}
-        />
+        <EnvironmentVariablesEdit envId={record.id!} />
       </ContainerWithHeading>
 
       <ContainerWithHeading
-        title="Poja Configuration"
+        title={
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Typography variant="h6" fontWeight="450">
+              Poja Configuration
+            </Typography>
+            <IconButtonWithTooltip
+              label={isEditConf ? "cancel edit" : "edit"}
+              onClick={() => setIsEditConf((v) => !v)}
+            >
+              {isEditConf ? <Cancel /> : <Edit />}
+            </IconButtonWithTooltip>
+          </Stack>
+        }
         sx={{fontSize: "1.2rem"}}
       >
-        <FunctionField<Environment>
-          render={(env) => <EnvironmentConfShow envId={env.id!} />}
-        />
+        {isEditConf ? (
+          <EnvironmentConfEdit envId={record.id!} />
+        ) : (
+          <EnvironmentConfShow envId={record.id!} />
+        )}
       </ContainerWithHeading>
     </Stack>
   );
