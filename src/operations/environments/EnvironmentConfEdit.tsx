@@ -70,7 +70,7 @@ const IntegrationConf = () => (
       />
       <BooleanInput
         label="Swagger UI"
-        source="conf.with_sentry"
+        source="conf.with_swagger_ui"
         variant="outlined"
         size="medium"
         fullWidth
