@@ -3,6 +3,7 @@ import {Grid, GridProps} from "@mui/material";
 
 export type GridLayoutProps = {
   children: React.ReactNode;
+  render?: (node: React.ReactNode) => React.ReactNode;
 } & GridProps;
 
 /**
@@ -14,13 +15,14 @@ export const GridLayout: React.FC<GridLayoutProps> = ({
   xs,
   md,
   lg,
+  render,
   ...rest
 }) => {
   return (
     <Grid container {...rest}>
       {React.Children.map(children, (node) => (
         <Grid item xs={xs} sm={sm} md={md} lg={lg}>
-          {node}
+          {render ? render(node) : node}
         </Grid>
       ))}
     </Grid>

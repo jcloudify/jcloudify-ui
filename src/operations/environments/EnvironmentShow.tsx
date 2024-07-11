@@ -7,7 +7,7 @@ import {ShowLayout} from "@/operations/components/show";
 import {
   EnvironmentState,
   EnvironmentVariablesEdit,
-  EnvironmentConfEdit,
+  EnvironmentConfShow,
 } from "@/operations/environments";
 
 const EnvironmentShowView: React.FC = () => {
@@ -45,7 +45,7 @@ const EnvironmentShowView: React.FC = () => {
         sx={{fontSize: "1.2rem"}}
       >
         <FunctionField<Environment>
-          render={(env) => <EnvironmentConfEdit envId={env.id!} />}
+          render={(env) => <EnvironmentConfShow envId={env.id!} />}
         />
       </ContainerWithHeading>
     </Stack>

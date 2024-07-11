@@ -180,14 +180,14 @@ const DBConf = () => {
         />
         <TextInput
           label="Non Root Username"
-          source="conf.database_non_root_username"
+          source="conf.database.database_non_root_username"
           variant="outlined"
           size="medium"
           fullWidth
         />
         <TextInput
           label="Non Root Password"
-          source="conf.database_non_root_password"
+          source="conf.database.database_non_root_password"
           variant="outlined"
           size="medium"
           type="password"
@@ -195,7 +195,7 @@ const DBConf = () => {
         />
         <TextInput
           label="Prod DB Cluster Timeout"
-          source="conf.prod_db_cluster_timeout"
+          source="conf.database.prod_db_cluster_timeout"
           variant="outlined"
           size="medium"
           type="number"

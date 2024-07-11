@@ -41,8 +41,8 @@ export const prod_env: ToRecord<Environment> = {
       database_non_root_password: "string",
       prod_db_cluster_timeout: 300,
     },
-    with_sentry: false,
-    with_sonar: false,
+    with_sentry: true,
+    with_sonar: true,
     with_codeql: false,
     concurrency: {
       frontal_reserved_concurrent_executions_nb: "3",
