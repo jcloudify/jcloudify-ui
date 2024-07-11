@@ -23,7 +23,7 @@ export const prod_env: ToRecord<Environment> = {
     },
     java_facade_it: "FacadeIT",
     with_gen_clients: false,
-    with_database: "sqlite",
+    with_database: "aurora-postgres",
     jacoco_min_coverage: 0.8,
     with_publish_to_npm_registry: false,
     client: {

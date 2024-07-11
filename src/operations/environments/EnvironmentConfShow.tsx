@@ -119,6 +119,7 @@ const ConcurrencyConf = () => (
 );
 
 const DBConf = () => {
+  const record = useRecordContext<Environment>();
   return (
     <Stack>
       <Heading size="sm" title="DB" mb={2} />
@@ -145,42 +146,35 @@ const DBConf = () => {
         />
       </GridLayout>
 
-      <FunctionField<Environment>
-        render={(record) => {
-          return record.conf?.with_database === "aurora-postgres" ? (
-            <GridLayout
-              xs={12}
-              md={6}
-              lg={4}
-              spacing={2}
-              alignItems="center"
-              rowSpacing={0.5}
-              render={renderWithLabel}
-            >
-              <TextField
-                label="Aurora Min Capacity"
-                source="conf.aurora.aurora_min_capacity"
-              />
-              <TextField
-                label="Aurora Max Capacity"
-                source="conf.aurora.aurora_max_capacity"
-              />
-              <TextField
-                label="Aurora Scale Point"
-                source="conf.aurora.aurora_scale_point"
-              />
-              <TextField
-                label="Aurora Sleep"
-                source="conf.aurora.aurora_sleep"
-              />
-              <BooleanField
-                label="Aurora Auto Pause"
-                source="conf.aurora.aurora_auto_pause"
-              />
-            </GridLayout>
-          ) : null;
-        }}
-      />
+      {record.conf?.with_database === "aurora-postgres" && (
+        <GridLayout
+          xs={12}
+          md={6}
+          lg={4}
+          spacing={2}
+          alignItems="center"
+          rowSpacing={0.5}
+          render={renderWithLabel}
+        >
+          <TextField
+            label="Aurora Min Capacity"
+            source="conf.aurora.aurora_min_capacity"
+          />
+          <TextField
+            label="Aurora Max Capacity"
+            source="conf.aurora.aurora_max_capacity"
+          />
+          <TextField
+            label="Aurora Scale Point"
+            source="conf.aurora.aurora_scale_point"
+          />
+          <TextField label="Aurora Sleep" source="conf.aurora.aurora_sleep" />
+          <BooleanField
+            label="Aurora Auto Pause"
+            source="conf.aurora.aurora_auto_pause"
+          />
+        </GridLayout>
+      )}
     </Stack>
   );
 };
