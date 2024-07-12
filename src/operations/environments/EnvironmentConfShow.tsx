@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  ShowBase,
-  TextField,
-  BooleanField,
-  FunctionField,
-  useRecordContext,
-} from "react-admin";
+import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
 import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {Divider} from "@/components/divider";
