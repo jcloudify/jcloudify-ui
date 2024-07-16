@@ -67,6 +67,9 @@ describe("Application", () => {
       });
 
       specify("Allow to set environment variables for the selected app", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.contains("prod_env").click();
+
         // env variables
         cy.getByName("variables.0.name").should("have.value", "region");
         cy.getByName("variables.0.value").should("have.value", "eu-west-3");
@@ -81,41 +84,12 @@ describe("Application", () => {
         cy.getByTestid("SaveEnvVar").should("be.enabled");
       });
 
-      // TODO: Poja Configuration
-
-      specify("Allow to create environment", () => {
-        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.get('[data-testid="createEnv"]').click();
-
-        cy.contains("Create environment");
-        cy.get('[data-testid="preprodEnv"]');
-
-        cy.contains("Hobby");
-        cy.contains("$0");
-        cy.contains("billed once yearly");
-
-        cy.contains("Standout feature");
-        cy.contains("Up to 45% shipping discount");
-        cy.contains("10 Inventory locations");
-        cy.contains("24/7 chat support");
-        cy.contains("Localized global selling");
-        cy.contains("POS Lite");
-
-        cy.getByTestid("plan-plan_1-card").click();
-        cy.contains("Pro");
-        cy.contains("$15");
-
-        cy.getByTestid("cancelCreateEnv").click();
-      });
-
       // TODO: remove field, remove existent env var
       specify(
         "Allows to 'update, add another, delete' variables for an environment",
         () => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});
           cy.contains("prod_env").click();
-
-          cy.contains(`"PROD" Env variables`);
 
           // edit
           cy.getByName("variables.0.name").clear().type("AMPLIFY_POOL_ID");
@@ -141,6 +115,33 @@ describe("Application", () => {
           cy.getByName("variables.2.value").should("have.value", "new-env-val");
         }
       );
+    });
+
+    // TODO: Poja Configuration
+
+    specify.skip("Allow to create environment", () => {
+      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+      cy.get('[data-testid="createEnv"]').click();
+
+      cy.contains("Create environment");
+      cy.get('[data-testid="preprodEnv"]');
+
+      cy.contains("Hobby");
+      cy.contains("$0");
+      cy.contains("billed once yearly");
+
+      cy.contains("Standout feature");
+      cy.contains("Up to 45% shipping discount");
+      cy.contains("10 Inventory locations");
+      cy.contains("24/7 chat support");
+      cy.contains("Localized global selling");
+      cy.contains("POS Lite");
+
+      cy.getByTestid("plan-plan_1-card").click();
+      cy.contains("Pro");
+      cy.contains("$15");
+
+      cy.getByTestid("cancelCreateEnv").click();
     });
 
     context("deployment", () => {

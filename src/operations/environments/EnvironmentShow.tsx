@@ -63,7 +63,10 @@ const EnvironmentShowView: React.FC = () => {
         sx={{fontSize: "1.2rem"}}
       >
         {isEditConf ? (
-          <EnvironmentConfEdit envId={record.id!} onEdited={() => setIsEditConf(false)}  />
+          <EnvironmentConfEdit
+            envId={record.id!}
+            onEdited={() => setIsEditConf(false)}
+          />
         ) : (
           <EnvironmentConfShow envId={record.id!} />
         )}

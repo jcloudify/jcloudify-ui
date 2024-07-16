@@ -58,7 +58,9 @@ export const EnvironmentVariablesEdit: React.FC<
   );
 };
 
-const ListEnvEdit: React.FC<Pick<EnvironmentVariablesEditProps, "onChange"|"envId">> = ({envId, onChange}) => {
+const ListEnvEdit: React.FC<
+  Pick<EnvironmentVariablesEditProps, "onChange" | "envId">
+> = ({envId, onChange}) => {
   const deleteIds = useSet<string>();
   const {data: vars = []} = useListContext<Required<EnvironmentVariable>>({
     resource: "env_variables",
@@ -82,7 +84,7 @@ const ListEnvEdit: React.FC<Pick<EnvironmentVariablesEditProps, "onChange"|"envI
     });
     return () => {
       subs.unsubscribe();
-    }
+    };
   }, [form.watch, deleteIds]);
 
   const {fields, append, remove} = useFieldArray({
@@ -225,18 +227,19 @@ const mapVarIdWithId = (variable: Record<string, any>) => {
   };
 };
 
-const normalizeVars = (rawVars: Record<string, any>[], toDeleteIds: Set<string>): ToRecord<EnvironmentVariable>[] => {
-    return rawVars.map((aVar) => {
-      const v = mapVarIdWithId(aVar);
-      if (!v.id) {
-        v.id = nanoid();
-      } else {
-        if (toDeleteIds.has(v.id)) {
-          v.archived = true;
-        }
+const normalizeVars = (
+  rawVars: Record<string, any>[],
+  toDeleteIds: Set<string>
+): ToRecord<EnvironmentVariable>[] => {
+  return rawVars.map((aVar) => {
+    const v = mapVarIdWithId(aVar);
+    if (!v.id) {
+      v.id = nanoid();
+    } else {
+      if (toDeleteIds.has(v.id)) {
+        v.archived = true;
       }
-      return v;
-    });
-}
-
-
+    }
+    return v;
+  });
+};

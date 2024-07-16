@@ -20,7 +20,10 @@ export interface EnvironmentConfEditProps {
   onEdited: () => void;
 }
 
-export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({envId, onEdited}) => {
+export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({
+  envId,
+  onEdited,
+}) => {
   return (
     <EditBase
       resource="environments"
@@ -52,7 +55,7 @@ export const EnvironmentConfFormFields: React.FC = () => (
     <GenClientConf />
     <IntegrationConf />
   </Stack>
-)
+);
 
 const IntegrationConf = () => (
   <Stack>
