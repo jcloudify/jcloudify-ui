@@ -53,7 +53,7 @@ export const EnvironmentVariablesEdit: React.FC<
       }}
       {...rest}
     >
-      <ListEnvEdit key={env_id} onChange={onChange} />
+      <ListEnvEdit key={env_id} onChange={onChange} envId={env_id} />
     </ListBase>
   );
 };
