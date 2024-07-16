@@ -15,13 +15,21 @@ import {GridLayout} from "@/components/grid";
 import {TitleWithToggle} from "@/operations/components/head";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 
-const transformConf = (data: any) => {
-  console.log("data", data);
-};
+export interface EnvironmentConfEditProps {
+  envId: string;
+  onEdited: () => void;
+}
 
-export const EnvironmentConfEdit: React.FC<{envId: string}> = ({envId}) => {
+export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({envId, onEdited}) => {
   return (
-    <EditBase resource="environments" id={envId} transform={transformConf}>
+    <EditBase
+      resource="environments"
+      id={envId}
+      mutationOptions={{
+        onSuccess: onEdited,
+      }}
+      redirect={false}
+    >
       <Form>
         <EnvironmentConfFormFields />
         <Toolbar sx={{mt: 2}}>
@@ -44,7 +52,7 @@ export const EnvironmentConfFormFields: React.FC = () => (
     <GenClientConf />
     <IntegrationConf />
   </Stack>
-);
+)
 
 const IntegrationConf = () => (
   <Stack>

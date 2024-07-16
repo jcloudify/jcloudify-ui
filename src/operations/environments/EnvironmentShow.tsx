@@ -1,4 +1,5 @@
 import {Environment} from "@jcloudify-api/typescript-client";
+import {useState} from "react";
 import {
   ShowBase,
   TextField,
@@ -17,7 +18,6 @@ import {
   EnvironmentConfShow,
   EnvironmentConfEdit,
 } from "@/operations/environments";
-import {useState} from "react";
 
 const EnvironmentShowView: React.FC = () => {
   const [isEditConf, setIsEditConf] = useState(false);
@@ -63,7 +63,7 @@ const EnvironmentShowView: React.FC = () => {
         sx={{fontSize: "1.2rem"}}
       >
         {isEditConf ? (
-          <EnvironmentConfEdit envId={record.id!} />
+          <EnvironmentConfEdit envId={record.id!} onEdited={() => setIsEditConf(false)}  />
         ) : (
           <EnvironmentConfShow envId={record.id!} />
         )}

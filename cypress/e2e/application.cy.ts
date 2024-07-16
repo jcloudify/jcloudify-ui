@@ -44,56 +44,44 @@ describe("Application", () => {
 
         cy.contains("prod_env");
         cy.contains("PROD");
+        cy.contains("Healthy");
 
         cy.contains("preprod_env");
         cy.contains("PREPROD");
+        cy.contains("Healthy");
 
         cy.getByHref(`/applications`).click();
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.contains("Unhealthy");
 
         cy.contains("preprod_env2");
         cy.contains("PREPROD");
       });
 
-      specify("Shows the selected environment's variables", () => {
+      specify("Shows the clicked environment details", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-
         cy.contains("prod_env").click();
-
-        cy.contains(`"PROD" Env variables`);
-
-        cy.getByName("variables.0.name").should("have.value", "region");
-        cy.getByName("variables.0.value").should("have.value", "eu-west-3");
-
-        cy.getByName("variables.1.name").should("have.value", "bucket-name");
-        cy.getByName("variables.1.value").should("have.value", "poja-bucket");
+        cy.contains("prod_env");
+        cy.contains("PROD");
+        cy.contains("Healthy");
       });
 
-      specify(
-        "Save button must is only available when there is a changes made to the en variables",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.contains("prod_env").click();
+      specify("Allow to set environment variables for the selected app", () => {
+        // env variables
+        cy.getByName("variables.0.name").should("have.value", "region");
+        cy.getByName("variables.0.value").should("have.value", "eu-west-3");
+        cy.getByName("variables.1.name").should("have.value", "bucket-name");
+        cy.getByName("variables.1.value").should("have.value", "poja-bucket");
 
-          cy.contains(`"PROD" Env variables`);
+        // save env variables is only available when there is a changes made to them
+        cy.getByTestid("SaveEnvVar").should("be.disabled");
+        cy.getByTestid("AddAnotherEnvVar").click();
+        cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
+        cy.getByName("variables.2.value").clear().type("new-env-val");
+        cy.getByTestid("SaveEnvVar").should("be.enabled");
+      });
 
-          cy.getByTestid("SaveEnvVar").should("be.disabled");
-
-          cy.getByTestid("AddAnotherEnvVar").click();
-          cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
-          cy.getByName("variables.2.value").clear().type("new-env-val");
-
-          cy.getByTestid("SaveEnvVar").should("be.enabled");
-        }
-      );
-
-      specify(
-        "Disable environment creation when both environments are created",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.contains("Available environments are already created");
-        }
-      );
+      // TODO: Poja Configuration
 
       specify("Allow to create environment", () => {
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});

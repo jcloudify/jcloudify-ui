@@ -4,7 +4,7 @@ import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
 import {ContainerWithHeading} from "@/components/container";
 import {Heading} from "@/components/head";
-import {EnvironmentConfFormFields} from "@/operations/environments";
+import {EnvironmentConfFormFields, EnvironmentVariablesEdit} from "@/operations/environments";
 
 const transformConf = (data: any) => {
   console.log("create", data);
@@ -30,6 +30,18 @@ export const EnvironmentCreate: React.FC<{
             size="sm"
             p={1}
           />
+
+          <ContainerWithHeading
+            title="Variables"
+            sx={{fontSize: "1.2rem"}}
+          >
+            <EnvironmentVariablesEdit
+              onChange={() => {
+                /* track values then submit on env created */
+              }}
+            />
+          </ContainerWithHeading>
+
           <ContainerWithHeading
             title="Poja Configuration"
             sx={{fontSize: "1.2rem"}}
