@@ -31,7 +31,6 @@ export const EnvironmentCreate: React.FC<{
     {meta: {env_id: template?.id}}
   );
 
-  console.log("template", template);
   const subtitle = template
     ? `From ${template.environment_type} env`
     : "From scratch";
