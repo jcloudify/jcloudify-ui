@@ -31,13 +31,18 @@ export const EnvironmentCreate: React.FC<{
     {meta: {env_id: template?.id}}
   );
 
+  console.log("template", template);
+  const subtitle = template
+    ? `From ${template.environment_type} env`
+    : "From scratch";
+
   return (
     <CreateBase resource="environments" transform={transformConf}>
       <Form defaultValues={{...template, id: nanoid()}}>
         <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
           <Heading
             title="Create New Environment"
-            subtitle="JCloudify enables you to effortlessly bootstrap a new application, which will be pushed to a GitHub repository of your choice. You can also directly import an existing Git repository."
+            subtitle={subtitle}
             mb={4}
             size="sm"
             p={1}
