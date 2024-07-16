@@ -1,15 +1,6 @@
 import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
-import {useCallback, useEffect} from "react";
-import {
-  Button,
-  IconButtonWithTooltip,
-  Identifier,
-  ListBase,
-  ListProps,
-  RaRecord,
-  useListContext,
-  useUpdateMany,
-} from "react-admin";
+import {useEffect, useMemo} from "react";
+import {Button, IconButtonWithTooltip, useUpdateMany} from "react-admin";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -24,48 +15,36 @@ import {Add, Remove, Cancel, Save} from "@mui/icons-material";
 import {nanoid} from "nanoid";
 import {z} from "zod";
 import {getIds} from "@/operations/utils/record";
-import {useSet} from "@/hooks";
 import {GridLayout} from "@/components/grid";
 import {envVariableSchema} from "./schema";
 import {colors} from "@/themes";
 import {optional} from "@/utils/monad";
 import {ToRecord} from "@/providers";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
+import {useSet} from "@/hooks";
 
-export type EnvironmentVariablesEditProps<
-  Record extends RaRecord<Identifier> = any,
-> = Omit<ListProps<Record>, "resource" | "queryOptions" | "children"> & {
-  envId?: string;
+export type EnvironmentVariableEditProps = {
   onChange?: (variables: EnvironmentVariable[]) => void;
+  defaultVars?: EnvironmentVariable[];
+  saveEnvId?: string;
+  hasSave?: boolean;
 };
 
 // TODO: edit env
 export const EnvironmentVariablesEdit: React.FC<
-  EnvironmentVariablesEditProps
-> = ({envId: env_id, onChange, ...rest}) => {
-  return (
-    <ListBase
-      resource="env_variables"
-      queryOptions={{
-        meta: {
-          env_id,
-        },
-      }}
-      {...rest}
-    >
-      <ListEnvEdit key={env_id} onChange={onChange} envId={env_id} />
-    </ListBase>
-  );
-};
-
-const ListEnvEdit: React.FC<
-  Pick<EnvironmentVariablesEditProps, "onChange" | "envId">
-> = ({envId, onChange}) => {
-  const deleteIds = useSet<string>();
-  const {data: vars = []} = useListContext<Required<EnvironmentVariable>>({
-    resource: "env_variables",
-  });
+  EnvironmentVariableEditProps
+> = ({
+  onChange,
+  saveEnvId,
+  hasSave = false,
+  defaultVars: _defaultVars = [],
+}) => {
+  const toRemoveIds = useSet<string>();
   const [updateMany, {isLoading}] = useUpdateMany();
+
+  const defaultVars = useMemo(() => {
+    return _defaultVars.map((v) => mapVarIdWithNamedId({...v, id: nanoid()}));
+  }, [_defaultVars]);
 
   const form = useForm({
     resolver: zodResolver(
@@ -74,39 +53,28 @@ const ListEnvEdit: React.FC<
       })
     ),
     values: {
-      variables: vars.map(mapVarIdWithNamedId),
+      variables: defaultVars,
     },
   });
 
-  useEffect(() => {
-    const subs = form.watch((v) => {
-      optional(onChange).call(normalizeVars(v.variables as any[], deleteIds));
-    });
-    return () => {
-      subs.unsubscribe();
-    };
-  }, [form.watch, deleteIds]);
-
-  const {fields, append, remove} = useFieldArray({
+  const {append, remove} = useFieldArray({
     control: form.control,
     name: "variables",
   });
 
-  const rmFieldOrToggleDeletion = useCallback(
-    (id: string | undefined, idx: number) => {
-      if (id) {
-        // toggle deletion
-        deleteIds.has(id) ? deleteIds.delete(id) : deleteIds.add(id);
-      } else {
-        remove(idx);
-      }
-    },
-    [fields]
-  );
+  useEffect(() => {
+    const subs = form.watch((v) => {
+      optional(onChange).call(normalizeVars(v.variables as any[]));
+    });
+    return () => {
+      subs.unsubscribe();
+    };
+  }, [form.watch]);
 
   const variables = form.watch("variables");
+
   const save: InferSubmitHandlerFromUseForm<typeof form> = () => {
-    const vars = normalizeVars(variables, deleteIds);
+    const vars = normalizeVars(variables);
     updateMany("env_variables", {data: vars, ids: getIds(vars)});
   };
 
@@ -127,9 +95,8 @@ const ListEnvEdit: React.FC<
 
       <Divider sx={{mb: 2, borderColor: colors("gray-0")}} />
 
-      {fields.map((variable, idx) => {
-        const {var_id: id} = variable;
-        const isInDeleteState = deleteIds.has(id!);
+      {variables.map((variable, idx) => {
+        const {var_id: id, archived} = variable;
         const message = (form.formState.errors.variables || [])[idx];
         return (
           <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
@@ -156,12 +123,20 @@ const ListEnvEdit: React.FC<
             </>
             <Stack justifyContent="center" alignItems="center">
               <IconButtonWithTooltip
-                label={isInDeleteState ? "Cancel removal" : "Remove"}
+                label={archived ? "Cancel removal" : "Remove"}
                 onClick={() => {
-                  rmFieldOrToggleDeletion(id, idx);
+                  if (id) {
+                    form.setValue(`variables.${idx}`, {
+                      ...variable,
+                      archived: !archived,
+                    });
+                    archived ? toRemoveIds.delete(id) : toRemoveIds.add(id);
+                  } else {
+                    remove(idx);
+                  }
                 }}
               >
-                {isInDeleteState ? <Cancel /> : <Remove />}
+                {archived ? <Cancel /> : <Remove />}
               </IconButtonWithTooltip>
             </Stack>
           </GridLayout>
@@ -179,13 +154,13 @@ const ListEnvEdit: React.FC<
             append({
               name: "",
               value: "",
-              environment_id: envId!,
+              environment_id: saveEnvId,
               archived: false,
               var_id: "",
             });
           }}
         />
-        {envId && (
+        {hasSave && saveEnvId && (
           <Button
             data-testid="SaveEnvVar"
             startIcon={<Save />}
@@ -193,7 +168,9 @@ const ListEnvEdit: React.FC<
             size="large"
             variant="contained"
             label="Save"
-            disabled={isLoading || (!form.formState.isDirty && !deleteIds.size)}
+            disabled={
+              isLoading || (!form.formState.isDirty && !toRemoveIds.size)
+            }
           />
         )}
       </Stack>
@@ -228,18 +205,11 @@ const mapVarIdWithId = (variable: Record<string, any>) => {
 };
 
 const normalizeVars = (
-  rawVars: Record<string, any>[],
-  toDeleteIds: Set<string>
+  rawVars: Record<string, any>[]
 ): ToRecord<EnvironmentVariable>[] => {
   return rawVars.map((aVar) => {
     const v = mapVarIdWithId(aVar);
-    if (!v.id) {
-      v.id = nanoid();
-    } else {
-      if (toDeleteIds.has(v.id)) {
-        v.archived = true;
-      }
-    }
+    v.id ||= nanoid();
     return v;
   });
 };

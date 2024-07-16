@@ -1,4 +1,7 @@
-import {Environment} from "@jcloudify-api/typescript-client";
+import {
+  Environment,
+  EnvironmentVariable,
+} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
 import {
   ShowBase,
@@ -6,6 +9,7 @@ import {
   Labeled,
   useRecordContext,
   IconButtonWithTooltip,
+  useGetList,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
@@ -18,10 +22,17 @@ import {
   EnvironmentConfShow,
   EnvironmentConfEdit,
 } from "@/operations/environments";
+import {ToRecord} from "@/providers";
 
 const EnvironmentShowView: React.FC = () => {
   const [isEditConf, setIsEditConf] = useState(false);
   const record = useRecordContext<Environment>();
+
+  const {data: vars = []} = useGetList<ToRecord<EnvironmentVariable>>(
+    "env_variables",
+    {meta: {env_id: record?.id}}
+  );
+
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
       <ContainerWithHeading title="Environment" sx={{fontSize: "1.2rem"}}>
@@ -43,7 +54,11 @@ const EnvironmentShowView: React.FC = () => {
       </ContainerWithHeading>
 
       <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
-        <EnvironmentVariablesEdit envId={record.id!} />
+        <EnvironmentVariablesEdit
+          hasSave
+          saveEnvId={record.id!}
+          defaultVars={vars}
+        />
       </ContainerWithHeading>
 
       <ContainerWithHeading

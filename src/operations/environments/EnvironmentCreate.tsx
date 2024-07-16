@@ -1,5 +1,8 @@
-import {Environment} from "@jcloudify-api/typescript-client";
-import {CreateBase, Form, SaveButton, Toolbar} from "react-admin";
+import {
+  Environment,
+  EnvironmentVariable,
+} from "@jcloudify-api/typescript-client";
+import {CreateBase, Form, SaveButton, Toolbar, useGetList} from "react-admin";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
 import {ContainerWithHeading} from "@/components/container";
@@ -8,6 +11,7 @@ import {
   EnvironmentConfFormFields,
   EnvironmentVariablesEdit,
 } from "@/operations/environments";
+import {ToRecord} from "@/providers";
 
 const transformConf = (data: any) => {
   console.log("create", data);
@@ -22,6 +26,11 @@ export const EnvironmentCreate: React.FC<{
   appId: string;
   template: Environment | undefined;
 }> = ({template}) => {
+  const {data: templateVars = []} = useGetList<ToRecord<EnvironmentVariable>>(
+    "env_variables",
+    {meta: {env_id: template?.id}}
+  );
+
   return (
     <CreateBase resource="environments" transform={transformConf}>
       <Form defaultValues={{...template, id: nanoid()}}>
@@ -36,6 +45,7 @@ export const EnvironmentCreate: React.FC<{
 
           <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
             <EnvironmentVariablesEdit
+              defaultVars={templateVars}
               onChange={() => {
                 /* track values then submit on env created */
               }}
