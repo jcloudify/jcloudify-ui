@@ -18,7 +18,7 @@ export interface EnvironmentCreateProps {
 export const EnvironmentCreate: React.FC<{
   appId: string;
   template: Environment | undefined;
-}> = ({appId, template}) => {
+}> = ({template}) => {
   return (
     <CreateBase resource="environments" transform={transformConf}>
       <Form defaultValues={{...template, id: nanoid()}}>
