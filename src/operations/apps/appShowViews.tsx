@@ -1,4 +1,9 @@
-import {AppEnvironmentList, AppEnvironmentShow} from "./AppEnvironment";
+import {
+  AppEnvironmentCreate,
+  AppEnvironmentCreation,
+  AppEnvironmentList,
+  AppEnvironmentShow,
+} from "./AppEnvironment";
 import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
 import {AppMonitoring} from "./AppMonitoring";
@@ -8,6 +13,8 @@ export const appShowViews: RouteMap = {
   environments: {
     "$$index": <AppEnvironmentList />,
     ":envId": <AppEnvironmentShow />,
+    "creation-template": <AppEnvironmentCreation />,
+    "create": <AppEnvironmentCreate />,
   },
   deployments: {
     "$$index": <AppDeploymentList />,

@@ -4,6 +4,7 @@ export * from "./EnvironmentVariablesEdit.tsx";
 export * from "./EnvironmentConfEdit";
 export * from "./EnvironmentConfShow";
 export * from "./EnvironmentCreate.tsx";
+export * from "./EnvironmentCreation.tsx";
 export * from "./EnvironmentShow.tsx";
 export * from "./EnvironmentState.tsx";
 export * from "./schema";

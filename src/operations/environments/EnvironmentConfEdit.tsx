@@ -23,16 +23,7 @@ export const EnvironmentConfEdit: React.FC<{envId: string}> = ({envId}) => {
   return (
     <EditBase resource="environments" id={envId} transform={transformConf}>
       <Form>
-        <Stack gap={1.5}>
-          <MetadataConf />
-          <EmailConf />
-          <ComputeConf />
-          <ConcurrencyConf />
-          <DBConf />
-          <GenClientConf />
-          <IntegrationConf />
-        </Stack>
-
+        <EnvironmentConfFormFields />
         <Toolbar sx={{mt: 2}}>
           <Stack direction="row" spacing={2}>
             <SaveButton />
@@ -42,6 +33,18 @@ export const EnvironmentConfEdit: React.FC<{envId: string}> = ({envId}) => {
     </EditBase>
   );
 };
+
+export const EnvironmentConfFormFields: React.FC = () => (
+  <Stack gap={1.5}>
+    <MetadataConf />
+    <EmailConf />
+    <ComputeConf />
+    <ConcurrencyConf />
+    <DBConf />
+    <GenClientConf />
+    <IntegrationConf />
+  </Stack>
+);
 
 const IntegrationConf = () => (
   <Stack>
