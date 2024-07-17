@@ -37,7 +37,7 @@ export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({
         <EnvironmentConfFormFields />
         <Toolbar sx={{mt: 2}}>
           <Stack direction="row" spacing={2}>
-            <SaveButton />
+            <SaveButton label="Update" />
           </Stack>
         </Toolbar>
       </Form>

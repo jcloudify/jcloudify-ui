@@ -174,7 +174,7 @@ export const BatchEnvironmentVariableEdit: React.FC<
               isLoading || (!form.formState.isDirty && !toRemoveIds.size)
             }
           >
-            Save
+            {defaultVars.length ? "Update" : "Save"}
           </Button>
         )}
       </Stack>

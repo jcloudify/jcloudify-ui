@@ -65,7 +65,7 @@ export const EnvironmentCreate: React.FC<{
 
           <Toolbar sx={{mt: 2}}>
             <Stack direction="row" spacing={2}>
-              <SaveButton alwaysEnable />
+              <SaveButton label="Create" alwaysEnable />
             </Stack>
           </Toolbar>
         </Stack>
