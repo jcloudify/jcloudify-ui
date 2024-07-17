@@ -8,7 +8,7 @@ import {
   BooleanInput,
   Toolbar,
 } from "react-admin";
-import {useFormContext, useWatch} from "react-hook-form";
+import {useWatch} from "react-hook-form";
 import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
