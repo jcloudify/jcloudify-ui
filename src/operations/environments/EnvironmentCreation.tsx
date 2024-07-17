@@ -46,6 +46,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
                 label="Create"
                 variant="outlined"
                 size="medium"
+                data-testid="CreateFromScratch"
               />
             </Box>
           </Stack>
@@ -60,6 +61,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
             <Select
               size="small"
               variant="outlined"
+              id="select-creation-template"
               onChange={(ev) => setTemplateId(ev.target.value as string)}
             >
               {envs.map((env) => (
@@ -76,6 +78,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
                 label="Create"
                 variant="outlined"
                 size="medium"
+                data-testid="CreateFromExisting"
               />
             </Box>
           </Stack>

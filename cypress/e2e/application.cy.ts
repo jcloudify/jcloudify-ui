@@ -117,7 +117,24 @@ describe("Application", () => {
       );
     });
 
-    // TODO: Poja Configuration
+    context("Create environment", () => {
+      beforeEach(() => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+        cy.contains("Create").click();
+      });
+
+      specify("from scratch", () => {
+        cy.getByTestid("CreateFromScratch").click();
+        cy.contains("From scratch");
+      });
+
+      specify("from an existing one", () => {
+        cy.muiSelect("#select-creation-template", "prod_env");
+        cy.getByTestid("CreateFromExisting").click();
+        cy.contains("From PROD env");
+      });
+    });
 
     specify.skip("Allow to create environment", () => {
       cy.getByTestid(`show-${app2.id}-app`).click({force: true});
