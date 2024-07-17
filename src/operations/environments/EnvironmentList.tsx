@@ -1,18 +1,35 @@
+import {Environment} from "@jcloudify-api/typescript-client";
+import {Stack} from "@mui/material";
+import {Add} from "@mui/icons-material";
 import {
+  Button,
   Datagrid,
+  FunctionField,
   Identifier,
+  Link,
   List,
   ListProps,
   RaRecord,
-  RowClickFunction,
   TextField,
 } from "react-admin";
-import {useSearchParams} from "react-router-dom";
+import {EnvironmentState} from "@/operations/environments";
 
 export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   Omit<ListProps<Record>, "resource" | "children"> & {
     appId: string;
   };
+
+const ListActions = () => (
+  <Stack py={1}>
+    <Button
+      to="creation-template"
+      startIcon={<Add />}
+      component={Link}
+      variant="contained"
+      label="Create"
+    />
+  </Stack>
+);
 
 export const EnvironmentList: React.FC<EnvironmentListProps> = ({
   appId: application_id,
@@ -21,16 +38,10 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
 }) => {
   queryOptions.meta ||= {};
 
-  const [_, setSearch] = useSearchParams();
-
-  const queryEnv: RowClickFunction = (_id, _resource, env) => {
-    setSearch({env: env.id.toString()});
-    return false;
-  };
-
   return (
     <List
       resource="environments"
+      actions={<ListActions />}
       queryOptions={{
         ...queryOptions,
         meta: {
@@ -40,9 +51,13 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
       }}
       {...rest}
     >
-      <Datagrid rowClick={queryEnv}>
+      <Datagrid rowClick={(id) => id.toString()}>
         <TextField source="id" />
         <TextField label="Type" source="environment_type" />
+        <FunctionField<Environment>
+          label="State"
+          render={(env) => <EnvironmentState value={env.state!} />}
+        />
       </Datagrid>
     </List>
   );

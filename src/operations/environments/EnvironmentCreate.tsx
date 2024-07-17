@@ -1,95 +1,81 @@
-import {useState} from "react";
 import {
-  Box,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  Typography,
-} from "@mui/material";
-import {Add as AddIcon, Close as CloseIcon} from "@mui/icons-material";
-import {EnvironmentType, Plan} from "@jcloudify-api/typescript-client";
-import {SelectPlan} from "@/operations/plan";
+  Environment,
+  EnvironmentVariable,
+} from "@jcloudify-api/typescript-client";
+import {CreateBase, Form, SaveButton, Toolbar, useGetList} from "react-admin";
+import {Stack} from "@mui/material";
+import {nanoid} from "nanoid";
+import {ContainerWithHeading} from "@/components/container";
+import {Heading} from "@/components/head";
+import {
+  EnvironmentConfFormFields,
+  BatchEnvironmentVariableEdit,
+} from "@/operations/environments";
+import {ToRecord} from "@/providers";
+import {memo} from "react";
+
+const transformConf = (data: any) => {
+  console.log("create", data);
+};
 
 export interface EnvironmentCreateProps {
-  onCancel: () => void;
-  envTypeList: Array<EnvironmentType>;
+  appId: string;
+  template?: Environment;
 }
 
-export const EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
-  envTypeList,
-  onCancel,
-}) => {
-  const [_environmentPlan, setEnvironmentPlan] = useState<Plan>();
-  const [environmentType, setEnvironmentType] = useState(
-    envTypeList.includes(EnvironmentType.PROD)
-      ? EnvironmentType.PREPROD
-      : EnvironmentType.PROD
+const _EnvironmentCreate: React.FC<{
+  appId: string;
+  template: Environment | undefined;
+}> = ({template}) => {
+  const {data: templateVars = []} = useGetList<ToRecord<EnvironmentVariable>>(
+    "env_variables",
+    {meta: {env_id: template?.id}}
   );
+
+  const subtitle = template
+    ? `From ${template.environment_type} env`
+    : "From scratch";
 
   return (
-    <Box>
-      <Typography variant="h5" mb={1}>
-        Create environment
-      </Typography>
-      <Stack direction="column" spacing={2}>
-        <Box>
-          <FormControl>
-            <FormLabel id="env-type-radio-label">Type</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="env-type-radio-label"
-              name="env-type"
-              value={environmentType}
-              onChange={(e) =>
-                setEnvironmentType(e.target.value as EnvironmentType)
-              }
-            >
-              <FormControlLabel
-                value={EnvironmentType.PROD}
-                control={<Radio />}
-                label={EnvironmentType.PROD}
-                disabled={envTypeList.includes(EnvironmentType.PROD)}
-                data-testid="prodEnv"
-              />
-
-              <FormControlLabel
-                value={EnvironmentType.PREPROD}
-                control={<Radio />}
-                label={EnvironmentType.PREPROD}
-                disabled={envTypeList.includes(EnvironmentType.PREPROD)}
-                data-testid="preprodEnv"
-              />
-            </RadioGroup>
-          </FormControl>
-        </Box>
-        <Box>
-          <Typography variant="subtitle1" color="gray">
-            Plan
-          </Typography>
-          <SelectPlan
-            onSelect={(plan) => {
-              setEnvironmentPlan(plan);
-            }}
+    <CreateBase resource="environments" transform={transformConf}>
+      <Form
+        defaultValues={{...template, id: nanoid()}}
+        reValidateMode="onChange"
+      >
+        <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
+          <Heading
+            title="Create New Environment"
+            subtitle={subtitle}
+            mb={4}
+            size="sm"
+            p={1}
           />
-        </Box>
-        <Stack direction="row" spacing={1}>
-          <Button variant="contained" startIcon={<AddIcon />}>
-            Create Env
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<CloseIcon />}
-            onClick={onCancel}
-            data-testid="cancelCreateEnv"
+
+          <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
+            <BatchEnvironmentVariableEdit
+              defaultVars={templateVars}
+              onChange={() => {
+                /* track values then submit on env created */
+              }}
+            />
+          </ContainerWithHeading>
+
+          <ContainerWithHeading
+            title="Poja Configuration"
+            sx={{fontSize: "1.2rem"}}
           >
-            Cancel
-          </Button>
+            <EnvironmentConfFormFields />
+          </ContainerWithHeading>
+
+          <Toolbar sx={{mt: 2}}>
+            <Stack direction="row" spacing={2}>
+              <SaveButton label="Create" alwaysEnable />
+            </Stack>
+          </Toolbar>
         </Stack>
-      </Stack>
-    </Box>
+      </Form>
+    </CreateBase>
   );
 };
+
+export const EnvironmentCreate = memo(_EnvironmentCreate);

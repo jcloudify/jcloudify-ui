@@ -93,6 +93,9 @@ export const defaultTheme: RaThemeOptions = {
       },
     },
     MuiOutlinedInput: {
+      defaultProps: {
+        spellCheck: false,
+      },
       styleOverrides: {
         root: {
           "&:focus-within": {

@@ -44,80 +44,44 @@ describe("Application", () => {
 
         cy.contains("prod_env");
         cy.contains("PROD");
+        cy.contains("Healthy");
 
         cy.contains("preprod_env");
         cy.contains("PREPROD");
+        cy.contains("Healthy");
 
         cy.getByHref(`/applications`).click();
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.contains("Unhealthy");
 
         cy.contains("preprod_env2");
         cy.contains("PREPROD");
       });
 
-      specify("Shows the selected environment's variables", () => {
+      specify("Shows the clicked environment details", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-
         cy.contains("prod_env").click();
-
-        cy.contains(`"PROD" Env variables`);
-
-        cy.getByName("variables.0.name").should("have.value", "region");
-        cy.getByName("variables.0.value").should("have.value", "eu-west-3");
-
-        cy.getByName("variables.1.name").should("have.value", "bucket-name");
-        cy.getByName("variables.1.value").should("have.value", "poja-bucket");
+        cy.contains("prod_env");
+        cy.contains("PROD");
+        cy.contains("Healthy");
       });
 
-      specify(
-        "Save button must is only available when there is a changes made to the en variables",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.contains("prod_env").click();
+      specify("Allow to set environment variables for the selected app", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.contains("prod_env").click();
 
-          cy.contains(`"PROD" Env variables`);
+        // env variables
+        cy.getByName("variables.0.name").should("have.value", "region");
+        cy.getByName("variables.0.value").should("have.value", "eu-west-3");
+        cy.getByName("variables.1.name").should("have.value", "bucket-name");
+        cy.getByName("variables.1.value").should("have.value", "poja-bucket");
 
-          cy.getByTestid("SaveEnvVar").should("be.disabled");
-
-          cy.getByTestid("AddAnotherEnvVar").click();
-          cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
-          cy.getByName("variables.2.value").clear().type("new-env-val");
-
-          cy.getByTestid("SaveEnvVar").should("be.enabled");
-        }
-      );
-
-      specify(
-        "Disable environment creation when both environments are created",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.contains("Available environments are already created");
-        }
-      );
-
-      specify("Allow to create environment", () => {
-        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.get('[data-testid="createEnv"]').click();
-
-        cy.contains("Create environment");
-        cy.get('[data-testid="preprodEnv"]');
-
-        cy.contains("Hobby");
-        cy.contains("$0");
-        cy.contains("billed once yearly");
-
-        cy.contains("Standout feature");
-        cy.contains("Up to 45% shipping discount");
-        cy.contains("10 Inventory locations");
-        cy.contains("24/7 chat support");
-        cy.contains("Localized global selling");
-        cy.contains("POS Lite");
-
-        cy.getByTestid("plan-plan_1-card").click();
-        cy.contains("Pro");
-        cy.contains("$15");
-
-        cy.getByTestid("cancelCreateEnv").click();
+        // save env variables is only available when there is a changes made to them
+        cy.getByTestid("SaveEnvVar").should("be.disabled");
+        cy.getByTestid("AddAnotherEnvVar").click();
+        cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
+        cy.getByName("variables.2.value").clear().type("new-env-val");
+        cy.getByTestid("SaveEnvVar").should("be.enabled");
       });
 
       // TODO: remove field, remove existent env var
@@ -126,8 +90,6 @@ describe("Application", () => {
         () => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});
           cy.contains("prod_env").click();
-
-          cy.contains(`"PROD" Env variables`);
 
           // edit
           cy.getByName("variables.0.name").clear().type("AMPLIFY_POOL_ID");
@@ -153,6 +115,50 @@ describe("Application", () => {
           cy.getByName("variables.2.value").should("have.value", "new-env-val");
         }
       );
+    });
+
+    context("Create environment", () => {
+      beforeEach(() => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+        cy.contains("Create").click();
+      });
+
+      specify("from scratch", () => {
+        cy.getByTestid("CreateFromScratch").click();
+        cy.contains("From scratch");
+      });
+
+      specify("from an existing one", () => {
+        cy.muiSelect("#select-creation-template", "prod_env");
+        cy.getByTestid("CreateFromExisting").click();
+        cy.contains("From PROD env");
+      });
+    });
+
+    specify.skip("Allow to create environment", () => {
+      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+      cy.get('[data-testid="createEnv"]').click();
+
+      cy.contains("Create environment");
+      cy.get('[data-testid="preprodEnv"]');
+
+      cy.contains("Hobby");
+      cy.contains("$0");
+      cy.contains("billed once yearly");
+
+      cy.contains("Standout feature");
+      cy.contains("Up to 45% shipping discount");
+      cy.contains("10 Inventory locations");
+      cy.contains("24/7 chat support");
+      cy.contains("Localized global selling");
+      cy.contains("POS Lite");
+
+      cy.getByTestid("plan-plan_1-card").click();
+      cy.contains("Pro");
+      cy.contains("$15");
+
+      cy.getByTestid("cancelCreateEnv").click();
     });
 
     context("deployment", () => {

@@ -11,7 +11,7 @@ import {
 import {colors} from "@/themes";
 
 export interface ContainerProps {
-  title: string;
+  title: React.ReactNode;
   subheader?: string;
   headerColor?: string;
   sx?: SxProps;
@@ -28,9 +28,13 @@ export const ContainerWithHeading: React.FC<
           bgcolor: headerColor,
         }}
         title={
-          <Typography variant="h6" fontWeight="575">
-            {title}
-          </Typography>
+          typeof title === "string" ? (
+            <Typography variant="h6" fontWeight="575">
+              {title}
+            </Typography>
+          ) : (
+            title
+          )
         }
       />
 
