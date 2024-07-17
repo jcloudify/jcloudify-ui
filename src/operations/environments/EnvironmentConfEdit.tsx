@@ -178,8 +178,8 @@ const ConcurrencyConf = () => (
 );
 
 const DBConf = () => {
-  const {getValues} = useFormContext();
-  const db = getValues("conf.with_database");
+  const {watch} = useFormContext();
+  const db = watch("conf.with_database");
   return (
     <Stack>
       <Heading size="sm" title="DB" mb={2} />
@@ -279,8 +279,8 @@ const EmailConf = () => (
 );
 
 const GenClientConf = () => {
-  const {getValues} = useFormContext();
-  const withGenClients = getValues("conf.with_gen_clients");
+  const {watch} = useFormContext();
+  const withGenClients = watch("conf.with_gen_clients");
   return (
     <Stack>
       <Heading
