@@ -21,8 +21,9 @@ import {envVariableSchema} from "./schema";
 import {colors} from "@/themes";
 import {optional} from "@/utils/monad";
 import {ToRecord} from "@/providers";
-import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 import {useSet} from "@/hooks";
+import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
+import {fromHookformObj, toHookformObj} from "@/utils/react-hook-form";
 
 export type BatchEnvironmentVariableEditProps = {
   onChange?: (variables: EnvironmentVariable[]) => void;
@@ -44,7 +45,7 @@ export const BatchEnvironmentVariableEdit: React.FC<
   const [updateMany, {isLoading}] = useUpdateMany();
 
   const defaultVars = useMemo(() => {
-    return _defaultVars.map((v) => mapVarIdWithNamedId({...v, id: nanoid()}));
+    return _defaultVars.map((v) => toHookformObj({...v, id: nanoid()}));
   }, [_defaultVars]);
 
   const form = useForm({
@@ -97,7 +98,7 @@ export const BatchEnvironmentVariableEdit: React.FC<
       <Divider sx={{mb: 2, borderColor: colors("gray-0")}} />
 
       {variables.map((variable, idx) => {
-        const {var_id: id, archived} = variable;
+        const {__id: id, archived} = variable;
         const message = (form.formState.errors.variables || [])[idx];
         return (
           <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
@@ -154,9 +155,9 @@ export const BatchEnvironmentVariableEdit: React.FC<
             append({
               name: "",
               value: "",
-              environment_id: saveEnvId,
               archived: false,
-              var_id: "",
+              __id: "",
+              id: "",
             });
           }}
         >
@@ -181,37 +182,11 @@ export const BatchEnvironmentVariableEdit: React.FC<
   );
 };
 
-/**
- * react-hook-form uses the 'id' key internally (replaces it) so rename it
- */
-const mapVarIdWithNamedId = (variable: EnvironmentVariable) => {
-  return {
-    environment_id: (variable as any).environment_id,
-    var_id: variable.id,
-    name: variable.name,
-    value: variable.value,
-    archived: variable.archived,
-  };
-};
-
-/**
- * map to its real struct
- */
-const mapVarIdWithId = (variable: Record<string, any>) => {
-  return {
-    environment_id: variable.environment_id,
-    id: variable.var_id,
-    name: variable.name,
-    value: variable.value,
-    archived: variable.archived,
-  };
-};
-
 const normalizeVars = (
   rawVars: Record<string, any>[]
 ): ToRecord<EnvironmentVariable>[] => {
   return rawVars.map((aVar) => {
-    const v = mapVarIdWithId(aVar);
+    const v = fromHookformObj<ToRecord<EnvironmentVariable>>(aVar);
     v.id ||= nanoid();
     return v;
   });
