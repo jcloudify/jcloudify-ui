@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import {
   EditBase,
   Form,
@@ -8,7 +8,7 @@ import {
   BooleanInput,
   Toolbar,
 } from "react-admin";
-import {useFormContext} from "react-hook-form";
+import {useFormContext, useWatch} from "react-hook-form";
 import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
@@ -45,7 +45,7 @@ export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({
   );
 };
 
-export const EnvironmentConfFormFields: React.FC = () => (
+export const EnvironmentConfFormFields: React.FC = memo(() => (
   <Stack gap={1.5}>
     <MetadataConf />
     <EmailConf />
@@ -55,7 +55,7 @@ export const EnvironmentConfFormFields: React.FC = () => (
     <GenClientConf />
     <IntegrationConf />
   </Stack>
-);
+));
 
 const IntegrationConf = () => (
   <Stack>
@@ -178,8 +178,7 @@ const ConcurrencyConf = () => (
 );
 
 const DBConf = () => {
-  const {watch} = useFormContext();
-  const db = watch("conf.with_database");
+  const withDatabase = useWatch({name: "conf.with_database"});
   return (
     <Stack>
       <Heading size="sm" title="DB" mb={2} />
@@ -217,7 +216,7 @@ const DBConf = () => {
         />
       </GridLayout>
 
-      {db === "aurora-postgres" && (
+      {withDatabase === "aurora-postgres" && (
         <GridLayout
           xs={12}
           md={6}
@@ -286,8 +285,7 @@ const EmailConf = () => (
 );
 
 const GenClientConf = () => {
-  const {watch} = useFormContext();
-  const withGenClients = watch("conf.with_gen_clients");
+  const withGenClients = useWatch({name: "conf.with_gen_clients"});
   return (
     <Stack>
       <Heading

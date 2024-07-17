@@ -12,6 +12,7 @@ import {
   BatchEnvironmentVariableEdit,
 } from "@/operations/environments";
 import {ToRecord} from "@/providers";
+import {memo} from "react";
 
 const transformConf = (data: any) => {
   console.log("create", data);
@@ -22,7 +23,7 @@ export interface EnvironmentCreateProps {
   template?: Environment;
 }
 
-export const EnvironmentCreate: React.FC<{
+const _EnvironmentCreate: React.FC<{
   appId: string;
   template: Environment | undefined;
 }> = ({template}) => {
@@ -37,7 +38,10 @@ export const EnvironmentCreate: React.FC<{
 
   return (
     <CreateBase resource="environments" transform={transformConf}>
-      <Form defaultValues={{...template, id: nanoid()}}>
+      <Form
+        defaultValues={{...template, id: nanoid()}}
+        reValidateMode="onChange"
+      >
         <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
           <Heading
             title="Create New Environment"
@@ -73,3 +77,5 @@ export const EnvironmentCreate: React.FC<{
     </CreateBase>
   );
 };
+
+export const EnvironmentCreate = memo(_EnvironmentCreate);
