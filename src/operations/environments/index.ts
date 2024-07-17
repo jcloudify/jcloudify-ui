@@ -1,6 +1,6 @@
 export * from "./SetEnvironment";
 export * from "./EnvironmentList";
-export * from "./EnvironmentVariablesEdit.tsx";
+export * from "./BatchEnvironmentVariableEdit";
 export * from "./EnvironmentConfEdit";
 export * from "./EnvironmentConfShow";
 export * from "./EnvironmentCreate.tsx";

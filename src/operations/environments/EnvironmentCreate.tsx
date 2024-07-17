@@ -9,7 +9,7 @@ import {ContainerWithHeading} from "@/components/container";
 import {Heading} from "@/components/head";
 import {
   EnvironmentConfFormFields,
-  EnvironmentVariablesEdit,
+  BatchEnvironmentVariableEdit,
 } from "@/operations/environments";
 import {ToRecord} from "@/providers";
 
@@ -48,7 +48,7 @@ export const EnvironmentCreate: React.FC<{
           />
 
           <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
-            <EnvironmentVariablesEdit
+            <BatchEnvironmentVariableEdit
               defaultVars={templateVars}
               onChange={() => {
                 /* track values then submit on env created */

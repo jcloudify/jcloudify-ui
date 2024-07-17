@@ -18,7 +18,7 @@ import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
 import {
   EnvironmentState,
-  EnvironmentVariablesEdit,
+  BatchEnvironmentVariableEdit,
   EnvironmentConfShow,
   EnvironmentConfEdit,
 } from "@/operations/environments";
@@ -54,7 +54,7 @@ const EnvironmentShowView: React.FC = () => {
       </ContainerWithHeading>
 
       <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
-        <EnvironmentVariablesEdit
+        <BatchEnvironmentVariableEdit
           hasSave
           saveEnvId={record.id!}
           defaultVars={vars}

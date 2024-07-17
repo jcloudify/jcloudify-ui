@@ -24,7 +24,7 @@ import {ToRecord} from "@/providers";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 import {useSet} from "@/hooks";
 
-export type EnvironmentVariableEditProps = {
+export type BatchEnvironmentVariableEditProps = {
   onChange?: (variables: EnvironmentVariable[]) => void;
   defaultVars?: EnvironmentVariable[];
   saveEnvId?: string;
@@ -32,8 +32,8 @@ export type EnvironmentVariableEditProps = {
 };
 
 // TODO: edit env
-export const EnvironmentVariablesEdit: React.FC<
-  EnvironmentVariableEditProps
+export const BatchEnvironmentVariableEdit: React.FC<
+  BatchEnvironmentVariableEditProps
 > = ({
   onChange,
   saveEnvId,
