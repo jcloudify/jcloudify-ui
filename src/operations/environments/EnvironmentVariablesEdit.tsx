@@ -1,6 +1,6 @@
 import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
 import {useEffect, useMemo} from "react";
-import {Button, IconButtonWithTooltip, useUpdateMany} from "react-admin";
+import {IconButtonWithTooltip, useUpdateMany} from "react-admin";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -10,6 +10,7 @@ import {
   FormHelperText,
   OutlinedInput,
   Divider,
+  Button,
 } from "@mui/material";
 import {Add, Remove, Cancel, Save} from "@mui/icons-material";
 import {nanoid} from "nanoid";
@@ -149,7 +150,6 @@ export const EnvironmentVariablesEdit: React.FC<
           startIcon={<Add />}
           size="large"
           variant="outlined"
-          label="Add Another"
           onClick={() => {
             append({
               name: "",
@@ -159,7 +159,9 @@ export const EnvironmentVariablesEdit: React.FC<
               var_id: "",
             });
           }}
-        />
+        >
+          Add Another
+        </Button>
         {hasSave && saveEnvId && (
           <Button
             data-testid="SaveEnvVar"
@@ -167,11 +169,12 @@ export const EnvironmentVariablesEdit: React.FC<
             type="submit"
             size="large"
             variant="contained"
-            label="Save"
             disabled={
               isLoading || (!form.formState.isDirty && !toRemoveIds.size)
             }
-          />
+          >
+            Save
+          </Button>
         )}
       </Stack>
     </Stack>
