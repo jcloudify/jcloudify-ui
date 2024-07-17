@@ -218,7 +218,14 @@ const DBConf = () => {
       </GridLayout>
 
       {db === "aurora-postgres" && (
-        <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
+        <GridLayout
+          xs={12}
+          md={6}
+          lg={4}
+          spacing={2}
+          rowSpacing={0.5}
+          alignItems="center"
+        >
           <TextInput
             label="Aurora Min Capacity"
             source="conf.aurora.aurora_min_capacity"
