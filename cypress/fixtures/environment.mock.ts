@@ -22,7 +22,7 @@ export const prod_env: ToRecord<Environment> = {
       custom_java_env_vars: "string" as any,
     },
     java_facade_it: "FacadeIT",
-    with_gen_clients: false,
+    with_gen_clients: true,
     with_database: "aurora-postgres",
     jacoco_min_coverage: 0.8,
     with_publish_to_npm_registry: false,
