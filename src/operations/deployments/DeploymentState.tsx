@@ -23,12 +23,14 @@ export const DeploymentState: React.FC<DeploymentStateProps> = ({value}) => {
     <Chip
       size="small"
       label={
-        <Typography variant="body2">{DEPLOYMENT_STATE_TEXT[value]}</Typography>
+        <Typography variant="body2">
+          {DEPLOYMENT_STATE_TEXT[value] || value}
+        </Typography>
       }
       variant="filled"
       sx={{
         width: "fit-content",
-        bgcolor: INDICATOR_COLORS[value],
+        bgcolor: INDICATOR_COLORS[value] || "gray",
         color: "#fff",
       }}
     />

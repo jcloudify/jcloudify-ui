@@ -17,6 +17,7 @@ import {Environment, LogLogTypeEnum} from "@jcloudify-api/typescript-client";
 import {Pagination} from "@/operations/components/list";
 import {GridLayout} from "@/components/grid";
 import {Dict} from "@/providers";
+import {EnvironmentType} from "../environments";
 
 const ListToolbar = styled(RAListToolbar)({
   "display": "block",
@@ -59,12 +60,14 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
     <Stack direction="column" alignItems="flex-end" spacing={2} width="100%">
       <SelectInput
         alwaysOn
-        label="Environmnet"
+        label="Environments"
         validate={required()}
         source="environment_id"
-        optionValue="id"
-        optionText="environment_type"
         choices={envs}
+        optionText={(option) => (
+          <EnvironmentType value={option.environment_type!} />
+        )}
+        optionValue="id"
         variant="outlined"
       />
       <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>

@@ -26,6 +26,7 @@ import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
 import {DeploymentState} from "@/operations/deployments";
 import {Pagination} from "@/operations/components/list";
+import {EnvironmentType} from "@/operations/environments";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {TODO_Deployment} from "@/services/poja-api";
 import {Dict} from "@/providers";
@@ -48,7 +49,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
         <Stack spacing={0.5}>
           <Typography fontWeight="520">{depl.id}</Typography>
 
-          <Typography fontWeight="400">{depl.target_env_type}</Typography>
+          <EnvironmentType value={depl.target_env_type} />
         </Stack>
       </Grid>
 
@@ -140,18 +141,28 @@ const DeploymentListFilter: React.FC<{
         source="env_type"
         validate={required()}
         choices={[{id: "_", environment_type: "All Environments"}, ...envs]}
-        optionText="environment_type"
+        optionText={(deployment) => (
+          <EnvironmentType value={deployment.environment_type!} />
+        )}
         optionValue="environment_type"
         variant="outlined"
         fullWidth
       />
 
       <SelectInput
-        label="Status"
-        source="status"
-        choices={makeSelectChoices(["Ready", "In Progress", "Failed"])}
-        variant="outlined"
+        label="State"
+        source="state"
+        choices={makeSelectChoices(
+          ["Any", "READY", "IN_PROGRESS", "FAILED"],
+          "state"
+        )}
+        optionText={(deployment) => (
+          <DeploymentState value={deployment.state!} />
+        )}
+        validate={required()}
+        optionValue="state"
         alwaysOn
+        variant="outlined"
         fullWidth
       />
 
@@ -184,7 +195,7 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
     <ListBase
       resource="deployments"
       queryOptions={{meta: {application_id: appId}}}
-      filterDefaultValues={{env_type: "All Environments"}}
+      filterDefaultValues={{env_type: "All Environments", state: "Any"}}
     >
       <Box mt={1}>
         <ListToolbar

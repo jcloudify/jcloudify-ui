@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {Stack, Box, Paper, Select, MenuItem} from "@mui/material";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
+import {EnvironmentType} from "@/operations/environments";
 import {ToRecord} from "@/providers";
 
 export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
@@ -66,7 +67,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
             >
               {envs.map((env) => (
                 <MenuItem key={env.id} value={env.id}>
-                  {env.id}
+                  <EnvironmentType value={env.environment_type!} />
                 </MenuItem>
               ))}
             </Select>

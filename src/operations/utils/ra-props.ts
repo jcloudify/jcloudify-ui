@@ -1,5 +1,8 @@
-export const makeSelectChoices = (strings: string[]) =>
+export const makeSelectChoices = (
+  strings: string[],
+  valueKey: string = "name"
+) =>
   strings.map((str) => ({
     id: str,
-    name: str,
+    [valueKey]: str,
   }));
