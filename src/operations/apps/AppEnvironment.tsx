@@ -67,9 +67,7 @@ export const AppEnvironmentDiff: React.FC = () => {
   if (!appId) return null;
   return (
     <WithTab tab="Environments">
-      <Box mt={1.5}>
-        <EnvironmentDiff appId={appId} />
-      </Box>
+      <EnvironmentDiff appId={appId} />
     </WithTab>
   );
 };
