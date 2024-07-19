@@ -1,6 +1,6 @@
 import {Environment} from "@jcloudify-api/typescript-client";
 import {Stack} from "@mui/material";
-import {Add} from "@mui/icons-material";
+import {Add, CompareArrows} from "@mui/icons-material";
 import {
   Button,
   Datagrid,
@@ -20,7 +20,15 @@ export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   };
 
 const ListActions = () => (
-  <Stack py={1}>
+  <Stack py={1} direction="row" alignItems="center" spacing={2}>
+    <Button
+      to="diff"
+      startIcon={<CompareArrows />}
+      component={Link}
+      variant="outlined"
+      label="Diff"
+    />
+
     <Button
       to="creation-template"
       startIcon={<Add />}

@@ -7,4 +7,5 @@ export * from "./EnvironmentCreate.tsx";
 export * from "./EnvironmentCreation.tsx";
 export * from "./EnvironmentShow.tsx";
 export * from "./EnvironmentState.tsx";
+export * from "./EnvironmentDiff.tsx";
 export * from "./schema";
