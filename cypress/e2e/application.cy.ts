@@ -117,6 +117,20 @@ describe("Application", () => {
       );
     });
 
+    specify.only("Compare Environment Differences", () => {
+      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+      cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+      cy.contains("Diff").click();
+
+      cy.contains("Environment Diff");
+      cy.contains("Compare Environment Differences");
+
+      cy.muiSelect("#select-env-0", "prod_env");
+      cy.muiSelect("#select-env-1", "preprod_env");
+
+      // TODO: a way to test this in a better way
+    });
+
     context("Create environment", () => {
       beforeEach(() => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});

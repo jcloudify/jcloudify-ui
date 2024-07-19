@@ -5,6 +5,7 @@ import {
   EnvironmentCreation,
   EnvironmentList,
   EnvironmentShow,
+  EnvironmentDiff,
 } from "@/operations/environments";
 import {WithTab} from "@/components/tab";
 
@@ -57,6 +58,16 @@ export const AppEnvironmentCreate: React.FC = () => {
   return (
     <WithTab tab="Environments">
       <EnvironmentCreate appId={appId} template={template} />
+    </WithTab>
+  );
+};
+
+export const AppEnvironmentDiff: React.FC = () => {
+  const {appId} = useParams();
+  if (!appId) return null;
+  return (
+    <WithTab tab="Environments">
+      <EnvironmentDiff appId={appId} />
     </WithTab>
   );
 };
