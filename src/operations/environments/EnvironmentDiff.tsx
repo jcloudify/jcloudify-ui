@@ -40,12 +40,14 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
         <DiffViewer
           leftTitle={
             <SelectEnvironmentToCompare
+              id="0"
               environments={environments}
               onSelect={(id) => setDiffEnvironment(id, 0)}
             />
           }
           rightTitle={
             <SelectEnvironmentToCompare
+              id="1"
               environments={environments}
               onSelect={(id) => setDiffEnvironment(id, 1)}
             />
@@ -60,10 +62,15 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
 };
 
 const SelectEnvironmentToCompare: React.FC<{
+  id: string;
   environments: Environment[];
   onSelect: (id: string) => void;
-}> = ({environments, onSelect}) => (
-  <Select<string> onChange={(ev) => onSelect(ev.target.value)} size="small">
+}> = ({environments, onSelect, id}) => (
+  <Select<string>
+    onChange={(ev) => onSelect(ev.target.value)}
+    size="small"
+    id={`select-env-${id}`}
+  >
     {environments.map((environment) => (
       <MenuItem key={environment.id} value={environment.id}>
         {environment.environment_type}
