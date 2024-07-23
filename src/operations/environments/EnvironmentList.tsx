@@ -1,5 +1,5 @@
 import {Environment} from "@jcloudify-api/typescript-client";
-import {Stack, Box, Typography} from "@mui/material";
+import {Stack} from "@mui/material";
 import {Add, CompareArrows} from "@mui/icons-material";
 import {
   Button,
