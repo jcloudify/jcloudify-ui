@@ -2,18 +2,29 @@ import {
   Environment,
   EnvironmentVariable,
 } from "@jcloudify-api/typescript-client";
-import {CreateBase, Form, SaveButton, Toolbar, useGetList} from "react-admin";
+import {
+  CreateBase,
+  Form,
+  SaveButton,
+  Toolbar,
+  SelectInput,
+  useGetList,
+  required,
+} from "react-admin";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
 import {ContainerWithHeading} from "@/components/container";
 import {Heading} from "@/components/head";
+import {GridLayout} from "@/components/grid";
 import {
   EnvironmentConfFormFields,
   BatchEnvironmentVariableEdit,
   EnvironmentType,
+  useEnvironmentCreation,
 } from "@/operations/environments";
 import {ToRecord} from "@/providers";
 import {memo} from "react";
+import {makeSelectChoices} from "@/operations/utils/ra-props";
 
 const transformConf = (data: any) => {
   console.log("create", data);
@@ -27,7 +38,8 @@ export interface EnvironmentCreateProps {
 const _EnvironmentCreate: React.FC<{
   appId: string;
   template: Environment | undefined;
-}> = ({template}) => {
+}> = ({template, appId}) => {
+  const {creatable} = useEnvironmentCreation(appId);
   const {data: templateVars = []} = useGetList<ToRecord<EnvironmentVariable>>(
     "env_variables",
     {meta: {env_id: template?.id}}
@@ -55,6 +67,22 @@ const _EnvironmentCreate: React.FC<{
             size="sm"
             p={1}
           />
+
+          <ContainerWithHeading title="General" sx={{fontSize: "1.2rem"}}>
+            <GridLayout xs={12} md={6} lg={4} spacing={2}>
+              <SelectInput
+                label="Type"
+                source="conf.environment_type"
+                validate={required()}
+                choices={makeSelectChoices(creatable)}
+                variant="outlined"
+                defaultValue={creatable[0]}
+                optionText={(env) => <EnvironmentType value={env.name} />}
+                size="medium"
+                fullWidth
+              />
+            </GridLayout>
+          </ContainerWithHeading>
 
           <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
             <BatchEnvironmentVariableEdit
