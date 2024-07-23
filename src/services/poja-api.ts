@@ -64,4 +64,6 @@ export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   return _.data;
 };
 
+// TODO: naming
 export const userRoles = getEnumValues(UserRoleEnum);
+export const ENVIRONMENT_TYPES = getEnumValues(EnvironmentType);

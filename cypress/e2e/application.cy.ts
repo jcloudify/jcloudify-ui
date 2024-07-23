@@ -43,11 +43,11 @@ describe("Application", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
 
         cy.contains("prod_env");
-        cy.contains("PROD");
+        cy.contains("Prod");
         cy.contains("Healthy");
 
         cy.contains("preprod_env");
-        cy.contains("PREPROD");
+        cy.contains("Preprod");
         cy.contains("Healthy");
 
         cy.getByHref(`/applications`).click();
@@ -55,14 +55,13 @@ describe("Application", () => {
         cy.contains("Unhealthy");
 
         cy.contains("preprod_env2");
-        cy.contains("PREPROD");
+        cy.contains("Preprod");
       });
 
       specify("Shows the clicked environment details", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.contains("prod_env").click();
-        cy.contains("prod_env");
-        cy.contains("PROD");
+        cy.contains("Prod");
         cy.contains("Healthy");
       });
 
@@ -117,7 +116,7 @@ describe("Application", () => {
       );
     });
 
-    specify.only("Compare Environment Differences", () => {
+    specify("Compare Environment Differences", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app1.id}/show/environments`).click();
       cy.contains("Diff").click();
@@ -132,21 +131,39 @@ describe("Application", () => {
     });
 
     context("Create environment", () => {
-      beforeEach(() => {
-        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
-        cy.contains("Create").click();
-      });
+      specify(
+        "Create button is disabled when there is no available environment to create",
+        () => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+          cy.contains("Create").should("have.attr", "aria-disabled", "true");
+        }
+      );
+
+      specify(
+        "Create button is enabled when there is available environment to create",
+        () => {
+          cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+          cy.contains("Create").should("not.have.attr", "aria-disabled");
+        }
+      );
 
       specify("from scratch", () => {
+        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+        cy.contains("Create").click();
         cy.getByTestid("CreateFromScratch").click();
         cy.contains("From scratch");
       });
 
-      specify("from an existing one", () => {
-        cy.muiSelect("#select-creation-template", "prod_env");
+      specify("from an existing one, create an available", () => {
+        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+        cy.contains("Create").click();
+        cy.muiSelect("#select-creation-template", "preprod_env2");
         cy.getByTestid("CreateFromExisting").click();
-        cy.contains("From PROD env");
+        cy.contains("From Preprod");
       });
     });
 
@@ -199,23 +216,23 @@ describe("Application", () => {
           cy.getByTestid(`depl-${depl2.id}`).should("exist");
         });
 
-        specify("Status", () => {
-          cy.muiSelect("#status", "Ready");
+        specify("State", () => {
+          cy.muiSelect("#state", "READY");
 
           cy.getByTestid(`depl-${depl1.id}`).should("exist");
           cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-          cy.muiSelect("#status", "In Progress");
+          cy.muiSelect("#state", "IN_PROGRESS");
 
           cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
           cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-          cy.muiSelect("#status", "Failed");
+          cy.muiSelect("#state", "FAILED");
 
           cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
           cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-          cy.muiClear("#status");
+          cy.muiSelect("#state", "Any");
 
           cy.getByTestid(`depl-${depl1.id}`).should("exist");
           cy.getByTestid(`depl-${depl2.id}`).should("exist");
@@ -315,7 +332,7 @@ describe("Application", () => {
 
         cy.contains(depl1.id);
         cy.contains("Ready");
-        cy.contains("PROD");
+        cy.contains("Prod");
         cy.contains("prod");
         cy.contains("fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef".slice(0, 7));
         cy.contains("poja: bootstrap");
@@ -336,7 +353,7 @@ describe("Application", () => {
 
           cy.contains(depl2.id);
           cy.contains("In Progress");
-          cy.contains("PREPROD");
+          cy.contains("Preprod");
           cy.contains("preprod");
           cy.contains("eccf28034eafdb9774e721d122cbdf2c2bbfaed2".slice(0, 7));
           cy.contains("style: reformat");
