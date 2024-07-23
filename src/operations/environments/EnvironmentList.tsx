@@ -78,10 +78,6 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
           label="Type"
           render={(env) => <EnvironmentType value={env.environment_type!} />}
         />
-        <FunctionField<Environment>
-          label="State"
-          render={(env) => <EnvironmentState value={env.state!} />}
-        />
       </Datagrid>
     </List>
   );

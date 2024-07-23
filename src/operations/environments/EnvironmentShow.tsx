@@ -17,7 +17,6 @@ import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
 import {
-  EnvironmentState,
   BatchEnvironmentVariableEdit,
   EnvironmentConfShow,
   EnvironmentConfEdit,
@@ -45,10 +44,6 @@ const EnvironmentShowView: React.FC = () => {
 
             <Labeled label="Type">
               <EnvironmentType value={record.environment_type!} />
-            </Labeled>
-
-            <Labeled label="State">
-              <EnvironmentState value={record.state!} />
             </Labeled>
           </GridLayout>
         </Stack>

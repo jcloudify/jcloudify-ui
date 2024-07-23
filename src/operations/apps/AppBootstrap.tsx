@@ -80,7 +80,7 @@ const CreateGitRepository: React.FC = () => {
           choices={makeSelectChoices(["Yume", "Not-Yume"])}
           source="scope"
           validate={required()}
-          label="Scope (org/scope)"
+          label="Scope (org/user)"
           size="medium"
           fullWidth
         />
