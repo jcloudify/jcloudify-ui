@@ -5,6 +5,7 @@ import {Box, Paper, Stack, Select, MenuItem} from "@mui/material";
 
 import {DiffViewer} from "@/components/diff";
 import {Heading} from "@/components/head";
+import {EnvironmentType} from "@/operations/environments";
 
 import {ToRecord} from "@/providers";
 import {highlightJSON} from "@/config/prism";
@@ -73,7 +74,7 @@ const SelectEnvironmentToCompare: React.FC<{
   >
     {environments.map((environment) => (
       <MenuItem key={environment.id} value={environment.id}>
-        {environment.environment_type}
+        <EnvironmentType value={environment.environment_type!} />
       </MenuItem>
     ))}
   </Select>

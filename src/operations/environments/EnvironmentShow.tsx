@@ -21,6 +21,7 @@ import {
   BatchEnvironmentVariableEdit,
   EnvironmentConfShow,
   EnvironmentConfEdit,
+  EnvironmentType,
 } from "@/operations/environments";
 import {ToRecord} from "@/providers";
 
@@ -42,11 +43,11 @@ const EnvironmentShowView: React.FC = () => {
               <TextField label="Environment ID" source="id" />
             </Labeled>
 
-            <Labeled>
-              <TextField label="Type" source="environment_type" />
+            <Labeled label="Type">
+              <EnvironmentType value={record.environment_type!} />
             </Labeled>
 
-            <Labeled label="state">
+            <Labeled label="State">
               <EnvironmentState value={record.state!} />
             </Labeled>
           </GridLayout>

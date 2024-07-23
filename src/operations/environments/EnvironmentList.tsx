@@ -12,7 +12,7 @@ import {
   RaRecord,
   TextField,
 } from "react-admin";
-import {EnvironmentState} from "@/operations/environments";
+import {EnvironmentState, EnvironmentType} from "@/operations/environments";
 
 export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   Omit<ListProps<Record>, "resource" | "children"> & {
@@ -61,7 +61,10 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
     >
       <Datagrid rowClick={(id) => id.toString()}>
         <TextField source="id" />
-        <TextField label="Type" source="environment_type" />
+        <FunctionField<Environment>
+          label="Type"
+          render={(env) => <EnvironmentType value={env.environment_type!} />}
+        />
         <FunctionField<Environment>
           label="State"
           render={(env) => <EnvironmentState value={env.state!} />}

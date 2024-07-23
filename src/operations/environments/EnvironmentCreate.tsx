@@ -10,6 +10,7 @@ import {Heading} from "@/components/head";
 import {
   EnvironmentConfFormFields,
   BatchEnvironmentVariableEdit,
+  EnvironmentType,
 } from "@/operations/environments";
 import {ToRecord} from "@/providers";
 import {memo} from "react";
@@ -32,9 +33,13 @@ const _EnvironmentCreate: React.FC<{
     {meta: {env_id: template?.id}}
   );
 
-  const subtitle = template
-    ? `From ${template.environment_type} env`
-    : "From scratch";
+  const subtitle = template ? (
+    <div>
+      From <EnvironmentType value={template.environment_type!} />
+    </div>
+  ) : (
+    "From scratch"
+  );
 
   return (
     <CreateBase resource="environments" transform={transformConf}>
