@@ -1,38 +1,38 @@
-import {useState} from "react";
 import {
   Form,
   SelectInput,
   BooleanInput,
   TextInput,
-  NumberInput,
   Toolbar,
   SaveButton,
   Button,
   Link,
+  required,
+  Title,
 } from "react-admin";
 import {Stack} from "@mui/material";
-import {Plan} from "@jcloudify-api/typescript-client";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
+import {GridLayout} from "@/components/grid";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {SelectPlan} from "@/operations/plan";
 
 export const AppBootstrap: React.FC = () => {
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
+      <Title title="App" />
+
       <Heading
-        width={{xs: "100%", md: "60%"}}
-        mb={4}
         title="Create New Application"
-        subtitle="JCloudify enables you to effortlessly bootstrap a new application, which will be pushed to a GitHub repository of your choice. You can also directly import an existing Git repository."
+        subtitle="JCloudify enables you to effortlessly bootstrap a new application, which will be pushed to a GitHub repository of your choice once your create an environment for it."
+        mb={4}
+        size="sm"
+        p={1}
       />
 
       <Form>
         <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
-          <ChoosePlan />
+          <AppInfo />
           <CreateGitRepository />
-          <ApplicationMetadata />
-          <Database />
         </Stack>
 
         <Toolbar sx={{mt: 2}}>
@@ -51,19 +51,22 @@ export const AppBootstrap: React.FC = () => {
   );
 };
 
-const ChoosePlan: React.FC = () => {
-  const [_selectedPlan, setSelectedPlan] = useState("");
-
-  const handleSelect = (plan: Plan) => {
-    setSelectedPlan(plan.name!);
-  };
-
-  return (
-    <ContainerWithHeading title="Choose Plan">
-      <SelectPlan onSelect={handleSelect} />
-    </ContainerWithHeading>
-  );
-};
+const AppInfo = () => (
+  <ContainerWithHeading
+    title="App Info"
+    subheader="The generated application code will be pushed to the specified repository."
+  >
+    <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
+      <TextInput
+        variant="outlined"
+        source="name"
+        placeholder="e.g: foo"
+        size="medium"
+        fullWidth
+      />
+    </GridLayout>
+  </ContainerWithHeading>
+);
 
 const CreateGitRepository: React.FC = () => {
   return (
@@ -71,65 +74,26 @@ const CreateGitRepository: React.FC = () => {
       title="Create Git Repository"
       subheader="The generated application code will be pushed to the specified repository."
     >
-      <SelectInput
-        variant="outlined"
-        choices={makeSelectChoices(["Yume", "Not-Yume"])}
-        source="scope"
-        fullWidth
-      />
+      <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
+        <SelectInput
+          variant="outlined"
+          choices={makeSelectChoices(["Yume", "Not-Yume"])}
+          source="scope"
+          validate={required()}
+          label="Scope (org/scope)"
+          size="medium"
+          fullWidth
+        />
+        <TextInput
+          variant="outlined"
+          source="repository_name"
+          placeholder="e.g: foo"
+          size="medium"
+          fullWidth
+        />
 
-      <TextInput
-        variant="outlined"
-        source="repository_name"
-        placeholder="e.g: foo"
-        fullWidth
-      />
-
-      <BooleanInput source="private" />
-    </ContainerWithHeading>
-  );
-};
-
-const ApplicationMetadata: React.FC = () => {
-  return (
-    <ContainerWithHeading title="Application Metadata">
-      <TextInput variant="outlined" source="app_name" />
-
-      <TextInput
-        variant="outlined"
-        source="package_full_name"
-        placeholder="e.g: com.example.poja"
-      />
-
-      <TextInput
-        variant="outlined"
-        source="java_facade_it"
-        label="Facade IT class name"
-        defaultValue="FacadeIT"
-      />
-
-      <NumberInput
-        variant="outlined"
-        source="jacoco_min_coverage"
-        label="Min test coverage"
-        defaultValue={80}
-      />
-
-      <BooleanInput source="with_gen_clients" />
-    </ContainerWithHeading>
-  );
-};
-
-const Database: React.FC = () => {
-  return (
-    <ContainerWithHeading title="Database">
-      <SelectInput
-        variant="outlined"
-        choices={makeSelectChoices(["sqlite", "postgres"])}
-        source="with_database"
-        label="database"
-        defaultValue="sqlite"
-      />
+        <BooleanInput source="private" />
+      </GridLayout>
     </ContainerWithHeading>
   );
 };
