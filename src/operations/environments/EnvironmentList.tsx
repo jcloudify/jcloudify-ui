@@ -12,32 +12,40 @@ import {
   RaRecord,
   TextField,
 } from "react-admin";
-import {EnvironmentState, EnvironmentType} from "@/operations/environments";
+import {
+  EnvironmentState,
+  EnvironmentType,
+  useEnvironmentCreation,
+} from "@/operations/environments";
 
 export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   Omit<ListProps<Record>, "resource" | "children"> & {
     appId: string;
   };
 
-const ListActions = () => (
-  <Stack py={1} direction="row" alignItems="center" spacing={2}>
-    <Button
-      to="diff"
-      startIcon={<CompareArrows />}
-      component={Link}
-      variant="outlined"
-      label="Diff"
-    />
+const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
+  const {canCreateMore} = useEnvironmentCreation(appId);
+  return (
+    <Stack py={1} direction="row" alignItems="center" spacing={2}>
+      <Button
+        to="diff"
+        startIcon={<CompareArrows />}
+        component={Link}
+        variant="outlined"
+        label="Diff"
+      />
 
-    <Button
-      to="creation-template"
-      startIcon={<Add />}
-      component={Link}
-      variant="contained"
-      label="Create"
-    />
-  </Stack>
-);
+      <Button
+        to="creation-template"
+        startIcon={<Add />}
+        component={Link}
+        variant="contained"
+        label="Create"
+        disabled={!canCreateMore}
+      />
+    </Stack>
+  );
+};
 
 export const EnvironmentList: React.FC<EnvironmentListProps> = ({
   appId: application_id,
@@ -49,7 +57,7 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
   return (
     <List
       resource="environments"
-      actions={<ListActions />}
+      actions={<ListActions appId={application_id} />}
       queryOptions={{
         ...queryOptions,
         meta: {

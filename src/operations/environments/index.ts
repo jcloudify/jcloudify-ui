@@ -10,3 +10,5 @@ export * from "./EnvironmentState.tsx";
 export * from "./EnvironmentType.tsx";
 export * from "./EnvironmentDiff.tsx";
 export * from "./schema";
+
+export * from "./useEnvironmentCreation";
