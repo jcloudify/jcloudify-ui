@@ -12,6 +12,7 @@ import {useWatch} from "react-hook-form";
 import {Stack} from "@mui/material";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
+import {Divider} from "@/components/divider";
 import {TitleWithToggle} from "@/operations/components/head";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 
@@ -47,15 +48,54 @@ export const EnvironmentConfEdit: React.FC<EnvironmentConfEditProps> = ({
 
 export const EnvironmentConfFormFields: React.FC = memo(() => (
   <Stack gap={1.5}>
-    <MetadataConf />
+    <GeneralConf />
+    <Divider />
+
     <EmailConf />
+    <Divider />
+
+    <TestingConf />
+    <Divider />
+
     <ComputeConf />
+    <Divider />
+
     <ConcurrencyConf />
+    <Divider />
+
     <DBConf />
+    <Divider />
+
     <GenClientConf />
+    <Divider />
+
     <IntegrationConf />
+    <Divider />
   </Stack>
 ));
+
+const TestingConf = () => (
+  <Stack>
+    <Heading size="sm" title="Testing" mb={2} />
+    <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
+      <TextInput
+        label="Java Facade IT"
+        source="conf.java_facade_it"
+        variant="outlined"
+        size="medium"
+        fullWidth
+      />
+      <TextInput
+        label="Jacoco Min Coverage"
+        source="conf.jacoco_min_coverage"
+        variant="outlined"
+        size="medium"
+        type="number"
+        fullWidth
+      />
+    </GridLayout>
+  </Stack>
+);
 
 const IntegrationConf = () => (
   <Stack>
@@ -93,10 +133,10 @@ const IntegrationConf = () => (
   </Stack>
 );
 
-const MetadataConf = () => (
+const GeneralConf = () => (
   <Stack>
-    <Heading size="sm" title="Metadata" mb={2} />
-    <GridLayout xs={12} md={6} lg={4} spacing={2}>
+    <Heading size="sm" title="General" mb={2} />
+    <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
       <TextInput
         label="Package name"
         source="conf.package_full_name"
@@ -104,19 +144,11 @@ const MetadataConf = () => (
         size="medium"
         fullWidth
       />
-      <TextInput
-        label="Java Facade IT"
-        source="conf.java_facade_it"
+      <BooleanInput
+        label="Snapstart"
+        source="conf.with_snapstart"
         variant="outlined"
         size="medium"
-        fullWidth
-      />
-      <TextInput
-        label="Jacoco Min Coverage"
-        source="conf.jacoco_min_coverage"
-        variant="outlined"
-        size="medium"
-        type="number"
         fullWidth
       />
     </GridLayout>

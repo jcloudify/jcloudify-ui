@@ -13,10 +13,13 @@ export const EnvironmentConfShow: React.FC<{envId: string}> = ({envId}) => {
     <ShowBase resource="environments" id={envId}>
       <ShowLayout>
         <Stack gap={1.5}>
-          <MetadataConf />
+          <GeneralConf />
           <Divider />
 
           <EmailConf />
+          <Divider />
+
+          <TestingConf />
           <Divider />
 
           <ComputeConf />
@@ -38,6 +41,26 @@ export const EnvironmentConfShow: React.FC<{envId: string}> = ({envId}) => {
   );
 };
 
+const TestingConf = () => (
+  <Stack>
+    <Heading size="sm" title="Testing" mb={2} />
+    <GridLayout
+      xs={12}
+      md={6}
+      lg={4}
+      spacing={2}
+      alignItems="center"
+      render={renderWithLabel}
+    >
+      <TextField label="Java Facade IT" source="conf.java_facade_it" />
+      <TextField
+        label="Jacoco Min Coverage"
+        source="conf.jacoco_min_coverage"
+      />
+    </GridLayout>
+  </Stack>
+);
+
 const IntegrationConf = () => (
   <Stack>
     <Heading size="sm" title="Integration" mb={2} />
@@ -57,16 +80,12 @@ const IntegrationConf = () => (
   </Stack>
 );
 
-const MetadataConf = () => (
+const GeneralConf = () => (
   <Stack>
-    <Heading size="sm" title="Metadata" mb={2} />
+    <Heading size="sm" title="General" mb={2} />
     <GridLayout xs={12} md={6} lg={4} spacing={2} render={renderWithLabel}>
       <TextField label="Package name" source="conf.package_full_name" />
-      <TextField label="Java Facade IT" source="conf.java_facade_it" />
-      <TextField
-        label="Jacoco Min Coverage"
-        source="conf.jacoco_min_coverage"
-      />
+      <BooleanField label="Snapstart" source="conf.with_snapstart" />
     </GridLayout>
   </Stack>
 );
