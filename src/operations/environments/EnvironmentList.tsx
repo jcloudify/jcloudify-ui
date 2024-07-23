@@ -1,5 +1,5 @@
 import {Environment} from "@jcloudify-api/typescript-client";
-import {Stack} from "@mui/material";
+import {Stack, Box, Typography} from "@mui/material";
 import {Add, CompareArrows} from "@mui/icons-material";
 import {
   Button,
@@ -11,6 +11,7 @@ import {
   ListProps,
   RaRecord,
   TextField,
+  useListContext,
 } from "react-admin";
 import {
   EnvironmentState,
@@ -25,15 +26,18 @@ export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
   const {canCreateMore} = useEnvironmentCreation(appId);
+  const {data = []} = useListContext();
   return (
     <Stack py={1} direction="row" alignItems="center" spacing={2}>
-      <Button
-        to="diff"
-        startIcon={<CompareArrows />}
-        component={Link}
-        variant="outlined"
-        label="Diff"
-      />
+      {!!data.length && (
+        <Button
+          to="diff"
+          startIcon={<CompareArrows />}
+          component={Link}
+          variant="outlined"
+          label="Diff"
+        />
+      )}
 
       <Button
         to="creation-template"
@@ -65,6 +69,7 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
           application_id,
         },
       }}
+      empty={false}
       {...rest}
     >
       <Datagrid rowClick={(id) => id.toString()}>
