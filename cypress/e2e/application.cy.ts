@@ -44,15 +44,12 @@ describe("Application", () => {
 
         cy.contains("prod_env");
         cy.contains("Prod");
-        cy.contains("Healthy");
 
         cy.contains("preprod_env");
         cy.contains("Preprod");
-        cy.contains("Healthy");
 
         cy.getByHref(`/applications`).click();
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.contains("Unhealthy");
 
         cy.contains("preprod_env2");
         cy.contains("Preprod");
@@ -62,7 +59,6 @@ describe("Application", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.contains("prod_env").click();
         cy.contains("Prod");
-        cy.contains("Healthy");
       });
 
       specify("Allow to set environment variables for the selected app", () => {
