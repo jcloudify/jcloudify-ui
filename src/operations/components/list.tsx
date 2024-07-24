@@ -1,5 +1,5 @@
 import {useListContext} from "react-admin";
-import {Button, Toolbar, Typography, styled} from "@mui/material";
+import {Button, Toolbar, Typography, Paper, Box, styled} from "@mui/material";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {colors} from "@/themes";
 
@@ -52,5 +52,20 @@ export const Pagination = () => {
         </Typography>
       </div>
     </Toolbar>
+  );
+};
+
+export const EmptyList: React.FC<{content?: string}> = ({
+  content = "No records to show",
+}) => {
+  return (
+    <Box
+      component={Paper}
+      p={2.5}
+      border={`1px solid ${colors("gray-0")}`}
+      fontSize="0.875rem"
+    >
+      {content}
+    </Box>
   );
 };

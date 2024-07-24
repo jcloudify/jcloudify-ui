@@ -34,6 +34,7 @@ declare global {
        */
       mockToken: (token: Token) => Chainable;
       fakeLogin: (user: User & {token: string}) => Chainable;
+      mockApiGet: () => Chainable;
     }
   }
 }

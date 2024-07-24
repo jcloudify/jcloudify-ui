@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import {Apps, Settings, GitHub, Add} from "@mui/icons-material";
 import {colors} from "@/themes";
-import {Pagination} from "@/operations/components/list";
+import {EmptyList, Pagination} from "@/operations/components/list";
 import {AppProps} from "./types";
 import {stripPrefix} from "@/utils/str";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
@@ -100,6 +100,8 @@ const AppGridView: React.FC = () => {
   const {data = []} = useListContext();
   return (
     <Box>
+      {!data.length && <EmptyList />}
+
       <Grid container spacing={1}>
         {data.map((app) => (
           <AppGridTile app={app} key={app.id} />

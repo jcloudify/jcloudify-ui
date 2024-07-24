@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import {apps} from "../fixtures/application.mock";
 import {jcloudify} from "./util";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
@@ -34,6 +35,14 @@ Cypress.Commands.add("muiClear", (selector) => {
 
 Cypress.Commands.add("mockToken", (token) => {
   return cy.intercept("GET", jcloudify("/token?code=*"), token);
+});
+
+Cypress.Commands.add("mockApiGet", () => {
+  cy.intercept(
+    "GET",
+    jcloudify("/users/*/applications?name=*&page=*&page_size=*"),
+    apps
+  ).as("getApplications");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

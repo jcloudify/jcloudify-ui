@@ -7,11 +7,14 @@ import {log1, log2} from "../fixtures/logs.mock";
 describe("Application", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
+    cy.mockApiGet();
     cy.getByHref(`/applications`).click();
   });
 
   context("list", () => {
     it("show all apps", () => {
+      cy.wait("@getApplications");
+
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name!);
       cy.getByTestid(`applications-${app1.id}`).contains(
         stripPrefix(app1.github_repository!, "https://github.com/")
