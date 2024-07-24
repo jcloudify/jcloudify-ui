@@ -29,6 +29,8 @@ export const EnvironmentType: React.FC<EnvironmentTypeProps> = ({value}) => {
         width: "fit-content",
         bgcolor: INDICATOR_COLORS[value] || "gray",
         color: "#fff",
+        padding: 0,
+        margin: 0,
       }}
     />
   );
