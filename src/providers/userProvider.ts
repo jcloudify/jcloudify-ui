@@ -15,8 +15,12 @@ export const userProvider: UserProvider = {
     throw new Error("Function not implemented.");
   },
   async save(user) {
-    const users = await unwrap(() => userApi().createUser([user]));
-    const registered = users[0];
+    const users = await unwrap(() =>
+      userApi().createUser({
+        data: [user],
+      })
+    );
+    const registered = users.data![0];
     whoamiCache.replace({
       user: registered,
     });
