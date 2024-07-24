@@ -24,6 +24,7 @@ import {
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
+import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
 import {DeploymentState} from "@/operations/deployments";
 import {Pagination} from "@/operations/components/list";
 import {EnvironmentType} from "@/operations/environments";
@@ -147,6 +148,7 @@ const DeploymentListFilter: React.FC<{
         optionValue="environment_type"
         variant="outlined"
         fullWidth
+        sx={COMMON_RA_SELECT_INPUT_SX_PROPS}
       />
 
       <SelectInput
@@ -164,6 +166,7 @@ const DeploymentListFilter: React.FC<{
         alwaysOn
         variant="outlined"
         fullWidth
+        sx={COMMON_RA_SELECT_INPUT_SX_PROPS}
       />
 
       <DateInput

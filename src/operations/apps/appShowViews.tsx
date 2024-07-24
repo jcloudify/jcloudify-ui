@@ -21,6 +21,8 @@ export const appShowViews: RouteMap = {
   deployments: {
     "$$index": <AppDeploymentList />,
     ":deplId": <AppDeploymentShow />,
+    "stacks": <h1>stacks</h1>,
+    "stacks/:stackId": <h1>stack id</h1>,
   },
   monitoring: <AppMonitoring />,
   logs: {
