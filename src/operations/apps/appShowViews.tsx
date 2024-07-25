@@ -8,6 +8,7 @@ import {
 import {
   AppDeploymentList,
   AppDeploymentShow,
+  AppDeploymentStackEventList,
   AppDeploymentStackList,
 } from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
@@ -26,7 +27,7 @@ export const appShowViews: RouteMap = {
     "$$index": <AppDeploymentList />,
     ":deplId": <AppDeploymentShow />,
     "stacks": <AppDeploymentStackList />,
-    "stacks/:stackId": <h1>stack id</h1>,
+    "stacks/:stackId": <AppDeploymentStackEventList />,
   },
   monitoring: <AppMonitoring />,
   logs: {
