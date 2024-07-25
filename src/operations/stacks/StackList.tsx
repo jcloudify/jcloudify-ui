@@ -65,7 +65,6 @@ export const StackList: React.FC<StackListProps> = ({
       {...rest}
     >
       <Datagrid rowClick={(id) => id.toString()} bulkActionButtons={false}>
-        <TextField label="ID" source="id" />
         <TextField label="Stack name" source="name" />
         <TextField label="Stack type" source="stackType" />
         <FunctionField<Stack>
