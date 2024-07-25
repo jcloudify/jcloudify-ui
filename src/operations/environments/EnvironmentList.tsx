@@ -14,7 +14,6 @@ import {
   useListContext,
 } from "react-admin";
 import {
-  EnvironmentState,
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";

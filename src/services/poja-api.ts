@@ -5,6 +5,7 @@ import {
   ApplicationApi,
   UserRoleEnum,
   EnvironmentType,
+  StackApi,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
@@ -17,6 +18,7 @@ export const securityApi = () =>
 export const userApi = () => new UserApi(authProvider.getCachedAuthConf());
 export const applicationApi = () =>
   new ApplicationApi(authProvider.getCachedAuthConf());
+export const stackApi = () => new StackApi(authProvider.getCachedAuthConf());
 
 export interface TODO_Deployment {
   id: string;

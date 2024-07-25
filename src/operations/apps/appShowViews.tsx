@@ -5,7 +5,11 @@ import {
   AppEnvironmentList,
   AppEnvironmentShow,
 } from "./AppEnvironment";
-import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
+import {
+  AppDeploymentList,
+  AppDeploymentShow,
+  AppDeploymentStackList,
+} from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
 import {AppMonitoring} from "./AppMonitoring";
 import {RouteMap} from "@/components/router";
@@ -21,7 +25,7 @@ export const appShowViews: RouteMap = {
   deployments: {
     "$$index": <AppDeploymentList />,
     ":deplId": <AppDeploymentShow />,
-    "stacks": <h1>stacks</h1>,
+    "stacks": <AppDeploymentStackList />,
     "stacks/:stackId": <h1>stack id</h1>,
   },
   monitoring: <AppMonitoring />,

@@ -9,6 +9,10 @@ export const humanizeSnakeStr = (s: string) => {
   return s.replace(/_/g, " ");
 };
 
+export const snakeToKebab = (s: string) => {
+  return s.replace(/_/g, "-");
+};
+
 export const capitalize = (s: string) => {
   return s
     .split(" ")
