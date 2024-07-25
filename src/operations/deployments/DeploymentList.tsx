@@ -2,6 +2,7 @@ import React from "react";
 import {Environment} from "@jcloudify-api/typescript-client";
 import {
   Link,
+  Button,
   ListBase,
   ListToolbar as RAListToolbar,
   SelectInput,
@@ -21,6 +22,7 @@ import {
   Avatar,
   styled,
 } from "@mui/material";
+import {Settings} from "@mui/icons-material";
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
@@ -200,16 +202,31 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
       queryOptions={{meta: {application_id: appId}}}
       filterDefaultValues={{env_type: "All Environments", state: "Any"}}
     >
-      <Box mt={1}>
-        <ListToolbar
-          title=" "
-          filters={
-            <Filter>
-              <DeploymentListFilter alwaysOn envs={envs} />
-            </Filter>
-          }
+      <Box
+        sx={{
+          mt: 2,
+          display: "flex",
+          justifyContent: "flex-end",
+          p: 0.5,
+        }}
+      >
+        <Button
+          label="View Stacks"
+          variant="outlined"
+          to="stacks"
+          component={Link}
+          endIcon={<Settings />}
         />
       </Box>
+
+      <ListToolbar
+        title=" "
+        filters={
+          <Filter>
+            <DeploymentListFilter alwaysOn envs={envs} />
+          </Filter>
+        }
+      />
       <DeploymentListView />
 
       <Box mt={2}>
