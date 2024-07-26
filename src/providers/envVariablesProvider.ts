@@ -1,17 +1,14 @@
 import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
-import {variables} from "#/environment-variables.mock";
 import {PojaDataProvider} from "./types";
 
 export const envVariablesProvider: PojaDataProvider<
   Required<EnvironmentVariable>
 > = {
   getList(_page, _perPage, _filter, meta) {
-    return Promise.resolve(
-      variables.filter((variable) => variable.environment_id === meta?.env_id)
-    );
+    return Promise.resolve([].filter((variable) => undefined === meta?.env_id));
   },
   getOne(id): Promise<any> {
-    return Promise.resolve(variables.find((variable) => variable.id === id));
+    return Promise.resolve([].find((variable) => undefined === id));
   },
   save(variable): Promise<any> {
     return Promise.resolve(variable);
