@@ -1,6 +1,5 @@
-import {EnvironmentVariable} from "@jcloudify-api/typescript-client";
 import {useEffect, useMemo} from "react";
-import {IconButtonWithTooltip, useUpdateMany} from "react-admin";
+import {IconButtonWithTooltip} from "react-admin";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -12,40 +11,31 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import {Add, Remove, Cancel, Save} from "@mui/icons-material";
-import {nanoid} from "nanoid";
+import {Add, Remove, Cancel} from "@mui/icons-material";
 import {z} from "zod";
-import {getIds} from "@/operations/utils/record";
 import {GridLayout} from "@/components/grid";
 import {envVariableSchema} from "./schema";
 import {colors} from "@/themes";
 import {optional} from "@/utils/monad";
-import {ToRecord} from "@/providers";
 import {useSet} from "@/hooks";
-import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
-import {fromHookformObj, toHookformObj} from "@/utils/react-hook-form";
+import {
+  EnvironmentRecord,
+  environmentArrayToRecord,
+  environmentRecordToArray,
+} from "./";
 
 export type BatchEnvironmentVariableEditProps = {
-  onChange?: (variables: EnvironmentVariable[]) => void;
-  defaultVars?: EnvironmentVariable[];
-  saveEnvId?: string;
-  hasSave?: boolean;
+  onChange?: (variables: Record<string, string>) => void;
+  defaultVars?: Record<string, string>;
 };
 
 // TODO: edit env
 export const BatchEnvironmentVariableEdit: React.FC<
   BatchEnvironmentVariableEditProps
-> = ({
-  onChange,
-  saveEnvId,
-  hasSave = false,
-  defaultVars: _defaultVars = [],
-}) => {
-  const toRemoveIds = useSet<string>();
-  const [updateMany, {isLoading}] = useUpdateMany();
-
+> = ({onChange, defaultVars: _defaultVars = {}}) => {
+  const toRemove = useSet<EnvironmentRecord>();
   const defaultVars = useMemo(() => {
-    return _defaultVars.map((v) => toHookformObj({...v, id: nanoid()}));
+    return environmentRecordToArray(_defaultVars);
   }, [_defaultVars]);
 
   const form = useForm({
@@ -66,7 +56,9 @@ export const BatchEnvironmentVariableEdit: React.FC<
 
   useEffect(() => {
     const subs = form.watch((v) => {
-      optional(onChange).call(normalizeVars(v.variables as any[]));
+      optional(onChange).call(
+        environmentArrayToRecord(v.variables as EnvironmentRecord[])
+      );
     });
     return () => {
       subs.unsubscribe();
@@ -75,19 +67,8 @@ export const BatchEnvironmentVariableEdit: React.FC<
 
   const variables = form.watch("variables");
 
-  const save: InferSubmitHandlerFromUseForm<typeof form> = () => {
-    const vars = normalizeVars(variables);
-    updateMany("env_variables", {data: vars, ids: getIds(vars)});
-  };
-
   return (
-    <Stack
-      component="form"
-      direction="column"
-      p={1}
-      gap={1.5}
-      onSubmit={form.handleSubmit(save)}
-    >
+    <Stack direction="column" p={1} gap={1.5}>
       <Box>
         <GridLayout xs={4} spacing={2}>
           <Typography variant="h6">Key</Typography>
@@ -98,7 +79,7 @@ export const BatchEnvironmentVariableEdit: React.FC<
       <Divider sx={{mb: 2, borderColor: colors("gray-0")}} />
 
       {variables.map((variable, idx) => {
-        const {__id: id, archived} = variable;
+        const {isNew, deleted} = variable;
         const message = (form.formState.errors.variables || [])[idx];
         return (
           <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
@@ -125,20 +106,22 @@ export const BatchEnvironmentVariableEdit: React.FC<
             </>
             <Stack justifyContent="center" alignItems="center">
               <IconButtonWithTooltip
-                label={archived ? "Cancel removal" : "Remove"}
+                label={deleted ? "Cancel removal" : "Remove"}
                 onClick={() => {
-                  if (id) {
+                  if (!isNew) {
                     form.setValue(`variables.${idx}`, {
                       ...variable,
-                      archived: !archived,
+                      deleted: !deleted,
                     });
-                    archived ? toRemoveIds.delete(id) : toRemoveIds.add(id);
+                    deleted
+                      ? toRemove.delete(variable)
+                      : toRemove.add(variable);
                   } else {
                     remove(idx);
                   }
                 }}
               >
-                {archived ? <Cancel /> : <Remove />}
+                {deleted ? <Cancel /> : <Remove />}
               </IconButtonWithTooltip>
             </Stack>
           </GridLayout>
@@ -155,39 +138,14 @@ export const BatchEnvironmentVariableEdit: React.FC<
             append({
               name: "",
               value: "",
-              archived: false,
-              __id: "",
-              id: "",
+              isNew: true,
+              deleted: false,
             });
           }}
         >
           Add Another
         </Button>
-        {hasSave && saveEnvId && (
-          <Button
-            data-testid="SaveEnvVar"
-            startIcon={<Save />}
-            type="submit"
-            size="large"
-            variant="contained"
-            disabled={
-              isLoading || (!form.formState.isDirty && !toRemoveIds.size)
-            }
-          >
-            {defaultVars.length ? "Update" : "Save"}
-          </Button>
-        )}
       </Stack>
     </Stack>
   );
-};
-
-const normalizeVars = (
-  rawVars: Record<string, any>[]
-): ToRecord<EnvironmentVariable>[] => {
-  return rawVars.map((aVar) => {
-    const v = fromHookformObj<ToRecord<EnvironmentVariable>>(aVar);
-    v.id ||= nanoid();
-    return v;
-  });
 };
