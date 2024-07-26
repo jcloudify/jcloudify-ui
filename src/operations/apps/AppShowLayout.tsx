@@ -1,18 +1,15 @@
 import React from "react";
-import {ShowBase, Title, useRecordContext} from "react-admin";
-import {Outlet, useParams} from "react-router-dom";
+import {Title} from "react-admin";
+import {Outlet} from "react-router-dom";
 import {Box} from "@mui/material";
 import {Tabs} from "@/components/tab";
 
 const tabList = ["Environments", "Deployments", "Monitoring", "Logs"];
 
 export const AppShowLayout: React.FC = () => {
-  const {appId} = useParams();
   return (
     <Box>
-      <ShowBase id={appId} resource="applications">
-        <AppShowTitle />
-      </ShowBase>
+      <AppShowTitle />
 
       <Box>
         <Tabs tabs={tabList} variant="scrollable" asLink>
@@ -24,7 +21,8 @@ export const AppShowLayout: React.FC = () => {
 };
 
 const AppShowTitle = () => {
-  const app = useRecordContext();
-  if (!app) return "";
-  return <Title title={app.name} />;
+  // TODO: when get_app_by_id is implemented
+  // const app = useRecordContext();
+  // if (!app) return "";
+  return <Title title="lambda" />;
 };

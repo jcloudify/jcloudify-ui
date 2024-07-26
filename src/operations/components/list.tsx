@@ -22,6 +22,7 @@ export const Pagination = () => {
         border: `1px solid ${colors("gray-0")}`,
         borderRadius: "4px",
         gap: 1,
+        mt: 1,
       }}
     >
       <PaginationAction

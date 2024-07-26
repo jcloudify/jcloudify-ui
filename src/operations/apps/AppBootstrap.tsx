@@ -1,6 +1,6 @@
 import {
+  CreateBase,
   Form,
-  SelectInput,
   BooleanInput,
   TextInput,
   Toolbar,
@@ -11,10 +11,10 @@ import {
   Title,
 } from "react-admin";
 import {Stack} from "@mui/material";
+import {nanoid} from "nanoid";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
-import {makeSelectChoices} from "@/operations/utils/ra-props";
 
 export const AppBootstrap: React.FC = () => {
   return (
@@ -29,24 +29,26 @@ export const AppBootstrap: React.FC = () => {
         p={1}
       />
 
-      <Form>
-        <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
-          <AppInfo />
-          <CreateGitRepository />
-        </Stack>
-
-        <Toolbar sx={{mt: 2}}>
-          <Stack direction="row" spacing={2}>
-            <SaveButton />
-            <Button
-              label="Return to applications"
-              variant="outlined"
-              to="/applications"
-              component={Link}
-            />
+      <CreateBase resource="applications">
+        <Form defaultValues={{id: nanoid()}}>
+          <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
+            <AppInfo />
+            <CreateGitRepository />
           </Stack>
-        </Toolbar>
-      </Form>
+
+          <Toolbar sx={{mt: 2}}>
+            <Stack direction="row" spacing={2}>
+              <SaveButton />
+              <Button
+                label="Return to applications"
+                variant="outlined"
+                to="/applications"
+                component={Link}
+              />
+            </Stack>
+          </Toolbar>
+        </Form>
+      </CreateBase>
     </Stack>
   );
 };
@@ -62,6 +64,7 @@ const AppInfo = () => (
         source="name"
         placeholder="e.g: foo"
         size="medium"
+        validate={required()}
         fullWidth
       />
     </GridLayout>
@@ -75,24 +78,27 @@ const CreateGitRepository: React.FC = () => {
       subheader="The generated application code will be pushed to the specified repository."
     >
       <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
-        <SelectInput
-          variant="outlined"
-          choices={makeSelectChoices(["Yume", "Not-Yume"])}
-          source="scope"
-          validate={required()}
-          label="Scope (org/user)"
-          size="medium"
-          fullWidth
-        />
         <TextInput
           variant="outlined"
-          source="repository_name"
+          label="Name"
+          source="github_repository.name"
           placeholder="e.g: foo"
           size="medium"
+          validate={required()}
           fullWidth
         />
 
-        <BooleanInput source="private" />
+        <TextInput
+          variant="outlined"
+          label="Description"
+          source="github_repository.description"
+          placeholder="e.g: foo"
+          size="medium"
+          validate={required()}
+          fullWidth
+        />
+
+        <BooleanInput label="Private" source="github_repository.is_private" />
       </GridLayout>
     </ContainerWithHeading>
   );
