@@ -202,23 +202,6 @@ export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
       queryOptions={{meta: {application_id: appId}}}
       filterDefaultValues={{env_type: "All Environments", state: "Any"}}
     >
-      <Box
-        sx={{
-          mt: 2,
-          display: "flex",
-          justifyContent: "flex-end",
-          p: 0.5,
-        }}
-      >
-        <Button
-          label="View Stacks"
-          variant="outlined"
-          to="stacks"
-          component={Link}
-          endIcon={<Settings />}
-        />
-      </Box>
-
       <ListToolbar
         title=" "
         filters={

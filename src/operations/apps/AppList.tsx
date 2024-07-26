@@ -57,7 +57,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
 
         <Stack>
           <Link
-            to={app.github_repository}
+            to={app.repositoryUrl}
             target="_blank"
             sx={{width: "fit-content", zIndex: 2}}
           >
@@ -65,7 +65,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
               icon={<GitHub />}
               label={
                 <Typography variant="body2">
-                  {stripPrefix(app.github_repository, GITHUB_URL_PREFIX)}
+                  {stripPrefix(app.repositoryUrl || "", GITHUB_URL_PREFIX)}
                 </Typography>
               }
               sx={{

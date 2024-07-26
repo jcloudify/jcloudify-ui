@@ -21,17 +21,9 @@ export type StackListProps<Record extends RaRecord<string> = any> = Omit<
   appId: string;
 };
 
-export const StackList: React.FC<StackListProps> = ({
-  appId,
-  queryOptions = {},
-  ...rest
-}) => {
-  queryOptions.meta ||= {};
-
+export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
   const {data: environments = []} = useGetList("environments", {
-    meta: {
-      application_id: appId,
-    },
+    filter: {appId},
   });
 
   return (

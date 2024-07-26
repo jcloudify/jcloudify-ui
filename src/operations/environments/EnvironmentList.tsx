@@ -1,6 +1,7 @@
 import {Environment} from "@jcloudify-api/typescript-client";
 import {Stack} from "@mui/material";
 import {Add, CompareArrows} from "@mui/icons-material";
+import {FaCubesStacked as StackIcon} from "react-icons/fa6";
 import {
   Button,
   Datagrid,
@@ -28,15 +29,23 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
   const {data = []} = useListContext();
   return (
     <Stack py={1} direction="row" alignItems="center" spacing={2}>
-      {!!data.length && (
-        <Button
-          to="diff"
-          startIcon={<CompareArrows />}
-          component={Link}
-          variant="outlined"
-          label="Diff"
-        />
-      )}
+      <Button
+        to="diff"
+        startIcon={<CompareArrows />}
+        component={Link}
+        variant="outlined"
+        disabled={!data.length}
+        label="Diff"
+      />
+
+      <Button
+        to="stacks"
+        startIcon={<StackIcon />}
+        component={Link}
+        variant="outlined"
+        disabled={!data.length}
+        label="Stacks"
+      />
 
       <Button
         to="creation-template"
@@ -51,7 +60,7 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
 };
 
 export const EnvironmentList: React.FC<EnvironmentListProps> = ({
-  appId: application_id,
+  appId,
   queryOptions = {},
   ...rest
 }) => {
@@ -60,13 +69,9 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
   return (
     <List
       resource="environments"
-      actions={<ListActions appId={application_id} />}
-      queryOptions={{
-        ...queryOptions,
-        meta: {
-          ...queryOptions.meta,
-          application_id,
-        },
+      actions={<ListActions appId={appId} />}
+      filter={{
+        appId,
       }}
       empty={false}
       {...rest}
