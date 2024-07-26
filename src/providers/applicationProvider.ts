@@ -1,21 +1,35 @@
-import {apps} from "#/application.mock";
 import {Application} from "@jcloudify-api/typescript-client";
-import {PojaDataProvider, ToRecord} from "./types";
+import {PojaDataProvider, ToRecord, authProvider} from "@/providers";
+import {applicationApi, unwrap} from "@/services/poja-api";
 
 export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
-  getList() {
-    return Promise.resolve(apps);
+  async getList() {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (
+      await unwrap(() => applicationApi().getApplications(uid, undefined))
+    ).data as ToRecord<Application>[];
   },
-  getOne(id): Promise<any> {
-    return Promise.resolve(apps.find((app) => app.id === id));
+  async getOne(id) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (await unwrap(() =>
+      applicationApi().getApplicationById(uid, id.toString())
+    )) as ToRecord<Application>;
   },
-  save(app): Promise<any> {
-    return Promise.resolve(app);
+  async save(app) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    const apps = (
+      await unwrap(() =>
+        applicationApi().crupdateApplications(uid, {
+          data: [{...app, user_id: uid}],
+        })
+      )
+    ).data!;
+    return apps[0] as ToRecord<Application>;
   },
-  saveAll(): Promise<any> {
+  saveAll() {
     throw new Error("Function not implemented.");
   },
-  delete(): Promise<any> {
+  delete() {
     throw new Error("Function not implemented.");
   },
 };

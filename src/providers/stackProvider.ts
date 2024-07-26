@@ -1,16 +1,21 @@
 import {Stack} from "@jcloudify-api/typescript-client";
-import {Dict, PojaDataProvider, ToRecord} from "./types";
-import {stacks} from "#/stack.mock";
+import {stackApi, unwrap} from "@/services/poja-api";
+import {authProvider, Dict, PojaDataProvider, ToRecord} from "@/providers";
 
 export const stackProvider: PojaDataProvider<ToRecord<Stack>> = {
-  getList(_page, _perPage, filter = {}, _meta) {
-    return Promise.resolve(stacks[filter.appId][filter.env_id] || []);
+  async getList(_page, _perPage, filter = {}, _meta) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (
+      await unwrap(() =>
+        stackApi().getEnvironmentStacks(uid, filter.appId, filter.env_id)
+      )
+    ).data as ToRecord<Stack>[];
   },
-  getOne(id, meta: Dict<string> = {}) {
-    const {appId, envId} = meta;
-    return Promise.resolve(
-      stacks[appId][envId].find((stack) => stack.id === id)!
-    );
+  async getOne(id, meta: Dict<string> = {}) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (await unwrap(() =>
+      stackApi().getStackById(uid, meta.appId, meta.envId, id.toString())
+    )) as ToRecord<Stack>;
   },
   save() {
     throw new Error("Function not implemented.");
