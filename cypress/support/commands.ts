@@ -1,5 +1,11 @@
 /// <reference types="cypress" />
 
+import {
+  preprod_env,
+  preprod_env2,
+  prod_env,
+} from "../fixtures/environment.mock";
+import {app1, app2, apps} from "../fixtures/application.mock";
 import {jcloudify} from "./util";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
@@ -34,6 +40,27 @@ Cypress.Commands.add("muiClear", (selector) => {
 
 Cypress.Commands.add("mockToken", (token) => {
   return cy.intercept("GET", jcloudify("/token?code=*"), token);
+});
+
+Cypress.Commands.add("mockApiGet", () => {
+  cy.intercept("GET", jcloudify(`/users/*/applications`), {
+    data: apps,
+  }).as("getApplications");
+
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app1.id}/environments`),
+    {
+      data: [prod_env, preprod_env],
+    }
+  ).as("getEnvironments");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app2.id}/environments`),
+    {
+      data: [preprod_env2],
+    }
+  ).as("getEnvironments");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

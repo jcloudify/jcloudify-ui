@@ -7,19 +7,22 @@ import {log1, log2} from "../fixtures/logs.mock";
 describe("Application", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
+    cy.mockApiGet();
     cy.getByHref(`/applications`).click();
   });
 
   context("list", () => {
     it("show all apps", () => {
+      cy.wait("@getApplications");
+
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name!);
       cy.getByTestid(`applications-${app1.id}`).contains(
-        stripPrefix(app1.github_repository!, "https://github.com/")
+        stripPrefix(app1.repositoryUrl!, "https://github.com/")
       );
 
       cy.getByTestid(`applications-${app2.id}`).contains(app2.name!);
       cy.getByTestid(`applications-${app2.id}`).contains(
-        stripPrefix(app2.github_repository!, "https://github.com/")
+        stripPrefix(app2.repositoryUrl!, "https://github.com/")
       );
     });
 
@@ -41,6 +44,7 @@ describe("Application", () => {
     context("environment", () => {
       specify("List available environment for the viewed app", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.wait("@getEnvironments");
 
         cy.contains("prod_env");
         cy.contains("Prod");
@@ -50,6 +54,7 @@ describe("Application", () => {
 
         cy.getByHref(`/applications`).click();
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.wait("@getEnvironments");
 
         cy.contains("preprod_env2");
         cy.contains("Preprod");

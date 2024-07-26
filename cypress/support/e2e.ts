@@ -33,6 +33,7 @@ declare global {
        * JCloudify mocking
        */
       mockToken: (token: Token) => Chainable;
+      mockApiGet: () => Chainable;
       fakeLogin: (user: User & {token: string}) => Chainable;
     }
   }

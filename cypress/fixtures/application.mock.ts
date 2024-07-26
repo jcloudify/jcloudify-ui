@@ -8,10 +8,15 @@ const app = (id: string): ToRecord<Application> => ({
   id,
   name: "jcloudify-" + id,
   archived: false,
-  github_repository: "https://github.com/poja-app/jcloudify-api-" + id,
+  repositoryUrl: "https://github.com/poja-app/jcloudify-api-" + id,
   creation_datetime: m.date.recent(),
   user_id: user1.id!,
   environments: [],
+  github_repository: {
+    name: "jcloudify-" + id,
+    description: "jcloudify platform " + id,
+    is_private: false,
+  },
 });
 
 export const app1 = {
