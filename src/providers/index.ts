@@ -10,5 +10,6 @@ export * from "./deploymentProvider";
 export * from "./tokenProvider";
 export * from "./logsProvider";
 export * from "./stackProvider";
+export * from "./pojaConfProvider";
 
 export * from "./cache";

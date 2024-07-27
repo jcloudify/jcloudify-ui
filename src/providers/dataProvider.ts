@@ -7,6 +7,7 @@ import {
   envVariablesProvider,
   environmentProvider,
   logsProvider,
+  pojaConfProvider,
   stackProvider,
   userProvider,
 } from "./";
@@ -27,6 +28,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return userProvider;
     case "stacks":
       return stackProvider;
+    case "pojaConf":
+      return pojaConfProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

@@ -20,24 +20,28 @@ import {useSet} from "@/hooks";
 
 export interface BatchRecordEditorProps {
   /** describes what exactly is the key values to edit e.g: EnvVars, Config */
+  kvLabels?: [string, string];
+  placeholders?: [string, string];
   pairName?: string;
   onChange?: (record: Record<string, string>) => void;
   defaultRecord?: Record<string, string>;
 }
 
-const _zodSchema = z.object({
+const schema = z.object({
   key: z.string().min(1),
   value: z.string().min(1),
   _deleted: z.boolean(),
   _newlyAdded: z.boolean(),
 });
 
-type _InternalKeyValue = z.infer<typeof _zodSchema>;
+type _InternalKeyValue = z.infer<typeof schema>;
 
 // TODO: edit env
 export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
   onChange,
   pairName = "",
+  kvLabels = ["Key", "Value"],
+  placeholders = ["Name", "Value"],
   defaultRecord: _defaultRecord = {},
 }) => {
   const toRemove = useSet<_InternalKeyValue>();
@@ -49,7 +53,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
     mode: "onChange",
     resolver: zodResolver(
       z.object({
-        keyValues: z.array(_zodSchema),
+        keyValues: z.array(schema),
       })
     ),
     values: {
@@ -93,8 +97,12 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
     <Stack direction="column" p={1} gap={1.5}>
       <Box>
         <GridLayout xs={4} spacing={2}>
-          <Typography variant="h6">Key</Typography>
-          <Typography variant="h6">value</Typography>
+          <Typography variant="body1" fontWeight="450">
+            {kvLabels[0]}
+          </Typography>
+          <Typography variant="body1" fontWeight="450">
+            {kvLabels[1]}
+          </Typography>
         </GridLayout>
       </Box>
 
@@ -107,7 +115,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
           <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
             <>
               <OutlinedInput
-                placeholder="e.g: CLIENT_KEY"
+                placeholder={placeholders[0]}
                 fullWidth
                 {...form.register(`keyValues.${idx}.key`)}
               />
@@ -118,7 +126,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
             <>
               <OutlinedInput
-                placeholder="XXX"
+                placeholder={placeholders[1]}
                 fullWidth
                 {...form.register(`keyValues.${idx}.value`)}
               />

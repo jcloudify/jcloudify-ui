@@ -1,7 +1,4 @@
-import {
-  Environment,
-  EnvironmentVariable,
-} from "@jcloudify-api/typescript-client";
+import {Environment} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
 import {
   ShowBase,
@@ -9,29 +6,21 @@ import {
   Labeled,
   useRecordContext,
   IconButtonWithTooltip,
-  useGetList,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
+import {EnvironmentType} from "@/operations/environments";
 import {
-  BatchEnvironmentVariableEdit,
-  EnvironmentConfShow,
-  EnvironmentConfEdit,
-  EnvironmentType,
-} from "@/operations/environments";
-import {ToRecord} from "@/providers";
+  PojaConfEditV1,
+  PojaConfShowV1,
+} from "@/operations/environments/poja-config-form";
 
-const EnvironmentShowView: React.FC = () => {
+const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
   const [isEditConf, setIsEditConf] = useState(false);
   const record = useRecordContext<Environment>();
-
-  const {data: vars = []} = useGetList<ToRecord<EnvironmentVariable>>(
-    "env_variables",
-    {meta: {env_id: record?.id}}
-  );
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
@@ -47,14 +36,6 @@ const EnvironmentShowView: React.FC = () => {
             </Labeled>
           </GridLayout>
         </Stack>
-      </ContainerWithHeading>
-
-      <ContainerWithHeading title="Variables" sx={{fontSize: "1.2rem"}}>
-        <BatchEnvironmentVariableEdit
-          hasSave
-          saveEnvId={record.id!}
-          defaultVars={vars}
-        />
       </ContainerWithHeading>
 
       <ContainerWithHeading
@@ -74,23 +55,27 @@ const EnvironmentShowView: React.FC = () => {
         sx={{fontSize: "1.2rem"}}
       >
         {isEditConf ? (
-          <EnvironmentConfEdit
+          <PojaConfEditV1
+            appId={appId}
             envId={record.id!}
-            onEdited={() => setIsEditConf(false)}
+            onSettled={() => setIsEditConf(false)}
           />
         ) : (
-          <EnvironmentConfShow envId={record.id!} />
+          <PojaConfShowV1 envId={record.id!} />
         )}
       </ContainerWithHeading>
     </Stack>
   );
 };
 
-export const EnvironmentShow: React.FC<{envId: string}> = ({envId}) => {
+export const EnvironmentShow: React.FC<{envId: string; appId: string}> = ({
+  envId,
+  appId,
+}) => {
   return (
     <ShowBase resource="environments" id={envId}>
       <ShowLayout>
-        <EnvironmentShowView />
+        <EnvironmentShowView appId={appId} />
       </ShowLayout>
     </ShowBase>
   );
