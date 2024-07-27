@@ -8,8 +8,8 @@ export const useEnvironmentCreation = (appId: string | undefined) => {
   const {data: environments = []} = useGetList<ToRecord<Environment>>(
     "environments",
     {
-      meta: {
-        application_id: appId,
+      filter: {
+        appId,
       },
     }
   );

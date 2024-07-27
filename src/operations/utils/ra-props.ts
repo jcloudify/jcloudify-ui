@@ -1,5 +1,5 @@
 export const makeSelectChoices = (
-  strings: string[],
+  strings: (string | number)[],
   valueKey: string = "name"
 ) =>
   strings.map((str) => ({

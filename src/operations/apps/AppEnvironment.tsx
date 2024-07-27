@@ -30,13 +30,13 @@ export const AppEnvironmentList: React.FC = () => {
 };
 
 export const AppEnvironmentShow = () => {
-  const {envId} = useParams();
+  const {envId, appId} = useParams();
 
-  if (!envId) return;
+  if (!envId || !appId) return;
 
   return (
     <WithTab tab="Environments">
-      <EnvironmentShow envId={envId} />
+      <EnvironmentShow envId={envId} appId={appId} />
     </WithTab>
   );
 };
