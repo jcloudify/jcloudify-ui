@@ -1,5 +1,12 @@
-import React from "react";
-import {Labeled as RALabeled, FunctionField, FieldProps} from "react-admin";
+import React, {useMemo} from "react";
+import {
+  Labeled as RALabeled,
+  FunctionField,
+  FieldProps,
+  RaRecord,
+  useInput,
+} from "react-admin";
+import {BatchRecordEditor} from "@/components/batch-record-editor";
 
 export type PasswordFieldProps = FieldProps & {
   source: string;
@@ -28,3 +35,13 @@ export const Labeled: React.FC<React.PropsWithChildren> = ({children}) =>
 export const renderWithLabel = (node: React.ReactNode) => (
   <Labeled>{node}</Labeled>
 );
+
+export const BatchRecordEditorField = <RecordType extends RaRecord<string>>({
+  source,
+}: FieldProps<RecordType>) => {
+  const {field} = useInput({source: source!});
+  const defaultValue = useMemo(() => field.value, []);
+  return (
+    <BatchRecordEditor defaultRecord={defaultValue} onChange={field.onChange} />
+  );
+};
