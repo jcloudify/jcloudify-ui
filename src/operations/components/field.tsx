@@ -5,7 +5,9 @@ import {
   FieldProps,
   RaRecord,
   useInput,
+  useRecordContext,
 } from "react-admin";
+import get from "lodash.get";
 import {
   BatchRecordEditor,
   BatchRecordEditorProps,
@@ -14,6 +16,9 @@ import {
   BatchArrayEditor,
   BatchArrayEditorProps,
 } from "@/components/batch-array-editor";
+import {RecordShow, RecordShowProps} from "@/components/record-show";
+import {StringArrayShow} from "@/components/string-array-show";
+import {Nullable} from "@/types/util";
 
 export type PasswordFieldProps = FieldProps & {
   source: string;
@@ -64,6 +69,18 @@ export const BatchRecordEditorField = <RecordType extends RaRecord<string>>({
 };
 
 /**
+ * 'Show' version of 'BatchRecordEditorField'
+ */
+export const RecordField = <RecordType extends RaRecord<string>>({
+  source,
+  record: propValue = {},
+  ...rest
+}: Pick<FieldProps<RecordType>, "source"> & Nullable<RecordShowProps>) => {
+  const record = useRecordContext();
+  return <RecordShow record={get(record, source!) || propValue} {...rest} />;
+};
+
+/**
  * TODO: impl 'label' prop
  */
 export const BatchArrayEditorField = <RecordType extends RaRecord<string>>({
@@ -78,6 +95,23 @@ export const BatchArrayEditorField = <RecordType extends RaRecord<string>>({
     <BatchArrayEditor
       defaultValues={defaultValue || defaultValues}
       onChange={field.onChange}
+      {...rest}
+    />
+  );
+};
+
+/**
+ * 'Show' version of 'BatchArrayEditorField'
+ */
+export const StringArrayField = <RecordType extends RaRecord<string>>({
+  source,
+  stringArray: propValue = [],
+  ...rest
+}: Pick<FieldProps<RecordType>, "source"> & Nullable<RecordShowProps>) => {
+  const record = useRecordContext();
+  return (
+    <StringArrayShow
+      stringArray={get(record, source!) || propValue}
       {...rest}
     />
   );
