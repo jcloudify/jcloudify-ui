@@ -7,3 +7,14 @@ export const reverseObjectKeyValues = (obj: Dict<string>) => {
     return o;
   }, {});
 };
+
+export const omit = <T extends object, K extends keyof T>(
+  o: T,
+  keys: K[]
+): Omit<T, K> => {
+  return Object.fromEntries(
+    Object.keys(o)
+      .filter((key) => !keys.includes(key as K))
+      .map((key) => [key, o[key as K]])
+  ) as any;
+};

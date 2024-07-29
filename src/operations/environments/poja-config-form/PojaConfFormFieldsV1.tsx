@@ -208,12 +208,22 @@ const IntegrationConf = () => (
         size="medium"
         fullWidth
       />
+      <BooleanInput
+        label="File Storage"
+        source="integration.with_file_storage"
+        variant="outlined"
+        size="medium"
+        fullWidth
+      />
     </GridLayout>
   </Stack>
 );
 
 const GenAPIClientConf = () => {
   const withGenClients = useWatch({name: "__conf.with_gen_clients"});
+  const withPublishToNpmRegistry = useWatch({
+    name: "gen_api_client.with_publish_to_npm_registry",
+  });
   return (
     <Stack>
       <Heading
@@ -252,6 +262,39 @@ const GenAPIClientConf = () => {
           <BooleanInput
             label="Publish to npm registry"
             source="gen_api_client.with_publish_to_npm_registry"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+        </GridLayout>
+      )}
+
+      {withPublishToNpmRegistry && (
+        <GridLayout
+          xs={12}
+          md={6}
+          lg={4}
+          spacing={2}
+          rowSpacing={0.5}
+          alignItems="center"
+        >
+          <TextInput
+            label="AWS Account ID"
+            source="gen_api_client.aws_account_id"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+          <TextInput
+            label="CodeArtifact Repository Name"
+            source="gen_api_client.codeartifact_repository_name"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+          <TextInput
+            label="CodeArtifact domain name"
+            source="gen_api_client.codeartifact_domain_name"
             variant="outlined"
             size="medium"
             fullWidth
@@ -351,7 +394,6 @@ const MailingConf = () => (
         source="emailing.ses_source"
         variant="outlined"
         size="medium"
-        validate={email()}
         fullWidth
       />
     </GridLayout>
@@ -383,12 +425,16 @@ const TestingConf = () => (
 
 const DBConf = () => {
   const withDatabase = useWatch({name: "database.with_database"});
+  const noneOrNonManaged =
+    withDatabase === DatabaseConf1WithDatabaseEnum.NONE ||
+    withDatabase === DatabaseConf1WithDatabaseEnum.NON_MANAGED_POSTGRES;
+
   return (
     <Stack>
       <Heading size="sm" title="DB" mb={2} />
       <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
         <SelectInput
-          label="DB"
+          label="Variant"
           source="database.with_database"
           choices={makeSelectChoices(
             Object.keys(DatabaseConf1WithDatabaseEnum)
@@ -397,30 +443,35 @@ const DBConf = () => {
           size="medium"
           fullWidth
         />
-        <TextInput
-          label="Non Root Username"
-          source="database.database_non_root_username"
-          variant="outlined"
-          size="medium"
-          fullWidth
-        />
-        <TextInput
-          label="Non Root Password"
-          source="database.database_non_root_password"
-          variant="outlined"
-          size="medium"
-          type="password"
-          fullWidth
-        />
-        <TextInput
-          label="Prod DB Cluster Timeout"
-          source="database.prod_db_cluster_timeout"
-          variant="outlined"
-          size="medium"
-          type="number"
-          fullWidth
-        />
       </GridLayout>
+
+      {!noneOrNonManaged && (
+        <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
+          <TextInput
+            label="Non Root Username"
+            source="database.database_non_root_username"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+          <TextInput
+            label="Non Root Password"
+            source="database.database_non_root_password"
+            variant="outlined"
+            size="medium"
+            type="password"
+            fullWidth
+          />
+          <TextInput
+            label="Prod DB Cluster Timeout"
+            source="database.prod_db_cluster_timeout"
+            variant="outlined"
+            size="medium"
+            type="number"
+            fullWidth
+          />
+        </GridLayout>
+      )}
 
       {withDatabase === DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES && (
         <GridLayout

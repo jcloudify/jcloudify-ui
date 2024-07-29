@@ -58,6 +58,8 @@ export const AppEnvironmentCreate: React.FC = () => {
 
   if (!appId) return null;
 
+  console.log("appId", appId);
+
   return (
     <WithTab tab="Environments">
       <EnvironmentCreate appId={appId} template={template} />
