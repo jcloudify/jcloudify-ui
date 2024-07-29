@@ -12,11 +12,21 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
       )
     ).data as ToRecord<Environment>[];
   },
-  getOne(id): Promise<any> {
-    return Promise.resolve(envs.find((env) => env.id === id));
+  async getOne(id) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (await unwrap(() => environmentApi().get(uid, filter.appId)))
+      .data as ToRecord<Environment>[];
   },
-  save(env): Promise<any> {
-    return Promise.resolve(env);
+  async save(env, meta = {}): Promise<any> {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    const res = (
+      await unwrap(() =>
+        environmentApi().crupdateApplicationEnvironments(uid, meta.appId, {
+          data: [env],
+        })
+      )
+    ).data as ToRecord<Environment>[];
+    return res[0];
   },
   saveAll(): Promise<any> {
     throw new Error("Function not implemented.");

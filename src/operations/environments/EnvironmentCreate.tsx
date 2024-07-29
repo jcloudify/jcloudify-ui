@@ -1,6 +1,18 @@
+import {
+  Environment,
+  EnvironmentType as TEnvironmentType,
+  OneOfPojaConf,
+} from "@jcloudify-api/typescript-client";
 import {useMemo, memo} from "react";
-import {Environment} from "@jcloudify-api/typescript-client";
-import {Form, SaveButton, Toolbar, SelectInput, required} from "react-admin";
+import {
+  Form,
+  SaveButton,
+  Toolbar,
+  SelectInput,
+  required,
+  useCreate,
+} from "react-admin";
+import {SubmitHandler} from "react-hook-form";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
 import {ContainerWithHeading} from "@/components/container";
@@ -12,10 +24,7 @@ import {
 } from "@/operations/environments";
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-
-const transformConf = (data: any) => {
-  console.log("create", data);
-};
+import {omit} from "@/utils/object";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -26,6 +35,20 @@ const _EnvironmentCreate: React.FC<{
   appId: string;
   template: Environment | undefined;
 }> = ({template, appId}) => {
+  const newEnvironmentId = useMemo(() => nanoid(), []);
+
+  const [createEnv] = useCreate<Environment>("environments", {
+    meta: {
+      appId,
+    },
+  });
+  const [configureEnv] = useCreate<OneOfPojaConf>("pojaConf", {
+    meta: {
+      appId,
+      envId: newEnvironmentId,
+    },
+  });
+
   const {creatable} = useEnvironmentCreation(appId);
 
   const subtitle = template ? (
@@ -36,15 +59,28 @@ const _EnvironmentCreate: React.FC<{
     "From scratch"
   );
 
-  const newEnvironmentId = useMemo(() => nanoid(), []);
+  const createEnvironmentWithPojaConf: SubmitHandler<
+    {
+      to_create?: {environment_type: TEnvironmentType};
+    } & Partial<OneOfPojaConf> & {__conf?: any}
+  > = async ({to_create, ...pojaConf}) => {
+    try {
+      await createEnv("environments", {
+        data: to_create,
+      });
+      await configureEnv("pojaConf", {
+        data: {...omit(pojaConf, ["__conf"]), version: "3.6.2"},
+      });
+    } catch (e) {
+      console.log("error", e);
+    }
+  };
 
   return (
     <Form
-      onSubmit={(data) => {
-        console.log("manually submitted", data);
-      }}
-      defaultValues={{...template, id: newEnvironmentId}}
-      reValidateMode="onChange"
+      onSubmit={createEnvironmentWithPojaConf}
+      defaultValues={{to_create: {id: newEnvironmentId}, __conf: {}}}
+      noValidate
     >
       <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
         <Heading
@@ -59,12 +95,12 @@ const _EnvironmentCreate: React.FC<{
           <GridLayout xs={12} md={6} lg={4} spacing={2}>
             <SelectInput
               label="Type"
-              source="environment_type"
-              validate={required()}
+              source="to_create.environment_type"
               choices={makeSelectChoices(creatable)}
               variant="outlined"
               defaultValue={creatable[0]}
               optionText={(env) => <EnvironmentType value={env.name} />}
+              validate={required()}
               size="medium"
               fullWidth
             />
