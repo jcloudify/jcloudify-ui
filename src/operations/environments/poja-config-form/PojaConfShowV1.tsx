@@ -1,11 +1,23 @@
 import React from "react";
 import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
-import {Stack} from "@mui/material";
+import {
+  Stack,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+import {ExpandMore} from "@mui/icons-material";
 import {Heading} from "@/components/head";
 import {Divider} from "@/components/divider";
 import {GridLayout} from "@/components/grid";
 import {ShowLayout} from "@/operations/components/show";
-import {PasswordField, renderWithLabel} from "@/operations/components/field";
+import {
+  PasswordField,
+  RecordField,
+  StringArrayField,
+  renderWithLabel,
+} from "@/operations/components/field";
 import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
@@ -58,11 +70,75 @@ export const PojaConfShowV1: React.FC<{envId: string; appId: string}> = ({
 const GeneralConf = () => (
   <Stack>
     <Heading size="sm" title="General" mb={2} />
-    <GridLayout xs={12} md={6} lg={4} spacing={2} render={renderWithLabel}>
+    <GridLayout
+      mb={2}
+      xs={12}
+      md={6}
+      lg={4}
+      spacing={2}
+      render={renderWithLabel}
+    >
       <TextField label="Package name" source="general.package_full_name" />
       <BooleanField label="Snapstart" source="general.with_queues_nb" />
       <BooleanField label="Snapstart" source="general.with_snapstart" />
     </GridLayout>
+
+    <Accordion
+      sx={{
+        "&::before": {
+          display: "none",
+        },
+        "mb": 2,
+      }}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Typography variant="body1" fontSize={12}>
+          Custom Java Environment Variables
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <RecordField
+          source="general.custom_java_env_vars"
+          kvLabels={["Name", "Value"]}
+        />
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion
+      sx={{
+        "&::before": {
+          display: "none",
+        },
+        "mb": 2,
+      }}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Typography variant="body1" fontSize={12}>
+          Custom Java Repositories
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <StringArrayField source="general.custom_java_repositories" />
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion
+      sx={{
+        "&::before": {
+          display: "none",
+        },
+        "mb": 2,
+      }}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Typography variant="body1" fontSize={12}>
+          Custom Java Dependencies
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <StringArrayField source="general.custom_java_deps" />
+      </AccordionDetails>
+    </Accordion>
   </Stack>
 );
 

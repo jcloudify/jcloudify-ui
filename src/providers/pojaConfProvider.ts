@@ -8,13 +8,16 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
   },
   async getOne(eId, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (await unwrap(() =>
+    const conf = (await unwrap(() =>
       environmentApi().getApplicationEnvironmentConfig(
         uid,
         meta.appId,
         eId.toString()
       )
     )) as ToRecord<OneOfPojaConf>;
+
+    conf.id = eId;
+    return conf;
   },
   async save(conf, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
