@@ -5,7 +5,8 @@ import {
   BooleanInput,
   SelectInput,
   EditBase,
-  email,
+  Form,
+  SimpleForm,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -55,7 +56,9 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
         onSettled,
       }}
     >
-      <PojaConfFormFieldsV1 />
+      <SimpleForm>
+        <PojaConfFormFieldsV1 />
+      </SimpleForm>
     </EditBase>
   );
 };
