@@ -61,7 +61,7 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
             onSettled={() => setIsEditConf(false)}
           />
         ) : (
-          <PojaConfShowV1 envId={record.id!} />
+          <PojaConfShowV1 appId={appId} envId={record.id!} />
         )}
       </ContainerWithHeading>
     </Stack>
@@ -73,7 +73,15 @@ export const EnvironmentShow: React.FC<{envId: string; appId: string}> = ({
   appId,
 }) => {
   return (
-    <ShowBase resource="environments" id={envId}>
+    <ShowBase
+      resource="environments"
+      id={envId}
+      queryOptions={{
+        meta: {
+          appId,
+        },
+      }}
+    >
       <ShowLayout>
         <EnvironmentShowView appId={appId} />
       </ShowLayout>

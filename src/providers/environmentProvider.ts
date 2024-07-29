@@ -1,4 +1,3 @@
-import {envs} from "#/environment.mock";
 import {Environment} from "@jcloudify-api/typescript-client";
 import {PojaDataProvider, ToRecord, authProvider} from "@/providers";
 import {environmentApi, unwrap} from "@/services/poja-api";
@@ -12,10 +11,15 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
       )
     ).data as ToRecord<Environment>[];
   },
-  async getOne(id) {
+  async getOne(id, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (await unwrap(() => environmentApi().get(uid, filter.appId)))
-      .data as ToRecord<Environment>[];
+    return (await unwrap(() =>
+      environmentApi().getApplicationEnvironmentById(
+        uid,
+        meta.appId,
+        id.toString()
+      )
+    )) as ToRecord<Environment>;
   },
   async save(env, meta = {}): Promise<any> {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
