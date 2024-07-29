@@ -11,6 +11,7 @@ import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
 import {AppMonitoring} from "./AppMonitoring";
 import {RouteMap} from "@/components/router";
+import {RecordField, StringArrayField} from "../components/field";
 
 export const appShowViews: RouteMap = {
   environments: {
