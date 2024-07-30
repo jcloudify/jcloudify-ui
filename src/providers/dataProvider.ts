@@ -5,6 +5,7 @@ import {
   applicationProvider,
   deploymentProvider,
   environmentProvider,
+  githubAppInstallationProvider,
   logsProvider,
   pojaConfProvider,
   stackProvider,
@@ -27,6 +28,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return stackProvider;
     case "pojaConf":
       return pojaConfProvider;
+    case "githubAppInstallation":
+      return githubAppInstallationProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

@@ -21,7 +21,6 @@ import {
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {fromToNow} from "@/utils/date";
-
 import {ghOrg, ghRepository} from "#/github.mock";
 
 export const AppGithubImport: React.FC = () => {
