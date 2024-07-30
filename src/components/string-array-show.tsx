@@ -1,11 +1,12 @@
-import {useMemo} from "react";
 import {Box, Typography} from "@mui/material";
 
 export interface StringArrayShowProps {
   stringArray: string[];
 }
 
-export const StringArrayShow: React.FC<StringArrayShow> = ({stringArray}) => {
+export const StringArrayShow: React.FC<StringArrayShowProps> = ({
+  stringArray,
+}) => {
   return (
     <Box p={1}>
       {stringArray.map((string, idx) => {

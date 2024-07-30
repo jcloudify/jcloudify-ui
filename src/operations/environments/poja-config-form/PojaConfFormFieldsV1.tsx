@@ -5,7 +5,6 @@ import {
   BooleanInput,
   SelectInput,
   EditBase,
-  Form,
   SimpleForm,
 } from "react-admin";
 import {useWatch} from "react-hook-form";

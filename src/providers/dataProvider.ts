@@ -4,7 +4,6 @@ import {PojaDataProvider} from "./types";
 import {
   applicationProvider,
   deploymentProvider,
-  envVariablesProvider,
   environmentProvider,
   logsProvider,
   pojaConfProvider,
@@ -20,8 +19,6 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return deploymentProvider;
     case "environments":
       return environmentProvider;
-    case "env_variables":
-      return envVariablesProvider;
     case "logs":
       return logsProvider;
     case "users":

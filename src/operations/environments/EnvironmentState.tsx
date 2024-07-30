@@ -9,11 +9,13 @@ export interface EnvironmentStateProps {
 const INDICATOR_COLORS = {
   HEALTHY: colors("success"),
   UNHEALTHY: colors("error"),
+  UNKNOWN: "gray",
 } as const;
 
 export const ENVIRONMENT_STATE_TEXT = {
   HEALTHY: "Healthy",
   UNHEALTHY: "Unhealthy",
+  UNKNOWN: "Unknown",
 } as const;
 
 export const EnvironmentState: React.FC<EnvironmentStateProps> = ({value}) => {

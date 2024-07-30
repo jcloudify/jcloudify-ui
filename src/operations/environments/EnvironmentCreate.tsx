@@ -25,8 +25,9 @@ import {
 } from "@/operations/environments";
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {omit} from "@/utils/object";
 import {ToRecord} from "@/providers";
+import {fromStringValue} from "@/components/batch-array-editor";
+import {toRecord} from "@/components/batch-record-editor";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -81,7 +82,22 @@ const _EnvironmentCreate: React.FC<{
         data: to_create,
       });
       await configureEnv("pojaConf", {
-        data: {...pojaConf, version: "3.6.2"},
+        data: {
+          ...pojaConf,
+          general: {
+            ...pojaConf.general,
+            custom_java_deps: fromStringValue(
+              (pojaConf.general?.custom_java_deps as any[]) || []
+            ),
+            custom_java_repositories: fromStringValue(
+              (pojaConf.general?.custom_java_repositories as any[]) || []
+            ),
+            custom_java_env_vars: toRecord(
+              (pojaConf.general?.custom_java_env_vars as unknown as any) || []
+            ),
+          },
+          version: "3.6.2",
+        },
       });
     } catch (e) {
       console.log("error", e);

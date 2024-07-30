@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React from "react";
 import {
   Labeled as RALabeled,
   FunctionField,
@@ -8,12 +8,10 @@ import {
   useRecordContext,
 } from "react-admin";
 import get from "lodash.get";
-import {useDebounce} from "@uidotdev/usehooks";
 import {
   BatchRecordEditor,
   BatchRecordEditorProps,
-  isKeyValues,
-  keyValuesFromRecord,
+  fromRecord,
 } from "@/components/batch-record-editor";
 import {
   BatchArrayEditor,
@@ -66,7 +64,7 @@ export const BatchRecordEditorField = <RecordType extends RaRecord<string>>({
   Omit<BatchRecordEditorProps, "onChange">) => {
   const {field} = useInput({source: source!});
   const val = !Array.isArray(field.value)
-    ? keyValuesFromRecord(field.value)
+    ? fromRecord(field.value)
     : field.value;
   return (
     <BatchRecordEditor
