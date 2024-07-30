@@ -1,6 +1,6 @@
-import {Environment} from "@jcloudify-api/typescript-client";
+import {Environment, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
-import {useGetList} from "react-admin";
+import {useGetList, useGetOne} from "react-admin";
 import {Box, Paper, Stack, Select, MenuItem} from "@mui/material";
 
 import {DiffViewer} from "@/components/diff";
@@ -10,23 +10,34 @@ import {EnvironmentType} from "@/operations/environments";
 import {ToRecord} from "@/providers";
 import {highlightJSON} from "@/config/prism";
 import {prettyJSON} from "@/utils/format";
+import {omit} from "@/utils/object";
 
 export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
-  const [toCompare, setToCompare] = useState<Environment[]>([]);
+  const [toCompare, setToCompare] = useState<string[]>([]);
 
   const {data: environments = []} = useGetList<ToRecord<Environment>>(
     "environments",
-    {meta: {application_id: appId}}
+    {filter: {appId}}
   );
 
-  const setDiffEnvironment = (selectedId: string, toCompareIdx: number) => {
-    toCompare[toCompareIdx] = environments.find(
-      (environment) => environment.id === selectedId
-    )!;
+  const {data: c1} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
+    id: toCompare[0],
+    meta: {
+      appId,
+    },
+  });
+
+  const {data: c2} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
+    id: toCompare[1],
+    meta: {
+      appId,
+    },
+  });
+
+  const setDiffEnvironment = (selectedId: string, idx: number) => {
+    toCompare[idx] = selectedId;
     setToCompare(toCompare.slice());
   };
-
-  const [c1, c2] = toCompare;
 
   return (
     <Stack mt={4} mb={3} spacing={3}>
@@ -53,8 +64,8 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
               onSelect={(id) => setDiffEnvironment(id, 1)}
             />
           }
-          oldValue={c1 ? prettyJSON(c1) : ""}
-          newValue={c2 ? prettyJSON(c2) : ""}
+          oldValue={c1 ? prettyJSON(omit(c1, "id" as any)) : ""}
+          newValue={c2 ? prettyJSON(omit(c2, "id" as any)) : ""}
           highlight={highlightJSON}
         />
       </Box>

@@ -1,4 +1,4 @@
-import {useMemo, useEffect} from "react";
+import {useEffect} from "react";
 import {IconButtonWithTooltip} from "react-admin";
 import {Button, Stack, OutlinedInput, FormHelperText} from "@mui/material";
 import {Add, Remove, Cancel} from "@mui/icons-material";
@@ -8,10 +8,11 @@ import {z} from "zod";
 import {GridLayout} from "@/components/grid";
 import {optional} from "@/utils/monad";
 import {useSet} from "@/hooks";
+import {useDebounceCallback} from "usehooks-ts";
 
 export interface BatchArrayEditorProps {
-  onChange?: (values: string[]) => void;
-  defaultValues?: string[];
+  onChange?: (values: StringValue[]) => void;
+  defaultValues?: StringValue[];
   placeholder?: string;
   name?: string;
 }
@@ -22,19 +23,16 @@ const schema = z.object({
   _newlyAdded: z.boolean(),
 });
 
-type _InternalValue = z.infer<typeof schema>;
+type StringValue = z.infer<typeof schema>;
 
 export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
-  onChange,
+  onChange: _onChange,
   placeholder = "foo",
-  defaultValues: _defaultValues = [],
+  defaultValues = [],
   name = "Value",
 }) => {
-  const toRemove = useSet<_InternalValue>();
-  const defaultValues = useMemo(() => {
-    return toInternal(_defaultValues);
-  }, [_defaultValues]);
-
+  const onChange = useDebounceCallback(optional(_onChange).call, 500);
+  const toRemove = useSet<StringValue>();
   const form = useForm({
     mode: "onChange",
     resolver: zodResolver(
@@ -54,7 +52,7 @@ export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
 
   useEffect(() => {
     const subs = form.watch((v = {}) => {
-      optional(onChange).call(toStrings(v.stringValues as _InternalValue[]));
+      onChange(v.stringValues as StringValue[]);
     });
     return () => {
       subs.unsubscribe();
@@ -130,7 +128,7 @@ export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
   );
 };
 
-const toInternal = (strings: string[]) => {
+export const toStringValue = (strings: string[]) => {
   return strings.map((str) => ({
     value: str,
     _deleted: false,
@@ -138,6 +136,6 @@ const toInternal = (strings: string[]) => {
   }));
 };
 
-const toStrings = (values: _InternalValue[]) => {
+export const fromStringValue = (values: StringValue[]) => {
   return values.filter((v) => !v._deleted).map((v) => v.value);
 };

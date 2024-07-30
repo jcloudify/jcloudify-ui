@@ -8,16 +8,23 @@ import {
   useRecordContext,
 } from "react-admin";
 import get from "lodash.get";
+import {useDebounce} from "@uidotdev/usehooks";
 import {
   BatchRecordEditor,
   BatchRecordEditorProps,
+  isKeyValues,
+  keyValuesFromRecord,
 } from "@/components/batch-record-editor";
 import {
   BatchArrayEditor,
   BatchArrayEditorProps,
+  toStringValue,
 } from "@/components/batch-array-editor";
 import {RecordShow, RecordShowProps} from "@/components/record-show";
-import {StringArrayShow} from "@/components/string-array-show";
+import {
+  StringArrayShow,
+  StringArrayShowProps,
+} from "@/components/string-array-show";
 import {Nullable} from "@/types/util";
 
 export type PasswordFieldProps = FieldProps & {
@@ -58,10 +65,12 @@ export const BatchRecordEditorField = <RecordType extends RaRecord<string>>({
 }: Pick<FieldProps<RecordType>, "source"> &
   Omit<BatchRecordEditorProps, "onChange">) => {
   const {field} = useInput({source: source!});
-  const defaultValue = useMemo(() => field.value, []);
+  const val = !Array.isArray(field.value)
+    ? keyValuesFromRecord(field.value)
+    : field.value;
   return (
     <BatchRecordEditor
-      defaultRecord={defaultValue || defaultRecord}
+      defaultRecord={val || defaultRecord}
       onChange={field.onChange}
       {...rest}
     />
@@ -89,12 +98,18 @@ export const BatchArrayEditorField = <RecordType extends RaRecord<string>>({
   ...rest
 }: Pick<FieldProps<RecordType>, "source"> &
   Omit<BatchArrayEditorProps, "onChange">) => {
-  const {field} = useInput({source: source!});
-  const defaultValue = useMemo(() => field.value, []);
+  const {
+    field: {value, onChange},
+  } = useInput({source: source!});
+  const val = value.length
+    ? typeof value[0] === "string"
+      ? toStringValue(value)
+      : value
+    : [];
   return (
     <BatchArrayEditor
-      defaultValues={defaultValue || defaultValues}
-      onChange={field.onChange}
+      defaultValues={val || defaultValues}
+      onChange={onChange}
       {...rest}
     />
   );
@@ -107,7 +122,7 @@ export const StringArrayField = <RecordType extends RaRecord<string>>({
   source,
   stringArray: propValue = [],
   ...rest
-}: Pick<FieldProps<RecordType>, "source"> & Nullable<RecordShowProps>) => {
+}: Pick<FieldProps<RecordType>, "source"> & Nullable<StringArrayShowProps>) => {
   const record = useRecordContext();
   return (
     <StringArrayShow

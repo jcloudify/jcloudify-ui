@@ -26,6 +26,7 @@ export const useEnvironmentCreation = (appId: string | undefined) => {
 
   return {
     creatable,
+    created: environments,
     canCreateMore,
   };
 };

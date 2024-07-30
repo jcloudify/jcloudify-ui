@@ -11,6 +11,7 @@ import {
   SelectInput,
   required,
   useCreate,
+  useGetOne,
 } from "react-admin";
 import {SubmitHandler} from "react-hook-form";
 import {Stack} from "@mui/material";
@@ -25,6 +26,7 @@ import {
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {omit} from "@/utils/object";
+import {ToRecord} from "@/providers";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -49,6 +51,16 @@ const _EnvironmentCreate: React.FC<{
     },
   });
 
+  const {data: fromConfig = {}} = useGetOne<ToRecord<OneOfPojaConf>>(
+    "pojaConf",
+    {
+      id: template?.id?.toString()!,
+      meta: {
+        appId,
+      },
+    }
+  );
+
   const {creatable} = useEnvironmentCreation(appId);
 
   const subtitle = template ? (
@@ -63,23 +75,25 @@ const _EnvironmentCreate: React.FC<{
     {
       to_create?: {environment_type: TEnvironmentType};
     } & Partial<OneOfPojaConf> & {__conf?: any}
-  > = async ({to_create, ...pojaConf}) => {
+  > = async ({to_create, __conf, ...pojaConf}) => {
     try {
       await createEnv("environments", {
         data: to_create,
       });
       await configureEnv("pojaConf", {
-        data: {...omit(pojaConf, ["__conf"]), version: "3.6.2"},
+        data: {...pojaConf, version: "3.6.2"},
       });
     } catch (e) {
       console.log("error", e);
     }
   };
 
+  console.log("fromConfig", fromConfig);
+
   return (
     <Form
       onSubmit={createEnvironmentWithPojaConf}
-      defaultValues={{to_create: {id: newEnvironmentId}, __conf: {}}}
+      values={{to_create: {id: newEnvironmentId}, __conf: {}, ...fromConfig}}
       noValidate
     >
       <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>

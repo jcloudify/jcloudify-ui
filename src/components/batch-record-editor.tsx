@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from "react";
+import {useEffect} from "react";
 import {IconButtonWithTooltip} from "react-admin";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -17,14 +17,15 @@ import {GridLayout} from "@/components/grid";
 import {colors} from "@/themes";
 import {optional} from "@/utils/monad";
 import {useSet} from "@/hooks";
+import {useDebounceCallback} from "usehooks-ts";
 
 export interface BatchRecordEditorProps {
   /** describes what exactly is the key values to edit e.g: EnvVars, Config */
   kvLabels?: [string, string];
   placeholders?: [string, string];
   pairName?: string;
-  onChange?: (record: Record<string, string>) => void;
-  defaultRecord?: Record<string, string>;
+  onChange?: (record: KeyValue[]) => void;
+  defaultRecord?: KeyValue[];
 }
 
 const schema = z.object({
@@ -34,20 +35,18 @@ const schema = z.object({
   _newlyAdded: z.boolean(),
 });
 
-type _InternalKeyValue = z.infer<typeof schema>;
+type KeyValue = z.infer<typeof schema>;
 
 // TODO: edit env
 export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
-  onChange,
+  onChange: _onChange,
   pairName = "",
   kvLabels = ["Key", "Value"],
   placeholders = ["Name", "Value"],
-  defaultRecord: _defaultRecord = {},
+  defaultRecord = [],
 }) => {
-  const toRemove = useSet<_InternalKeyValue>();
-  const defaultRecord = useMemo(() => {
-    return keyValuesFromRecord(_defaultRecord);
-  }, [_defaultRecord]);
+  const onChange = useDebounceCallback(optional(_onChange).call, 500);
+  const toRemove = useSet<KeyValue>();
 
   const form = useForm({
     mode: "onChange",
@@ -68,7 +67,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
   useEffect(() => {
     const subs = form.watch((v = {}) => {
-      const keyValues = v.keyValues as _InternalKeyValue[];
+      const keyValues = v.keyValues as KeyValue[];
       const keys = keyValues.filter((kv) => !kv._deleted).map((kv) => kv.key);
       const isUnique = keys.length === new Set(keys).size;
 
@@ -82,9 +81,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
       form.clearErrors("root.uniqueness");
 
-      optional(onChange).call(
-        recordFromKeyValues(v.keyValues as _InternalKeyValue[])
-      );
+      onChange(v.keyValues as KeyValue[]);
     });
     return () => {
       subs.unsubscribe();
@@ -184,18 +181,20 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
   );
 };
 
-const keyValuesFromRecord = (
+export const keyValuesFromRecord = (
   record: Record<string, string>
-): _InternalKeyValue[] => {
-  return Object.entries(record).map(([key, value]) => ({
+): KeyValue[] => {
+  const keyValues = Object.entries(record).map(([key, value]) => ({
     key,
     value,
     _deleted: false,
     _newlyAdded: false,
   }));
+  (keyValues as any).__kv = true;
+  return keyValues;
 };
 
-const recordFromKeyValues = (keyValues: _InternalKeyValue[]) => {
+export const recordFromKeyValues = (keyValues: KeyValue[]) => {
   return keyValues.reduce(
     (record, pair) => {
       if (!pair._deleted) {
@@ -205,4 +204,8 @@ const recordFromKeyValues = (keyValues: _InternalKeyValue[]) => {
     },
     {} as Record<string, string>
   );
+};
+
+export const isKeyValues = (val: object) => {
+  return "__kv" in val;
 };
