@@ -181,20 +181,17 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
   );
 };
 
-export const keyValuesFromRecord = (
-  record: Record<string, string>
-): KeyValue[] => {
+export const fromRecord = (record: Record<string, string>): KeyValue[] => {
   const keyValues = Object.entries(record).map(([key, value]) => ({
     key,
     value,
     _deleted: false,
     _newlyAdded: false,
   }));
-  (keyValues as any).__kv = true;
   return keyValues;
 };
 
-export const recordFromKeyValues = (keyValues: KeyValue[]) => {
+export const toRecord = (keyValues: KeyValue[]) => {
   return keyValues.reduce(
     (record, pair) => {
       if (!pair._deleted) {
@@ -204,8 +201,4 @@ export const recordFromKeyValues = (keyValues: KeyValue[]) => {
     },
     {} as Record<string, string>
   );
-};
-
-export const isKeyValues = (val: object) => {
-  return "__kv" in val;
 };

@@ -2,7 +2,6 @@ import React from "react";
 import {Environment} from "@jcloudify-api/typescript-client";
 import {
   Link,
-  Button,
   ListBase,
   ListToolbar as RAListToolbar,
   SelectInput,
@@ -22,7 +21,6 @@ import {
   Avatar,
   styled,
 } from "@mui/material";
-import {Settings} from "@mui/icons-material";
 import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
