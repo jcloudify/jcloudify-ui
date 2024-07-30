@@ -7,6 +7,10 @@ import {jcloudify} from "../support/util";
 describe("Auth", () => {
   const AUTH_CALLBACK_ROUTE = "/auth/callback?code=anycode";
 
+  beforeEach(() => {
+    cy.mockApiGet();
+  });
+
   specify("Login", () => {
     cy.fakeLogin(user1);
 
@@ -22,7 +26,7 @@ describe("Auth", () => {
     }).as("exchangeCode");
 
     cy.intercept("POST", jcloudify("/users"), (req) => {
-      const [user] = req.body;
+      const [user] = req.body.data;
       expect(user).to.deep.eq({
         first_name: user1.first_name,
         last_name: user1.last_name,
@@ -63,7 +67,7 @@ describe("Auth", () => {
     }).as("exchangeCode");
 
     cy.intercept("POST", jcloudify("/users"), (req) => {
-      const [user] = req.body;
+      const [user] = req.body.data;
       expect(user).to.deep.eq({
         first_name: user1.first_name,
         last_name: user1.last_name,

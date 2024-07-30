@@ -6,6 +6,7 @@ import {
   prod_env,
 } from "../fixtures/environment.mock";
 import {app1, app2, apps} from "../fixtures/application.mock";
+import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "./util";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
@@ -61,6 +62,34 @@ Cypress.Commands.add("mockApiGet", () => {
       data: [preprod_env2],
     }
   ).as("getEnvironments");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app1.id}/environments/prod_env`),
+    prod_env
+  ).as("getEnvironmentById");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app1.id}/environments/preprod_env`),
+    preprod_env
+  ).as("getEnvironmentById");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app2.id}/environments/preprod_env2`),
+    preprod_env2
+  ).as("getEnvironmentById");
+
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app1.id}/environments/prod_env/config`),
+    prod_env_conf1
+  ).as("getEnvironmentConfig");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app1.id}/environments/preprod_env/config`
+    ),
+    preprod_env_conf1
+  ).as("getEnvironmentConfig");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

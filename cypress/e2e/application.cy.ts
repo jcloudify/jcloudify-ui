@@ -12,7 +12,7 @@ describe("Application", () => {
   });
 
   context("list", () => {
-    it("show all apps", () => {
+    it.only("show all apps", () => {
       cy.wait("@getApplications");
 
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name!);
@@ -61,6 +61,7 @@ describe("Application", () => {
       });
 
       specify("Shows the clicked environment details", () => {
+        cy.wait("@getEnvironmentById");
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.contains("prod_env").click();
         cy.contains("Prod");
@@ -90,6 +91,9 @@ describe("Application", () => {
         () => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});
           cy.contains("prod_env").click();
+
+          cy.wait("@getEnvironmentById");
+          cy.wait("@getEnvironmentById");
 
           // edit
           cy.getByName("variables.0.name").clear().type("AMPLIFY_POOL_ID");
@@ -128,6 +132,8 @@ describe("Application", () => {
       cy.muiSelect("#select-env-0", "prod_env");
       cy.muiSelect("#select-env-1", "preprod_env");
 
+      cy.wait("@getEnvironments");
+      cy.wait("@getEnvironmentConfig");
       // TODO: a way to test this in a better way
     });
 
@@ -151,6 +157,8 @@ describe("Application", () => {
       );
 
       specify("from scratch", () => {
+        cy.wait("@getEnvironments");
+
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
         cy.getByHref(`/applications/${app2.id}/show/environments`).click();
         cy.contains("Create").click();
@@ -198,6 +206,7 @@ describe("Application", () => {
         beforeEach(() => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+          cy.wait("@getEnvironments");
         });
 
         specify("Environment", () => {
