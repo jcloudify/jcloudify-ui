@@ -12,10 +12,12 @@ import {
   required,
   useCreate,
   useGetOne,
+  useNotify,
 } from "react-admin";
 import {SubmitHandler} from "react-hook-form";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
+import {isAxiosError} from "axios";
 import {ContainerWithHeading} from "@/components/container";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
@@ -39,6 +41,7 @@ const _EnvironmentCreate: React.FC<{
   template: Environment | undefined;
 }> = ({template, appId}) => {
   const newEnvironmentId = useMemo(() => nanoid(), []);
+  const notify = useNotify();
 
   const [createEnv] = useCreate<Environment>("environments", {
     meta: {
@@ -99,12 +102,14 @@ const _EnvironmentCreate: React.FC<{
           version: "3.6.2",
         },
       });
-    } catch (e) {
-      console.log("error", e);
+
+      notify("Environment created successfully.");
+    } catch (err) {
+      if (isAxiosError(err)) {
+        notify(err.response?.data || "unable to create environment.");
+      }
     }
   };
-
-  console.log("fromConfig", fromConfig);
 
   return (
     <Form
