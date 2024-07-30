@@ -8,6 +8,7 @@ import {authProvider, dataProvider} from "@/providers";
 import {AuthCallback, AuthRegistration, Authentication} from "@/security";
 import {apps} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
+import {AppInstallationCallback} from "@/operations/github";
 import {defaultTheme} from "@/themes";
 import {renderRouteMap} from "@/components/router";
 
@@ -40,6 +41,10 @@ export const App = () => (
     <BrowserRouter>
       <Routes>
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route
+          path="/installation/callback"
+          element={<AppInstallationCallback />}
+        />
         <Route path="/auth/register" element={<AuthRegistration />} />
         <Route path="*" element={<JCAdmin />} />
       </Routes>

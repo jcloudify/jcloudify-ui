@@ -1,4 +1,4 @@
-import {Token, Whoami} from "@jcloudify-api/typescript-client";
+import {Application, Token, Whoami} from "@jcloudify-api/typescript-client";
 import {ToRecord} from "./types";
 
 export interface CacheObject<T> {
@@ -36,6 +36,7 @@ const inLocalStorage = <T>(key: string) =>
 
 export const authTokenCache = inLocalStorage<ToRecord<Token>>("auth_tokens");
 export const whoamiCache = inLocalStorage<Whoami>("whoami");
+export const appCreateCache = inLocalStorage<Application>("app_create");
 
 export type AuthProcess = "login" | "signup" | undefined;
 export const authProcess = inLocalStorage<"login" | "signup" | undefined>(
