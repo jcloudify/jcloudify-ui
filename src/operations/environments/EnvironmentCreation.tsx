@@ -1,26 +1,26 @@
 import {useState} from "react";
-import {Environment} from "@jcloudify-api/typescript-client";
-import {Button, useGetList} from "react-admin";
+import {Button} from "react-admin";
 import {useNavigate} from "react-router-dom";
-import {Stack, Box, Paper, Select, MenuItem} from "@mui/material";
+import {Stack, Box, Paper, Select, MenuItem, Alert} from "@mui/material";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
-import {EnvironmentType} from "@/operations/environments";
-import {ToRecord} from "@/providers";
+import {
+  EnvironmentType,
+  useEnvironmentCreation,
+} from "@/operations/environments";
 
 export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
   const [templateId, setTemplateId] = useState<string>();
 
   const navigate = useNavigate();
 
-  const {data: envs = []} = useGetList<ToRecord<Environment>>("environments", {
-    meta: {
-      application_id: appId,
-    },
-  });
+  const {created: createdEnvironments, canCreateMore} =
+    useEnvironmentCreation(appId);
 
   const navigateToCreateEnv = () => {
-    const environment = envs.find((env) => env.id === templateId);
+    const environment = createdEnvironments.find(
+      (env) => env.id === templateId
+    );
 
     navigate(`/applications/${appId}/show/environments/create`, {
       state: environment,
@@ -36,6 +36,13 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
         size="sm"
       />
 
+      {!canCreateMore && (
+        <Alert severity="error">
+          All available environments have been already created, so it's not
+          possible to create more at this time.
+        </Alert>
+      )}
+
       <Box>
         <GridLayout xs={6} spacing={1.5}>
           <Stack component={Paper} p={2} height="100%">
@@ -47,6 +54,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
                 label="Create"
                 variant="outlined"
                 size="medium"
+                disabled={!canCreateMore}
                 data-testid="CreateFromScratch"
               />
             </Box>
@@ -64,8 +72,9 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
               variant="outlined"
               id="select-creation-template"
               onChange={(ev) => setTemplateId(ev.target.value as string)}
+              disabled={!createdEnvironments.length || !canCreateMore}
             >
-              {envs.map((env) => (
+              {createdEnvironments.map((env) => (
                 <MenuItem key={env.id} value={env.id}>
                   <EnvironmentType value={env.environment_type!} />
                 </MenuItem>
@@ -74,7 +83,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
 
             <Box>
               <Button
-                disabled={!templateId}
+                disabled={!templateId || !canCreateMore}
                 onClick={navigateToCreateEnv}
                 label="Create"
                 variant="outlined"
