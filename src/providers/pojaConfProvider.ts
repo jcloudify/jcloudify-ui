@@ -21,7 +21,7 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
   },
   async save(conf, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (await unwrap(() =>
+    const saved = (await unwrap(() =>
       environmentApi().configureApplicationEnv(
         uid,
         meta.appId,
@@ -29,6 +29,8 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
         conf
       )
     )) as ToRecord<OneOfPojaConf>;
+    saved.id = conf.id;
+    return saved;
   },
   saveAll(): Promise<any> {
     throw new Error("Function not implemented.");

@@ -1,4 +1,7 @@
-import {AppInstallation} from "@jcloudify-api/typescript-client";
+import {
+  Application,
+  GithubAppInstallation,
+} from "@jcloudify-api/typescript-client";
 import {
   CreateBase,
   Form,
@@ -11,6 +14,7 @@ import {
   required,
   Title,
   useGetList,
+  useInput,
 } from "react-admin";
 import {
   FormHelperText,
@@ -23,6 +27,8 @@ import {
 } from "@mui/material";
 import {GitHub, Add} from "@mui/icons-material";
 import {nanoid} from "nanoid";
+import {useLocation} from "react-router-dom";
+import {useFormContext} from "react-hook-form";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
@@ -30,13 +36,9 @@ import {Divider} from "@/components/divider";
 import {ToRecord, appCreateCache} from "@/providers";
 import {gh} from "@/config/env";
 import {redirect} from "@/utils/redirect";
-import {useLocation} from "react-router-dom";
-import {useFormContext} from "react-hook-form";
 
 export const AppBootstrap: React.FC = () => {
   const {state: appCreateState = {}} = useLocation();
-
-  console.log("app_create_state", appCreateState);
 
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
@@ -95,9 +97,13 @@ const AppInfo = () => {
 };
 
 const CreateGitRepository: React.FC = () => {
-  const {data: appInstallations = []} = useGetList<ToRecord<AppInstallation>>(
-    "githubAppInstallation"
-  );
+  const {data: appInstallations = []} = useGetList<
+    ToRecord<GithubAppInstallation>
+  >("githubAppInstallation");
+  const {field} = useInput({
+    source: "github_repository.installation_id",
+    defaultValue: appInstallations[0]?.gh_installation_id,
+  });
 
   return (
     <ContainerWithHeading
@@ -106,18 +112,17 @@ const CreateGitRepository: React.FC = () => {
     >
       <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
         <FormControl variant="outlined" sx={{width: "100%", height: "100%"}}>
-          <Select fullWidth size="medium">
+          <Select fullWidth size="medium" {...field}>
             {appInstallations.map((installation) => (
               <MenuItem
                 value={installation.id}
                 key={`installation-${installation.id}`}
-                sx={{my: 1}}
               >
-                <ListItemIcon>
+                <Stack direction="row" alignItems="center" spacing={2}>
                   <GitHub />
-                </ListItemIcon>
 
-                <ListItemText>{installation.owner}</ListItemText>
+                  <span>{installation.owner}</span>
+                </Stack>
               </MenuItem>
             ))}
             <Divider />

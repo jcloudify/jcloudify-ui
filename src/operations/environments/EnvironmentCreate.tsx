@@ -30,6 +30,7 @@ import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {ToRecord} from "@/providers";
 import {fromStringValue} from "@/components/batch-array-editor";
 import {toRecord} from "@/components/batch-record-editor";
+import { useNavigate } from "react-router-dom";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -42,13 +43,9 @@ const _EnvironmentCreate: React.FC<{
 }> = ({template, appId}) => {
   const newEnvironmentId = useMemo(() => nanoid(), []);
   const notify = useNotify();
+  const navigate = useNavigate();
 
-  const [createEnv] = useCreate<Environment>("environments", {
-    meta: {
-      appId,
-    },
-  });
-  const [configureEnv] = useCreate<OneOfPojaConf>("pojaConf", {
+  const [createEnvironmentWithConfig, {isLoading}] = useCreate<Environment>("environments", {
     meta: {
       appId,
       envId: newEnvironmentId,
@@ -75,35 +72,33 @@ const _EnvironmentCreate: React.FC<{
     "From scratch"
   );
 
-  const createEnvironmentWithPojaConf: SubmitHandler<
+  const doCreateEnvironmentWithConfig: SubmitHandler<
     {
       to_create?: {environment_type: TEnvironmentType};
     } & Partial<OneOfPojaConf> & {__conf?: any}
   > = async ({to_create, __conf, ...pojaConf}) => {
     try {
-      await createEnv("environments", {
-        data: to_create,
-      });
-      await configureEnv("pojaConf", {
-        data: {
-          ...pojaConf,
-          general: {
-            ...pojaConf.general,
-            custom_java_deps: fromStringValue(
-              (pojaConf.general?.custom_java_deps as any[]) || []
-            ),
-            custom_java_repositories: fromStringValue(
-              (pojaConf.general?.custom_java_repositories as any[]) || []
-            ),
-            custom_java_env_vars: toRecord(
-              (pojaConf.general?.custom_java_env_vars as unknown as any) || []
-            ),
-          },
-          version: "3.6.2",
-        },
-      });
+      const {custom_java_deps = [], custom_java_env_vars = [], custom_java_repositories = []} = pojaConf.general!;
 
-      notify("Environment created successfully.");
+      await createEnvironmentWithConfig("environments", {
+        data: to_create,
+        meta: {
+          appId,
+          with_config: {
+            ...pojaConf,
+            general: {
+              ...pojaConf.general,
+              custom_java_deps: fromStringValue(custom_java_deps as any[]),
+              custom_java_repositories: fromStringValue(custom_java_repositories as any[]),
+              custom_java_env_vars: Array.isArray(custom_java_env_vars) ? toRecord(custom_java_env_vars as unknown as any) : custom_java_env_vars,
+              gen_api_client: __conf.with_gen_clients ? null : pojaConf.gen_api_client,
+            },
+            version: "3.6.2",
+          },
+        }
+      })
+      notify("Environment created successfully.", {type: "success"});
+      navigate(`/applications/${appId}/show/environments/${newEnvironmentId}`);
     } catch (err) {
       if (isAxiosError(err)) {
         notify(err.response?.data || "unable to create environment.");
@@ -113,8 +108,10 @@ const _EnvironmentCreate: React.FC<{
 
   return (
     <Form
-      onSubmit={createEnvironmentWithPojaConf}
+      onSubmit={doCreateEnvironmentWithConfig}
       values={{to_create: {id: newEnvironmentId}, __conf: {}, ...fromConfig}}
+      validate={() => ({})}
+      disabled={isLoading}
       noValidate
     >
       <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
@@ -151,7 +148,7 @@ const _EnvironmentCreate: React.FC<{
 
         <Toolbar sx={{mt: 2}}>
           <Stack direction="row" spacing={2}>
-            <SaveButton label="Create" alwaysEnable />
+            <SaveButton label="Create" />
           </Stack>
         </Toolbar>
       </Stack>

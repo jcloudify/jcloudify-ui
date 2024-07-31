@@ -79,7 +79,7 @@ const GeneralConf = () => (
       render={renderWithLabel}
     >
       <TextField label="Package name" source="general.package_full_name" />
-      <BooleanField label="Snapstart" source="general.with_queues_nb" />
+      <TextField label="Queues NB" source="general.with_queues_nb" />
       <BooleanField label="Snapstart" source="general.with_snapstart" />
     </GridLayout>
 

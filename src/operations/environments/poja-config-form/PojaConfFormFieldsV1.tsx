@@ -5,7 +5,9 @@ import {
   BooleanInput,
   SelectInput,
   EditBase,
-  SimpleForm,
+  Form,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -40,6 +42,7 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
 }) => {
   return (
     <EditBase
+      mutationMode="pessimistic"
       resource="pojaConf"
       id={envId}
       queryOptions={{
@@ -47,17 +50,23 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
           appId,
         },
       }}
+      redirect={false}
       mutationOptions={{
         meta: {
           appId,
           envId,
         },
-        onSettled,
+        onSuccess: onSettled,
       }}
     >
-      <SimpleForm>
+      <Form validate={() => ({})} noValidate>
         <PojaConfFormFieldsV1 />
-      </SimpleForm>
+        <Toolbar sx={{mt: 2}}>
+          <Stack direction="row" spacing={2}>
+            <SaveButton />
+          </Stack>
+        </Toolbar>
+      </Form>
     </EditBase>
   );
 };
