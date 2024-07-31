@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useMemo, useEffect} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {Loading} from "@/components/loading";
@@ -11,12 +11,14 @@ export const AppInstallationCallback = () => {
 
   const installation_id = p.get("installation_id");
 
+  const newId = useMemo(() => nanoid(), []);
+
   useEffect(() => {
     const doUpdateInstallation = async () => {
       if (installation_id) {
         try {
           await githubAppInstallationProvider.save({
-            id: nanoid(),
+            id: newId,
             gh_installation_id: Number(installation_id),
           });
 
