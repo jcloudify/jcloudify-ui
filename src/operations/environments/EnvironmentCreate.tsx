@@ -1,4 +1,8 @@
-import {Environment, OneOfPojaConf} from "@jcloudify-api/typescript-client";
+import {
+  Application,
+  Environment,
+  OneOfPojaConf,
+} from "@jcloudify-api/typescript-client";
 import {useMemo, memo} from "react";
 import {
   Form,
@@ -41,6 +45,10 @@ const _EnvironmentCreate: React.FC<{
   const notify = useNotify();
   const navigate = useNavigate();
 
+  const {data: app} = useGetOne<ToRecord<Application>>("applications", {
+    id: appId!,
+  });
+
   const [createEnvironmentWithConfig, {isLoading}] = useCreate<Environment>(
     "environments",
     {
@@ -77,11 +85,19 @@ const _EnvironmentCreate: React.FC<{
     } & PojaConfFormDataV1
   > = async ({to_create, ...pojaConf}) => {
     try {
+      const with_config = fromPojaConfFormData(pojaConf);
+
       await createEnvironmentWithConfig("environments", {
         data: to_create,
         meta: {
           appId,
-          with_config: fromPojaConfFormData(pojaConf),
+          with_config: {
+            ...with_config,
+            general: {
+              ...with_config.general,
+              app_name: app?.name,
+            },
+          },
         },
       });
       notify("Environment created successfully.", {type: "success"});
