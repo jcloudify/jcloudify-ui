@@ -12,6 +12,8 @@ import {AppInstallationCallback} from "@/operations/github";
 import {PlanDetails} from "@/operations/plan";
 import {defaultTheme} from "@/themes";
 import {renderRouteMap} from "@/components/router";
+import {Payments} from "@/operations/payments";
+import {PaymentMethod} from "@/operations/payment-methods";
 
 const JCAdmin = () => (
   <Admin
@@ -33,8 +35,9 @@ const JCAdmin = () => (
       <Route path="/applications/create">
         {renderRouteMap(appCreateViews)}
       </Route>
-      <Route path="/payment-method" element={<>Payment Method</>} />
-      <Route path="/plan-info" element={<PlanDetails />} />
+      <Route path="/payments" element={<Payments />} />
+      <Route path="/payments/payment-methods" element={<PaymentMethod />} />
+      <Route path="/pricing" element={<PlanDetails />} />
     </CustomRoutes>
   </Admin>
 );

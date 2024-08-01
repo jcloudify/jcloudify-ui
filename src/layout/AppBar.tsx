@@ -79,25 +79,25 @@ const UserMenu: React.FC = () => {
         <Box pb={1}>
           <MenuItem
             onClick={() => {
-              navigate("/payment-method");
+              navigate("/payments");
             }}
           >
             <ListItemIcon>
               <PaymentIcon fontSize="small" />
             </ListItemIcon>
 
-            <ListItemText>Payment</ListItemText>
+            <ListItemText>Payments</ListItemText>
           </MenuItem>
           <MenuItem
             onClick={() => {
-              navigate("/plan-info");
+              navigate("/pricing");
             }}
           >
             <ListItemIcon>
               <CardMembershipIcon fontSize="small" />
             </ListItemIcon>
 
-            <ListItemText>Plan Info</ListItemText>
+            <ListItemText>Pricing</ListItemText>
           </MenuItem>
         </Box>
 
