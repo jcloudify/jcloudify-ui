@@ -11,9 +11,7 @@ const PaginationAction = styled(Button)({
 });
 
 export const Pagination = () => {
-  const {page, setPage} = useListContext();
-
-  const isFirstPage = page === 1;
+  const {page, setPage, hasNextPage, hasPreviousPage} = useListContext();
 
   return (
     <Toolbar
@@ -32,7 +30,7 @@ export const Pagination = () => {
         }}
         color="primary"
         key="prev"
-        disabled={isFirstPage}
+        disabled={!hasPreviousPage}
         startIcon={<ChevronLeft />}
         onClick={() => setPage(page - 1)}
       >
@@ -43,6 +41,7 @@ export const Pagination = () => {
         sx={{color: "#575757", textTransform: "none"}}
         key="next"
         endIcon={<ChevronRight />}
+        disabled={!hasNextPage}
         onClick={() => setPage(page + 1)}
       >
         Next

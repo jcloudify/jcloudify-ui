@@ -44,7 +44,7 @@ Cypress.Commands.add("mockToken", (token) => {
 });
 
 Cypress.Commands.add("mockApiGet", () => {
-  cy.intercept("GET", jcloudify(`/users/*/applications`), {
+  cy.intercept("GET", jcloudify(`/users/*/applications?page=*&page_size=*`), {
     data: apps,
   }).as("getApplications");
 

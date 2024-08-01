@@ -1,4 +1,4 @@
-import {DataProvider as RADataProvider} from "react-admin";
+import {DataProvider} from "react-admin";
 import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
 import {
@@ -35,23 +35,34 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
   }
 };
 
-export const dataProvider: RADataProvider = {
+export const dataProvider: DataProvider = {
   async getList(resource, raParams) {
     const {
       pagination: {page, perPage},
       filter,
       meta,
     } = normalizeParams(resource, raParams);
-    const result = await getProvider(resource).getList(
+    const {data, count, has_previous} = await getProvider(resource).getList(
       page,
       perPage,
       filter,
       meta
     );
-    return {data: result, total: Number.MAX_SAFE_INTEGER};
+
+    return {
+      data,
+      total: undefined,
+      pageInfo: {
+        hasPreviousPage: has_previous,
+        hasNextPage: count === 10,
+      },
+    };
   },
   async getOne(resource, params) {
-    const result = await getProvider(resource).getOne(params.id, params.meta);
+    const result = await getProvider(resource).getOne(
+      params.id.toString(),
+      params.meta
+    );
     return {data: result};
   },
   async update(resource, params) {
@@ -63,7 +74,7 @@ export const dataProvider: RADataProvider = {
     return {data: result};
   },
   async delete(resource, params) {
-    const result = await getProvider(resource).delete(params.id);
+    const result = await getProvider(resource).delete(params.id.toString());
     return {data: result};
   },
   async updateMany(resource, params) {
