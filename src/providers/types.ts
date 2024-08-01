@@ -32,17 +32,6 @@ export interface PagedResponse<T> extends _PagedResponse {
   data: T[];
 }
 
-export type RaDataProviderCRUD =
-  | "getList"
-  | "getOne"
-  | "update"
-  | "create"
-  | "delete"
-  | "updateMany"
-  | "getMany"
-  | "getManyReference"
-  | "deleteMany";
-
 export type ToRecord<T extends object> = T & {
   id: string;
 };
