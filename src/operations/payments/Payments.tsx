@@ -1,7 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {
   Box,
-  Container,
   Divider,
   IconButton,
   Stack,
@@ -9,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import {Settings as SettingsIcon} from "@mui/icons-material";
-import {DisplayCard, PaymentMethod} from "@/operations/payment-methods";
+import {DisplayCard} from "@/operations/payment-methods";
 import {colors} from "@/themes";
 
 export const Payments: React.FC = () => {
@@ -20,7 +19,8 @@ export const Payments: React.FC = () => {
       <Stack direction="column" spacing={2} my={2}>
         <PaymentsSummary />
         <Box my={1}>
-          <PaymentMethod />
+          <Typography variant="h5">Payment List</Typography>
+          <Typography variant="body2">Empty list</Typography>
         </Box>
       </Stack>
     </Box>
@@ -30,7 +30,8 @@ export const Payments: React.FC = () => {
 const PaymentsSummary: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Container>
+    <Box>
+      <Typography variant="h5">Summary</Typography>
       <Stack
         direction={{sm: "column", md: "row"}}
         spacing={1}
@@ -38,14 +39,13 @@ const PaymentsSummary: React.FC = () => {
         borderRadius={4}
         p={1}
         border={1}
+        my={2}
       >
-        <Box>
-          <Typography variant="h6">Actual invoice</Typography>
-          <Typography variant="body1">
-            Labore aliquip esse esse proident excepteur. In excepteur nisi qui
-            esse proident non. Nisi laborum deserunt aute excepteur eu eu duis
-            excepteur.
-          </Typography>
+        <Box sx={{my: 1, minWidth: "17rem"}}>
+          <Stack direction="column" spacing={1} mb={1}>
+            <Typography variant="h6">Current month</Typography>
+            <Typography variant="h4">12.2$</Typography>
+          </Stack>
         </Box>
         <Box>
           <Typography variant="h6">Actual invoice</Typography>
@@ -81,6 +81,6 @@ const PaymentsSummary: React.FC = () => {
           </Box>
         </Box>
       </Stack>
-    </Container>
+    </Box>
   );
 };
