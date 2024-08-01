@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Divider,
   Typography,
 } from "@mui/material";
 import {ExpandMore as ExpandMoreIcon} from "@mui/icons-material";
@@ -10,6 +11,8 @@ import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {ContainerWithHeading} from "@/components/container";
 import {PaymentMethodForm} from "./PaymentMethodForm";
+import {Datagrid, FunctionField, ListBase, TextField} from "react-admin";
+import {PaymentMethod as PaymentMethodModel} from "@jcloudify-api/typescript-client";
 
 export const PaymentMethod = () => {
   const stripePk = process.env.REACT_APP_STRIPE_PK;
@@ -26,23 +29,48 @@ export const PaymentMethod = () => {
   return (
     <Box>
       <Box sx={{width: {md: "75%", sm: "100%"}, p: 1}}>
-        <Elements stripe={stripePromise} options={options}>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Typography>Add Payment Method</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ContainerWithHeading title="Payment Method Information">
-                <PaymentMethodForm />
-              </ContainerWithHeading>
-            </AccordionDetails>
-          </Accordion>
-        </Elements>
+        <Typography variant="h5">Payment Methods</Typography>
+        <Divider />
+        <Box my={4}>
+          <Elements stripe={stripePromise} options={options}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Typography>Add Payment Method</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ContainerWithHeading title="Payment Method Information">
+                  <PaymentMethodForm />
+                </ContainerWithHeading>
+              </AccordionDetails>
+            </Accordion>
+            <PaymentMethodList />
+          </Elements>
+        </Box>
       </Box>
+    </Box>
+  );
+};
+
+const PaymentMethodList = () => {
+  return (
+    <Box my={4}>
+      <ListBase resource="paymentMethods">
+        <Datagrid>
+          <FunctionField
+            source="last4"
+            label="Number"
+            render={(record: PaymentMethodModel) =>
+              `xxxx xxxx xxxx ${record.last4}`
+            }
+          />
+          <TextField source="brand" />
+          <TextField source="type" />
+        </Datagrid>
+      </ListBase>
     </Box>
   );
 };

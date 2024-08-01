@@ -7,12 +7,13 @@ import {
   Switch,
 } from "@mui/material";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
-import {paymentMethodProvider} from "@/providers/paymentMethodProvider";
+import {useCreate} from "react-admin";
 
 export const PaymentMethodForm = () => {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const [create] = useCreate("paymentMethods");
   const submitPaymentInfo = async (e: any) => {
     e.preventDefault();
 
@@ -30,7 +31,9 @@ export const PaymentMethodForm = () => {
           elements,
         });
 
-        const res = await paymentMethodProvider.save(pm?.id!, isDefault);
+        const res = await create("paymentMethods", {
+          data: {id: pm?.id, setDefault: isDefault},
+        });
         console.log("paymentMethod: ", res);
 
         setIsSubmiting(false);
