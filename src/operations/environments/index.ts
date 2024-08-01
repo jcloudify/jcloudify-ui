@@ -8,5 +8,6 @@ export * from "./EnvironmentType.tsx";
 export * from "./EnvironmentDiff.tsx";
 export * from "./schema";
 export * from "./types";
+export * from "./util";
 
 export * from "./useEnvironmentCreation";
