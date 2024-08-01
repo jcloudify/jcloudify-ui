@@ -1,7 +1,4 @@
-import {
-  Application,
-  GithubAppInstallation,
-} from "@jcloudify-api/typescript-client";
+import {GithubAppInstallation} from "@jcloudify-api/typescript-client";
 import {
   CreateBase,
   Form,

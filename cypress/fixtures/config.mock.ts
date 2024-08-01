@@ -9,7 +9,7 @@ const createConf1 = (
   version: "string",
   general: {
     app_name: "string",
-    with_snapstart: "true",
+    with_snapstart: true,
     with_queues_nb: 0,
     package_full_name: "string",
     custom_java_repositories: ["mavenLocal", "gradleLocal"],
