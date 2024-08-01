@@ -1,8 +1,4 @@
-import {
-  Environment,
-  EnvironmentType as TEnvironmentType,
-  OneOfPojaConf,
-} from "@jcloudify-api/typescript-client";
+import {Environment, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 import {useMemo, memo} from "react";
 import {
   Form,
@@ -23,14 +19,14 @@ import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
 import {
   EnvironmentType,
+  PojaConfFormDataV1,
+  fromPojaConfFormData,
   useEnvironmentCreation,
 } from "@/operations/environments";
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {ToRecord} from "@/providers";
-import {fromStringValue} from "@/components/batch-array-editor";
-import {toRecord} from "@/components/batch-record-editor";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -45,12 +41,15 @@ const _EnvironmentCreate: React.FC<{
   const notify = useNotify();
   const navigate = useNavigate();
 
-  const [createEnvironmentWithConfig, {isLoading}] = useCreate<Environment>("environments", {
-    meta: {
-      appId,
-      envId: newEnvironmentId,
-    },
-  });
+  const [createEnvironmentWithConfig, {isLoading}] = useCreate<Environment>(
+    "environments",
+    {
+      meta: {
+        appId,
+        envId: newEnvironmentId,
+      },
+    }
+  );
 
   const {data: fromConfig = {}} = useGetOne<ToRecord<OneOfPojaConf>>(
     "pojaConf",
@@ -74,31 +73,19 @@ const _EnvironmentCreate: React.FC<{
 
   const doCreateEnvironmentWithConfig: SubmitHandler<
     {
-      to_create?: {environment_type: TEnvironmentType};
-    } & Partial<OneOfPojaConf> & {__conf?: any}
-  > = async ({to_create, __conf, ...pojaConf}) => {
+      to_create?: Environment;
+    } & PojaConfFormDataV1
+  > = async ({to_create, ...pojaConf}) => {
     try {
-      const {custom_java_deps = [], custom_java_env_vars = [], custom_java_repositories = []} = pojaConf.general!;
-
       await createEnvironmentWithConfig("environments", {
         data: to_create,
         meta: {
           appId,
-          with_config: {
-            ...pojaConf,
-            general: {
-              ...pojaConf.general,
-              custom_java_deps: fromStringValue(custom_java_deps as any[]),
-              custom_java_repositories: fromStringValue(custom_java_repositories as any[]),
-              custom_java_env_vars: Array.isArray(custom_java_env_vars) ? toRecord(custom_java_env_vars as unknown as any) : custom_java_env_vars,
-              gen_api_client: __conf.with_gen_clients ? null : pojaConf.gen_api_client,
-            },
-            version: "3.6.2",
-          },
-        }
-      })
+          with_config: fromPojaConfFormData(pojaConf),
+        },
+      });
       notify("Environment created successfully.", {type: "success"});
-      navigate(`/applications/${appId}/show/environments/${newEnvironmentId}`);
+      navigate(`/applications/${appId}/show/environments`);
     } catch (err) {
       if (isAxiosError(err)) {
         notify(err.response?.data || "unable to create environment.");
@@ -109,7 +96,12 @@ const _EnvironmentCreate: React.FC<{
   return (
     <Form
       onSubmit={doCreateEnvironmentWithConfig}
-      values={{to_create: {id: newEnvironmentId}, __conf: {}, ...fromConfig}}
+      values={{
+        to_create: {id: newEnvironmentId},
+        __flags: {with_gen_clients: false},
+        version: "3.6.2",
+        ...fromConfig,
+      }}
       validate={() => ({})}
       disabled={isLoading}
       noValidate

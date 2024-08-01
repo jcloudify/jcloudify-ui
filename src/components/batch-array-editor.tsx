@@ -23,7 +23,7 @@ const schema = z.object({
   _newlyAdded: z.boolean(),
 });
 
-type StringValue = z.infer<typeof schema>;
+export type StringValue = z.infer<typeof schema>;
 
 export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
   onChange: _onChange,

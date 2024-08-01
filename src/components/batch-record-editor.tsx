@@ -35,7 +35,7 @@ const schema = z.object({
   _newlyAdded: z.boolean(),
 });
 
-type KeyValue = z.infer<typeof schema>;
+export type KeyValue = z.infer<typeof schema>;
 
 // TODO: edit env
 export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({

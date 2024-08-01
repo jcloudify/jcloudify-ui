@@ -60,7 +60,6 @@ export const dataProvider: RADataProvider = {
   },
   async create(resource, params) {
     const result = await getProvider(resource).save(params.data, params.meta);
-    console.log("result", result);
     return {data: result};
   },
   async delete(resource, params) {
