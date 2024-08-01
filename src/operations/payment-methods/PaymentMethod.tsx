@@ -1,4 +1,11 @@
-import {Box} from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Typography,
+} from "@mui/material";
+import {ExpandMore as ExpandMoreIcon} from "@mui/icons-material";
 import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {ContainerWithHeading} from "@/components/container";
@@ -19,11 +26,22 @@ export const PaymentMethod = () => {
   return (
     <Box>
       <Box sx={{width: {md: "75%", sm: "100%"}, p: 1}}>
-        <ContainerWithHeading title="Payment Method Information">
-          <Elements stripe={stripePromise} options={options}>
-            <PaymentMethodForm />
-          </Elements>
-        </ContainerWithHeading>
+        <Elements stripe={stripePromise} options={options}>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <Typography>Add Payment Method</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ContainerWithHeading title="Payment Method Information">
+                <PaymentMethodForm />
+              </ContainerWithHeading>
+            </AccordionDetails>
+          </Accordion>
+        </Elements>
       </Box>
     </Box>
   );

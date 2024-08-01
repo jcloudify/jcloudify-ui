@@ -15,8 +15,10 @@ export const PaymentMethodForm = () => {
   const elements = useElements();
   const submitPaymentInfo = async (e: any) => {
     e.preventDefault();
+
     try {
       if (stripe && elements) {
+        const isDefault = e.currentTarget.elements.isDefault.checked || false;
         setIsSubmiting(true);
         const {error} = await elements.submit();
         if (error) {
@@ -24,13 +26,11 @@ export const PaymentMethodForm = () => {
           return;
         }
 
-        console.log("elements: ", elements);
-
         const {paymentMethod: pm} = await stripe.createPaymentMethod({
           elements,
         });
 
-        const res = await paymentMethodProvider.save(pm?.id!, true);
+        const res = await paymentMethodProvider.save(pm?.id!, isDefault);
         console.log("paymentMethod: ", res);
 
         setIsSubmiting(false);
@@ -55,6 +55,7 @@ export const PaymentMethodForm = () => {
             control={<Switch />}
             label="Set as default payment method"
             labelPlacement="start"
+            name="isDefault"
           />
         </FormControl>
         <Button
