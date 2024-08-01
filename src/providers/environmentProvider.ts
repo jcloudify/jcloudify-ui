@@ -1,5 +1,6 @@
 import {Environment} from "@jcloudify-api/typescript-client";
 import {
+  PagedResponse,
   PojaDataProvider,
   ToRecord,
   authProvider,
@@ -10,11 +11,9 @@ import {environmentApi, unwrap} from "@/services/poja-api";
 export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
   async getList(_page, _perPage, filter = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (
-      await unwrap(() =>
-        environmentApi().getApplicationEnvironments(uid, filter.appId)
-      )
-    ).data as ToRecord<Environment>[];
+    return (await unwrap(() =>
+      environmentApi().getApplicationEnvironments(uid, filter.appId)
+    )) as PagedResponse<ToRecord<Environment>>;
   },
   async getOne(id, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;

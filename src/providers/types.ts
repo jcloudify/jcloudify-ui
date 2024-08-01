@@ -1,19 +1,24 @@
-import {Token, Configuration, Whoami} from "@jcloudify-api/typescript-client";
-import {AuthProvider, Identifier, RaRecord} from "react-admin";
+import {
+  Token,
+  Configuration,
+  Whoami,
+  PagedResponse as _PagedResponse,
+} from "@jcloudify-api/typescript-client";
+import {AuthProvider, RaRecord} from "react-admin";
 
 export type Dict<V> = Record<string, V>;
 
-export interface PojaDataProvider<R extends RaRecord<Identifier>> {
+export interface PojaDataProvider<R extends RaRecord<string>> {
   getList: (
     page: number,
     perPage: number,
     filter?: Dict<any>,
     meta?: Dict<any>
-  ) => Promise<Array<R>>;
-  getOne: (id: Identifier, meta?: Dict<any>) => Promise<R>;
+  ) => Promise<PagedResponse<R>>;
+  getOne: (id: string, meta?: Dict<any>) => Promise<R>;
   save: (resource: R, meta?: Dict<any>) => Promise<R>;
   saveAll: (resources: R[], meta?: Dict<any>) => Promise<R[]>;
-  delete: (id: Identifier) => Promise<R>;
+  delete: (id: string) => Promise<R>;
 }
 
 export interface PojaAuthProvider extends AuthProvider {
@@ -23,6 +28,21 @@ export interface PojaAuthProvider extends AuthProvider {
   whoami: () => Promise<Whoami>;
 }
 
+export interface PagedResponse<T> extends _PagedResponse {
+  data: T[];
+}
+
+export type RaDataProviderCRUD =
+  | "getList"
+  | "getOne"
+  | "update"
+  | "create"
+  | "delete"
+  | "updateMany"
+  | "getMany"
+  | "getManyReference"
+  | "deleteMany";
+
 export type ToRecord<T extends object> = T & {
-  id: Identifier;
+  id: string;
 };

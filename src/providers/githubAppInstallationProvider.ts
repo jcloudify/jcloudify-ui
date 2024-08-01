@@ -1,5 +1,5 @@
 import {GithubAppInstallation} from "@jcloudify-api/typescript-client";
-import {PojaDataProvider, ToRecord, authProvider} from "@/providers";
+import {PagedResponse, PojaDataProvider, ToRecord, authProvider} from "@/providers";
 import {githubAppInstallationApi, unwrap} from "@/services/poja-api";
 
 export const githubAppInstallationProvider: PojaDataProvider<
@@ -9,7 +9,7 @@ export const githubAppInstallationProvider: PojaDataProvider<
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     return (
       await unwrap(() => githubAppInstallationApi().getUserInstallations(uid))
-    ).data as ToRecord<GithubAppInstallation>[];
+    ) as PagedResponse<ToRecord<GithubAppInstallation>>;
   },
   async save(installation) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;

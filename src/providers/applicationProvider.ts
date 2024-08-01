@@ -1,13 +1,18 @@
 import {Application} from "@jcloudify-api/typescript-client";
-import {PojaDataProvider, ToRecord, authProvider} from "@/providers";
+import {
+  PagedResponse,
+  PojaDataProvider,
+  ToRecord,
+  authProvider,
+} from "@/providers";
 import {applicationApi, unwrap} from "@/services/poja-api";
 
 export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
-  async getList() {
+  async getList(page, perPage) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (
-      await unwrap(() => applicationApi().getApplications(uid, undefined))
-    ).data as ToRecord<Application>[];
+    return (await unwrap(() =>
+      applicationApi().getApplications(uid, undefined, page, perPage)
+    )) as PagedResponse<ToRecord<Application>>;
   },
   async getOne(id) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
