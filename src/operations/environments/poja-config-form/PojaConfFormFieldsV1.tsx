@@ -1,4 +1,7 @@
-import {DatabaseConf1WithDatabaseEnum} from "@jcloudify-api/typescript-client";
+import {
+  DatabaseConf1WithDatabaseEnum,
+  WithQueuesNbEnum,
+} from "@jcloudify-api/typescript-client";
 import {memo} from "react";
 import {
   TextInput,
@@ -113,7 +116,8 @@ const GeneralConf = () => (
       <SelectInput
         label="Queues NB"
         source="general.with_queues_nb"
-        choices={makeSelectChoices([0, 1, 2])}
+        choices={makeSelectChoices(Object.values(WithQueuesNbEnum))}
+        defaultValue={WithQueuesNbEnum.NUMBER_2}
         variant="outlined"
         size="medium"
         fullWidth
@@ -350,6 +354,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={2048}
         fullWidth
       />
       <TextInput
@@ -358,6 +363,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={30}
         fullWidth
       />
       <TextInput
@@ -366,6 +372,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={1024}
         fullWidth
       />
       <TextInput
@@ -374,6 +381,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={5}
         fullWidth
       />
       <TextInput
@@ -382,6 +390,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={600}
         fullWidth
       />
       <TextInput
@@ -390,6 +399,7 @@ const ComputeConf = () => (
         variant="outlined"
         size="medium"
         type="number"
+        defaultValue={600}
         fullWidth
       />
     </GridLayout>
@@ -419,6 +429,7 @@ const TestingConf = () => (
         label="Java Facade IT"
         source="testing.java_facade_it"
         variant="outlined"
+        defaultValue="FacadeIT"
         size="medium"
         fullWidth
       />
@@ -427,7 +438,8 @@ const TestingConf = () => (
         source="testing.jacoco_min_coverage"
         variant="outlined"
         size="medium"
-        type="number"
+        defaultValue="0.2"
+        type="string"
         fullWidth
       />
     </GridLayout>
@@ -478,7 +490,8 @@ const DBConf = () => {
             source="database.prod_db_cluster_timeout"
             variant="outlined"
             size="medium"
-            type="number"
+            defaultValue="300"
+            type="string"
             fullWidth
           />
         </GridLayout>
@@ -500,6 +513,7 @@ const DBConf = () => {
             size="medium"
             fullWidth
             type="number"
+            defaultValue={2}
           />
           <TextInput
             label="Aurora Max Capacity"
@@ -508,6 +522,7 @@ const DBConf = () => {
             size="medium"
             fullWidth
             type="number"
+            defaultValue={16}
           />
           <TextInput
             label="Aurora Scale Point"
@@ -516,6 +531,7 @@ const DBConf = () => {
             size="medium"
             fullWidth
             type="number"
+            defaultValue={60}
           />
           <TextInput
             label="Aurora Sleep"
@@ -524,6 +540,7 @@ const DBConf = () => {
             size="medium"
             fullWidth
             type="number"
+            defaultValue={900}
           />
           <BooleanInput
             label="Aurora Auto Pause"
