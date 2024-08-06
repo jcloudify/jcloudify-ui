@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom";
+import {Datagrid, FunctionField, ListBase, TextField} from "react-admin";
 import {
   Box,
   Divider,
@@ -14,13 +15,24 @@ import {colors} from "@/themes";
 export const Payments: React.FC = () => {
   return (
     <Box>
-      <Typography variant="h4">Payments</Typography>
+      <Typography variant="h4">Billing</Typography>
       <Divider />
       <Stack direction="column" spacing={2} my={2}>
         <PaymentsSummary />
         <Box my={1}>
           <Typography variant="h5">Payment List</Typography>
-          <Typography variant="body2">Empty list</Typography>
+          <ListBase resource="payments">
+            <Datagrid>
+              <TextField source="ref" />
+              <TextField source="date" />
+              <FunctionField
+                source="amount"
+                label="Amount"
+                render={(record: any) => `${record.amount} $`}
+              />
+              <TextField source="status" />
+            </Datagrid>
+          </ListBase>
         </Box>
       </Stack>
     </Box>
@@ -40,6 +52,7 @@ const PaymentsSummary: React.FC = () => {
         p={1}
         border={1}
         my={2}
+        divider={<Divider />}
       >
         <Box sx={{my: 1, minWidth: "17rem"}}>
           <Stack direction="column" spacing={1} mb={1}>
@@ -48,7 +61,7 @@ const PaymentsSummary: React.FC = () => {
           </Stack>
         </Box>
         <Box>
-          <Typography variant="h6">Actual invoice</Typography>
+          <Typography variant="h6">Usage summary</Typography>
           <Typography variant="body1">
             Labore aliquip esse esse proident excepteur. In excepteur nisi qui
             esse proident non. Nisi laborum deserunt aute excepteur eu eu duis
@@ -77,7 +90,7 @@ const PaymentsSummary: React.FC = () => {
           </Stack>
           <Box>
             <Typography variant="body2">Your default payment method</Typography>
-            <DisplayCard last4="4578" />
+            <DisplayCard last4="4242" />
           </Box>
         </Box>
       </Stack>
