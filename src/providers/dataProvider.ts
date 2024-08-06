@@ -10,9 +10,10 @@ import {
   pojaConfProvider,
   stackProvider,
   userProvider,
+  paymentProvider,
+  paymentMethodProvider,
+  paymentCustomerProvider,
 } from "./";
-import {paymentMethodProvider} from "./paymentMethodProvider";
-import {paymentProvider} from "./paymentProvider";
 
 const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
@@ -36,6 +37,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return paymentMethodProvider;
     case "payments":
       return paymentProvider;
+    case "paymentCustomers":
+      return paymentCustomerProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }
