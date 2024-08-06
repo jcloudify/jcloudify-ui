@@ -4,9 +4,16 @@ import {
   AccordionSummary,
   Box,
   Divider,
+  IconButton,
+  Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import {ExpandMore as ExpandMoreIcon} from "@mui/icons-material";
+import {
+  Check as CheckIcon,
+  ExpandMore as ExpandMoreIcon,
+  Remove as RemoveIcon,
+} from "@mui/icons-material";
 import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {ContainerWithHeading} from "@/components/container";
@@ -69,6 +76,23 @@ const PaymentMethodList = () => {
           />
           <TextField source="brand" />
           <TextField source="type" />
+          <FunctionField
+            label="Action"
+            render={(_record: PaymentMethodModel) => (
+              <Stack direction="row" spacing={1}>
+                <Tooltip title="Set default">
+                  <IconButton size="small" color="primary">
+                    <CheckIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton size="small">
+                    <RemoveIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            )}
+          />
         </Datagrid>
       </ListBase>
     </Box>
