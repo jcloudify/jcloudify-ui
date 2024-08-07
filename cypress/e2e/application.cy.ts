@@ -12,7 +12,7 @@ describe("Application", () => {
   });
 
   context("list", () => {
-    it.only("show all apps", () => {
+    it("show all apps", () => {
       cy.wait("@getApplications");
 
       cy.getByTestid(`applications-${app1.id}`).contains(app1.name!);
@@ -29,6 +29,8 @@ describe("Application", () => {
     context("logs", () => {
       specify("Show all available logs", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.wait("@getApplications");
+
         cy.get('[href="/applications/app1/show/logs"]').click();
         cy.contains(log1.id);
         cy.contains(log1.log_type);

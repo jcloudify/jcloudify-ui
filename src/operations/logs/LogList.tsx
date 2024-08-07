@@ -10,6 +10,7 @@ import {
   UrlField,
   maxValue,
   required,
+  useGetList,
   useListFilterContext,
 } from "react-admin";
 import {Box, Stack, styled} from "@mui/material";
@@ -95,19 +96,23 @@ const LogListFilter: React.FC<{alwaysOn?: boolean; envs: Environment[]}> = ({
   );
 };
 
-export const LogList: React.FC<{envs: Environment[]}> = ({envs}) => {
+export const LogList: React.FC<{appId: string}> = ({appId}) => {
+  const {data: environments = []} = useGetList("environments", {
+    filter: {appId},
+  });
+
   return (
     <ListBase
       resource="logs"
-      queryOptions={{meta: {environment_id: envs[0].id}}}
-      filterDefaultValues={{environment_id: envs[0].id}}
+      queryOptions={{meta: {environment_id: environments[0]?.id}}}
+      filterDefaultValues={{environment_id: environments[0]?.id}}
     >
       <Box mt={1}>
         <ListToolbar
           title=" "
           filters={
             <Filter>
-              <LogListFilter alwaysOn envs={envs} />
+              <LogListFilter alwaysOn envs={environments} />
             </Filter>
           }
         />
