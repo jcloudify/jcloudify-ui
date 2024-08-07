@@ -20,8 +20,9 @@ export const paymentCustomerProvider: PojaDataProvider<any> = {
   getOne: function (_id: Identifier): Promise<any> {
     return Promise.resolve(customer);
   },
-  save: function (resource: any, meta?: Dict<any>): Promise<any> {
-    throw new Error("Function not implemented.");
+  save: function (resource: any): Promise<any> {
+    console.log("updateRes: ", resource);
+    return Promise.resolve(resource);
   },
   saveAll: function (resources: any[], meta?: Dict<any>): Promise<any[]> {
     throw new Error("Function not implemented.");

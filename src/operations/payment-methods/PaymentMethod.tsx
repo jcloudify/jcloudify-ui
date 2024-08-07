@@ -1,3 +1,4 @@
+import {Datagrid, FunctionField, ListBase, TextField} from "react-admin";
 import {
   Accordion,
   AccordionDetails,
@@ -13,22 +14,12 @@ import {
   Check as CheckIcon,
   ExpandMore as ExpandMoreIcon,
   Remove as RemoveIcon,
-  Settings as SettingsIcon,
 } from "@mui/icons-material";
-import {
-  Datagrid,
-  FunctionField,
-  Labeled,
-  ListBase,
-  ShowBase,
-  SimpleShowLayout,
-  TextField,
-} from "react-admin";
 import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {PaymentMethod as PaymentMethodModel} from "@jcloudify-api/typescript-client";
 import {ContainerWithHeading} from "@/components/container";
-import {PaymentMethodForm} from "./PaymentMethodForm";
+import {BillingInformation, PaymentMethodForm} from "./";
 
 export const PaymentMethod = () => {
   const stripePk = process.env.REACT_APP_STRIPE_PK;
@@ -106,52 +97,5 @@ const PaymentMethodList = () => {
         </Datagrid>
       </ListBase>
     </Box>
-  );
-};
-
-const BillingInformation = () => {
-  return (
-    <Box>
-      <Stack direction="row" justifyContent="space-between">
-        <Typography variant="h5">Billing Information</Typography>
-        <Tooltip title="Edit Billing Information">
-          <IconButton
-            aria-label="payment-method"
-            size="small"
-            onClick={() => {}}
-          >
-            <SettingsIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-      <Divider />
-      <CustomerShow />
-    </Box>
-  );
-};
-
-const CustomerShow = () => {
-  return (
-    <ShowBase resource="paymentCustomers" id="customer_id">
-      <SimpleShowLayout>
-        <Stack
-          direction={{md: "row", sm: "column"}}
-          spacing={1}
-          my={2}
-          px={1}
-          justifyContent="space-between"
-        >
-          <Labeled>
-            <TextField source="name" />
-          </Labeled>
-          <Labeled>
-            <TextField source="email" />
-          </Labeled>
-          <Labeled>
-            <TextField source="phone" />
-          </Labeled>
-        </Stack>
-      </SimpleShowLayout>
-    </ShowBase>
   );
 };
