@@ -23,7 +23,7 @@ export interface BatchRecordEditorProps {
   /** describes what exactly is the key values to edit e.g: EnvVars, Config */
   kvLabels?: [string, string];
   placeholders?: [string, string];
-  pairName?: string;
+  name?: string;
   onChange?: (record: KeyValue[]) => void;
   defaultRecord?: KeyValue[];
 }
@@ -40,7 +40,7 @@ export type KeyValue = z.infer<typeof schema>;
 // TODO: edit env
 export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
   onChange: _onChange,
-  pairName = "",
+  name = "key_values",
   kvLabels = ["Key", "Value"],
   placeholders = ["Name", "Value"],
   defaultRecord = [],
@@ -52,22 +52,22 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
     mode: "onChange",
     resolver: zodResolver(
       z.object({
-        keyValues: z.array(schema),
+        [name]: z.array(schema),
       })
     ),
     values: {
-      keyValues: defaultRecord,
+      [name]: defaultRecord,
     },
   });
 
   const {append, remove} = useFieldArray({
     control: form.control,
-    name: "keyValues",
+    name,
   });
 
   useEffect(() => {
     const subs = form.watch((v = {}) => {
-      const keyValues = v.keyValues as KeyValue[];
+      const keyValues = v[name] as KeyValue[];
       const keys = keyValues.filter((kv) => !kv._deleted).map((kv) => kv.key);
       const isUnique = keys.length === new Set(keys).size;
 
@@ -81,14 +81,14 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
       form.clearErrors("root.uniqueness");
 
-      onChange(v.keyValues as KeyValue[]);
+      onChange(v[name] as KeyValue[]);
     });
     return () => {
       subs.unsubscribe();
     };
   }, [form.watch]);
 
-  const keyValues = form.watch("keyValues");
+  const keyValues = form.watch(name);
 
   return (
     <Stack direction="column" p={1} gap={1.5}>
@@ -107,14 +107,14 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
       {keyValues.map((keyValue, idx) => {
         const {_deleted, _newlyAdded} = keyValue;
-        const errors = (form.formState.errors.keyValues || [])[idx];
+        const errors = (form.formState.errors[name] || [])[idx];
         return (
-          <GridLayout xs={4} spacing={2} key={`variables.${idx}`}>
+          <GridLayout xs={4} spacing={2} key={`${name}.${idx}`}>
             <>
               <OutlinedInput
                 placeholder={placeholders[0]}
                 fullWidth
-                {...form.register(`keyValues.${idx}.key`)}
+                {...form.register(`${name}.${idx}.key`)}
               />
               <FormHelperText error>
                 {errors?.key?.message?.toString() ?? " "}
@@ -125,7 +125,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
               <OutlinedInput
                 placeholder={placeholders[1]}
                 fullWidth
-                {...form.register(`keyValues.${idx}.value`)}
+                {...form.register(`${name}.${idx}.value`)}
               />
               <FormHelperText error>
                 {errors?.value?.message?.toString() ?? " "}
@@ -136,7 +136,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
                 label={_deleted ? "Cancel removal" : "Remove"}
                 onClick={() => {
                   if (!_newlyAdded) {
-                    form.setValue(`keyValues.${idx}`, {
+                    form.setValue(`${name}.${idx}`, {
                       ...keyValue,
                       _deleted: !_deleted,
                     });
@@ -161,7 +161,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
 
       <Stack direction="row" spacing={2}>
         <Button
-          data-testid={"AddAnother" + pairName}
+          data-testid={"AddAnother" + name}
           startIcon={<Add />}
           size="large"
           variant="outlined"

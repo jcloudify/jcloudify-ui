@@ -132,6 +132,7 @@ const GeneralConf = () => (
     </GridLayout>
 
     <Accordion
+      data-testid="custom_java_env_vars_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -147,6 +148,7 @@ const GeneralConf = () => (
       <AccordionDetails>
         <BatchRecordEditorField
           source="general.custom_java_env_vars"
+          name="custom_java_env_vars"
           placeholders={["e.g: CLIENT_KEY", "XXX"]}
           kvLabels={["Name", "Value"]}
         />
@@ -154,6 +156,7 @@ const GeneralConf = () => (
     </Accordion>
 
     <Accordion
+      data-testid="custom_java_repositories_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -167,11 +170,15 @@ const GeneralConf = () => (
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <BatchArrayEditorField source="general.custom_java_repositories" />
+        <BatchArrayEditorField
+          source="general.custom_java_repositories"
+          name="custom_java_repositories"
+        />
       </AccordionDetails>
     </Accordion>
 
     <Accordion
+      data-testid="custom_java_deps_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -185,7 +192,10 @@ const GeneralConf = () => (
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <BatchArrayEditorField source="general.custom_java_deps" />
+        <BatchArrayEditorField
+          source="general.custom_java_deps"
+          name="custom_java_deps"
+        />
       </AccordionDetails>
     </Accordion>
   </Stack>
