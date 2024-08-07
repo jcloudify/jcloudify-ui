@@ -18,8 +18,7 @@ import {
   Chip,
 } from "@mui/material";
 import {Apps, Settings, GitHub, Add} from "@mui/icons-material";
-import {Empty} from "@/operations/components/list2";
-import {Pagination} from "@/operations/components/list";
+import {Empty, Pagination} from "@/operations/components/list";
 import {colors} from "@/themes";
 import {AppProps} from "@/operations/apps/types";
 import {stripPrefix} from "@/utils/str";
