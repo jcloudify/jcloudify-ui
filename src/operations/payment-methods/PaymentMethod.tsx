@@ -5,6 +5,8 @@ import {
   IconButtonWithTooltip,
   ListBase,
   TextField,
+  useCreate,
+  useDelete,
 } from "react-admin";
 import {
   Box,
@@ -83,23 +85,41 @@ const PaymentMethodList = () => {
           <TextField source="type" />
           <FunctionField
             label="Action"
-            render={(_record: PaymentMethodModel) => (
-              <Stack direction="row" spacing={1}>
-                <Tooltip title="Set default">
-                  <IconButton size="small" color="primary">
-                    <CheckIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton size="small">
-                    <RemoveIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
+            render={(record: PaymentMethodModel) => (
+              <PaymentMethodAction record={record} />
             )}
           />
         </Datagrid>
       </ListBase>
     </Box>
+  );
+};
+
+const PaymentMethodAction: React.FC<{record: PaymentMethodModel}> = ({
+  record,
+}) => {
+  const [create] = useCreate("paymentMethods");
+  const [deleteOne] = useDelete("paymentMethods");
+
+  const setDefaultPm = async () => {
+    await create("paymentMethods", {
+      data: {id: record.id, setDefault: true},
+    });
+  };
+
+  const detachPm = async () => {
+    await deleteOne("paymentMethods", {
+      id: record.id,
+    });
+  };
+  return (
+    <Stack direction="row" spacing={1}>
+      <IconButtonWithTooltip label="set default" onClick={setDefaultPm}>
+        <CheckIcon fontSize="inherit" />
+      </IconButtonWithTooltip>
+      <IconButtonWithTooltip label="Delete" onClick={detachPm}>
+        <RemoveIcon fontSize="inherit" />
+      </IconButtonWithTooltip>
+    </Stack>
   );
 };
