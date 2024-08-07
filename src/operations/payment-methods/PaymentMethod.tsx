@@ -8,24 +8,19 @@ import {
   useCreate,
   useDelete,
 } from "react-admin";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import {Box, Divider, Stack, Typography} from "@mui/material";
 import {
   Add as AddIcon,
   Cancel as CancelIcon,
   Check as CheckIcon,
   Remove as RemoveIcon,
+  Settings as SettingsIcon,
 } from "@mui/icons-material";
 import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {PaymentMethod as PaymentMethodModel} from "@jcloudify-api/typescript-client";
-import {BillingInformation, PaymentMethodForm} from "./";
+import {BillingInformation, DisplayCard, PaymentMethodForm} from "./";
+import {useNavigate} from "react-router-dom";
 
 export const PaymentMethod = () => {
   const [addPm, setAddPm] = useState(false);
@@ -121,5 +116,26 @@ const PaymentMethodAction: React.FC<{record: PaymentMethodModel}> = ({
         <RemoveIcon fontSize="inherit" />
       </IconButtonWithTooltip>
     </Stack>
+  );
+};
+
+export const PaymentMethodSummary = () => {
+  const navigate = useNavigate();
+  return (
+    <Box>
+      <Stack direction="row" spacing={1} justifyContent="space-between" mb={1}>
+        <Typography variant="h6">Payment Method</Typography>
+        <IconButtonWithTooltip
+          label="Manage Payment Methods"
+          onClick={() => navigate("/billing/payment-methods")}
+        >
+          <SettingsIcon fontSize="small" />
+        </IconButtonWithTooltip>
+      </Stack>
+      <Box>
+        <Typography variant="body2">Your default payment method</Typography>
+        <DisplayCard last4="4242" />
+      </Box>
+    </Box>
   );
 };

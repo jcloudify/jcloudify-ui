@@ -1,14 +1,6 @@
-import {
-  Datagrid,
-  FunctionField,
-  IconButtonWithTooltip,
-  ListBase,
-  TextField,
-} from "react-admin";
-import {useNavigate} from "react-router-dom";
+import {Datagrid, FunctionField, ListBase, TextField} from "react-admin";
 import {Box, Divider, Stack, Typography} from "@mui/material";
-import {Settings as SettingsIcon} from "@mui/icons-material";
-import {DisplayCard} from "@/operations/payment-methods";
+import {PaymentMethodSummary} from "@/operations/payment-methods";
 import {colors} from "@/themes";
 
 export const Payments: React.FC = () => {
@@ -39,7 +31,6 @@ export const Payments: React.FC = () => {
 };
 
 const PaymentsSummary: React.FC = () => {
-  const navigate = useNavigate();
   return (
     <Box>
       <Stack
@@ -66,26 +57,7 @@ const PaymentsSummary: React.FC = () => {
             excepteur.
           </Typography>
         </Box>
-        <Box>
-          <Stack
-            direction="row"
-            spacing={1}
-            justifyContent="space-between"
-            mb={1}
-          >
-            <Typography variant="h6">Payment Method</Typography>
-            <IconButtonWithTooltip
-              label="Manage Payment Methods"
-              onClick={() => navigate("/billing/payment-methods")}
-            >
-              <SettingsIcon fontSize="small" />
-            </IconButtonWithTooltip>
-          </Stack>
-          <Box>
-            <Typography variant="body2">Your default payment method</Typography>
-            <DisplayCard last4="4242" />
-          </Box>
-        </Box>
+        <PaymentMethodSummary />
       </Stack>
     </Box>
   );
