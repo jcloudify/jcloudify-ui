@@ -6,13 +6,9 @@ import {WithTab} from "@/components/tab";
 export const AppLogList: React.FC = () => {
   const {appId} = useParams();
 
-  const {data: envList = []} = useGetList("environments", {
-    meta: {application_id: appId},
-  });
+  if (!appId) return;
 
-  if (!envList.length) return;
-
-  return <LogList envs={envList} />;
+  return <LogList appId={appId} />;
 };
 
 export const AppLogShow: React.FC = () => {
