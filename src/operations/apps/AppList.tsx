@@ -5,6 +5,7 @@ import {
   Link,
   TopToolbar,
   Button,
+  WithListContext,
 } from "react-admin";
 import {
   Box,
@@ -17,9 +18,10 @@ import {
   Chip,
 } from "@mui/material";
 import {Apps, Settings, GitHub, Add} from "@mui/icons-material";
-import {colors} from "@/themes";
+import {Empty} from "@/operations/components/list2";
 import {Pagination} from "@/operations/components/list";
-import {AppProps} from "./types";
+import {colors} from "@/themes";
+import {AppProps} from "@/operations/apps/types";
 import {stripPrefix} from "@/utils/str";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 
@@ -113,26 +115,39 @@ export const AppList: React.FC = () => (
   <ListBase resource="applications">
     <Title title="Applications" />
 
-    <TopToolbar>
-      <Button
-        label="Create New"
-        startIcon={<Add />}
-        variant="contained"
-        to="create/new"
-        component={Link}
-      />
-      <Button
-        label="Import"
-        startIcon={<GitHub />}
-        variant="contained"
-        to="create/import-git-repo"
-        component={Link}
-      />
-    </TopToolbar>
+    <WithListContext
+      render={({data = []}) =>
+        !!data.length && (
+          <>
+            <TopToolbar>
+              <Button
+                label="Create New"
+                startIcon={<Add />}
+                variant="contained"
+                to="create/new"
+                component={Link}
+              />
+              <Button
+                label="Import"
+                startIcon={<GitHub />}
+                variant="contained"
+                to="create/import-git-repo"
+                component={Link}
+              />
+            </TopToolbar>
+          </>
+        )
+      }
+    />
+
+    <WithListContext
+      render={({data = []}) =>
+        !data.length && <Empty createRoute="create/new" />
+      }
+    />
+
     <AppGridView />
 
-    <Box mt={2}>
-      <Pagination />
-    </Box>
+    <Pagination />
   </ListBase>
 );

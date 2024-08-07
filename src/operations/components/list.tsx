@@ -10,47 +10,58 @@ const PaginationAction = styled(Button)({
   },
 });
 
+/**
+ * hidden when listContext.data is empty
+ */
 export const Pagination = () => {
-  const {page, setPage, hasNextPage, hasPreviousPage} = useListContext();
+  const {
+    data = [],
+    page,
+    setPage,
+    hasNextPage,
+    hasPreviousPage,
+  } = useListContext();
 
   return (
-    <Toolbar
-      sx={{
-        bgcolor: "#fff",
-        border: `1px solid ${colors("gray-0")}`,
-        borderRadius: "4px",
-        gap: 1,
-        mt: 1,
-      }}
-    >
-      <PaginationAction
+    !!data.length && (
+      <Toolbar
         sx={{
-          color: "#575757",
-          textTransform: "none",
+          bgcolor: "#fff",
+          border: `1px solid ${colors("gray-0")}`,
+          borderRadius: "4px",
+          gap: 1,
+          mt: 1,
         }}
-        color="primary"
-        key="prev"
-        disabled={!hasPreviousPage}
-        startIcon={<ChevronLeft />}
-        onClick={() => setPage(page - 1)}
       >
-        Previous
-      </PaginationAction>
+        <PaginationAction
+          sx={{
+            color: "#575757",
+            textTransform: "none",
+          }}
+          color="primary"
+          key="prev"
+          disabled={!hasPreviousPage}
+          startIcon={<ChevronLeft />}
+          onClick={() => setPage(page - 1)}
+        >
+          Previous
+        </PaginationAction>
 
-      <PaginationAction
-        sx={{color: "#575757", textTransform: "none"}}
-        key="next"
-        endIcon={<ChevronRight />}
-        disabled={!hasNextPage}
-        onClick={() => setPage(page + 1)}
-      >
-        Next
-      </PaginationAction>
-      <div style={{marginLeft: "auto"}}>
-        <Typography variant="body2" sx={{color: "#575757"}}>
-          Page: {page}
-        </Typography>
-      </div>
-    </Toolbar>
+        <PaginationAction
+          sx={{color: "#575757", textTransform: "none"}}
+          key="next"
+          endIcon={<ChevronRight />}
+          disabled={!hasNextPage}
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </PaginationAction>
+        <div style={{marginLeft: "auto"}}>
+          <Typography variant="body2" sx={{color: "#575757"}}>
+            Page: {page}
+          </Typography>
+        </div>
+      </Toolbar>
+    )
   );
 };

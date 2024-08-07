@@ -70,10 +70,6 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
     <List
       resource="environments"
       actions={<ListActions appId={appId} />}
-      filter={{
-        appId,
-      }}
-      empty={false}
       {...rest}
     >
       <Datagrid rowClick={(id) => id.toString()}>
