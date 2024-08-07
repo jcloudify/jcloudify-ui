@@ -22,7 +22,11 @@ export const AppEnvironmentList: React.FC = () => {
           exporter={false}
           appId={appId}
           title=" "
+          empty={false}
           pagination={false}
+          filter={{
+            appId,
+          }}
         />
       </Box>
     </WithTab>
