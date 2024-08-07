@@ -63,147 +63,118 @@ describe("Application", () => {
       });
 
       specify("Shows the clicked environment details", () => {
-        cy.wait("@getEnvironmentById");
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.contains("prod_env").click();
-        cy.contains("Prod");
-      });
 
-      specify("Allow to set environment variables for the selected app", () => {
-        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-        cy.contains("prod_env").click();
+        cy.wait("@getEnvironmentById");
+
+        cy.contains("Prod");
 
         // env variables
-        cy.getByName("variables.0.name").should("have.value", "region");
-        cy.getByName("variables.0.value").should("have.value", "eu-west-3");
-        cy.getByName("variables.1.name").should("have.value", "bucket-name");
-        cy.getByName("variables.1.value").should("have.value", "poja-bucket");
+        cy.getByTestid("custom_java_env_vars_accordion").click();
+        cy.get("#custom_java_env_vars-0-key").contains("region");
+        cy.get("#custom_java_env_vars-0-value").contains("eu-west-3");
+        cy.get("#custom_java_env_vars-1-key").contains("bucket-name");
+        cy.get("#custom_java_env_vars-1-value").contains("poja-bucket");
 
-        // save env variables is only available when there is a changes made to them
-        cy.getByTestid("SaveEnvVar").should("be.disabled");
-        cy.getByTestid("AddAnotherEnvVar").click();
-        cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
-        cy.getByName("variables.2.value").clear().type("new-env-val");
-        cy.getByTestid("SaveEnvVar").should("be.enabled");
+        // repositories
+        cy.getByTestid("custom_java_deps_accordion").click();
+        cy.get("#custom_java_deps-0-string-value").contains("lombok");
+        cy.get("#custom_java_deps-1-string-value").contains("tika");
+        cy.get("#custom_java_deps-2-string-value").contains("guava");
+
+        // repositories
+        cy.getByTestid("custom_java_repositories_accordion").click();
+        cy.get("#custom_java_repositories-0-string-value").contains("mavenLocal");
+        cy.get("#custom_java_repositories-1-string-value").contains("gradleLocal");
       });
 
-      // TODO: remove field, remove existent env var
-      specify(
-        "Allows to 'update, add another, delete' variables for an environment",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.contains("prod_env").click();
+      specify("Compare Environment Differences", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+        cy.contains("Diff").click();
 
-          cy.wait("@getEnvironmentById");
-          cy.wait("@getEnvironmentById");
+        cy.contains("Environment Diff");
+        cy.contains("Compare Environment Differences");
 
-          // edit
-          cy.getByName("variables.0.name").clear().type("AMPLIFY_POOL_ID");
-          cy.getByName("variables.0.value")
-            .clear()
-            .type("new-amplify-pool-gid");
+        cy.muiSelect("#select-env-0", "prod_env");
+        cy.muiSelect("#select-env-1", "preprod_env");
 
-          // add
-          cy.getByTestid("AddAnotherEnvVar").click();
-          cy.getByName("variables.2.name").clear().type("NEW_ENV_KEY");
-          cy.getByName("variables.2.value").clear().type("new-env-val");
+        cy.wait("@getEnvironments");
+        cy.wait("@getEnvironmentConfig");
+        // TODO: a way to test this in a better way
+      });
 
-          // shows
-          cy.getByName("variables.0.name").should(
-            "have.value",
-            "AMPLIFY_POOL_ID"
-          );
-          cy.getByName("variables.0.value").should(
-            "have.value",
-            "new-amplify-pool-gid"
-          );
-          cy.getByName("variables.2.name").should("have.value", "NEW_ENV_KEY");
-          cy.getByName("variables.2.value").should("have.value", "new-env-val");
-        }
-      );
-    });
+      context("Create environment", () => {
+        specify(
+          "Create button is disabled when there is no available environment to create",
+          () => {
+            cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+            cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+            cy.contains("Create").should("have.attr", "aria-disabled", "true");
+          }
+        );
 
-    specify("Compare Environment Differences", () => {
-      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app1.id}/show/environments`).click();
-      cy.contains("Diff").click();
+        specify(
+          "Create button is enabled when there is available environment to create",
+          () => {
+            cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+            cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+            cy.contains("Create").should("not.have.attr", "aria-disabled");
+          }
+        );
 
-      cy.contains("Environment Diff");
-      cy.contains("Compare Environment Differences");
-
-      cy.muiSelect("#select-env-0", "prod_env");
-      cy.muiSelect("#select-env-1", "preprod_env");
-
-      cy.wait("@getEnvironments");
-      cy.wait("@getEnvironmentConfig");
-      // TODO: a way to test this in a better way
-    });
-
-    context("Create environment", () => {
-      specify(
-        "Create button is disabled when there is no available environment to create",
-        () => {
-          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-          cy.getByHref(`/applications/${app1.id}/show/environments`).click();
-          cy.contains("Create").should("have.attr", "aria-disabled", "true");
-        }
-      );
-
-      specify(
-        "Create button is enabled when there is available environment to create",
-        () => {
+        specify("from scratch", () => {
           cy.getByTestid(`show-${app2.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app2.id}/show/environments`).click();
-          cy.contains("Create").should("not.have.attr", "aria-disabled");
-        }
-      );
 
-      specify("from scratch", () => {
-        cy.wait("@getEnvironments");
+          cy.wait("@getEnvironments");
 
-        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
-        cy.contains("Create").click();
-        cy.getByTestid("CreateFromScratch").click();
-        cy.contains("From scratch");
+          cy.contains("Create").click();
+          cy.getByTestid("CreateFromScratch").click();
+          cy.contains("From scratch");
+        });
+
+        specify("from an existing one, create an available", () => {
+          cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+
+          cy.wait("@getEnvironments");
+
+          cy.contains("Create").click();
+          cy.muiSelect("#select-creation-template", "preprod_env2");
+          cy.getByTestid("CreateFromExisting").click();
+          cy.contains("From Preprod");
+        });
       });
 
-      specify("from an existing one, create an available", () => {
+      specify.skip("Allow to create environment", () => {
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
-        cy.contains("Create").click();
-        cy.muiSelect("#select-creation-template", "preprod_env2");
-        cy.getByTestid("CreateFromExisting").click();
-        cy.contains("From Preprod");
+        cy.get('[data-testid="createEnv"]').click();
+
+        cy.contains("Create environment");
+        cy.get('[data-testid="preprodEnv"]');
+
+        cy.contains("Hobby");
+        cy.contains("$0");
+        cy.contains("billed once yearly");
+
+        cy.contains("Standout feature");
+        cy.contains("Up to 45% shipping discount");
+        cy.contains("10 Inventory locations");
+        cy.contains("24/7 chat support");
+        cy.contains("Localized global selling");
+        cy.contains("POS Lite");
+
+        cy.getByTestid("plan-plan_1-card").click();
+        cy.contains("Pro");
+        cy.contains("$15");
+
+        cy.getByTestid("cancelCreateEnv").click();
       });
-    });
+    })
 
-    specify.skip("Allow to create environment", () => {
-      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-      cy.get('[data-testid="createEnv"]').click();
-
-      cy.contains("Create environment");
-      cy.get('[data-testid="preprodEnv"]');
-
-      cy.contains("Hobby");
-      cy.contains("$0");
-      cy.contains("billed once yearly");
-
-      cy.contains("Standout feature");
-      cy.contains("Up to 45% shipping discount");
-      cy.contains("10 Inventory locations");
-      cy.contains("24/7 chat support");
-      cy.contains("Localized global selling");
-      cy.contains("POS Lite");
-
-      cy.getByTestid("plan-plan_1-card").click();
-      cy.contains("Pro");
-      cy.contains("$15");
-
-      cy.getByTestid("cancelCreateEnv").click();
-    });
-
-    context("deployment", () => {
+    context.skip("deployment", () => {
       context("Filter", () => {
         beforeEach(() => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});

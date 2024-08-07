@@ -84,6 +84,7 @@ const GeneralConf = () => (
     </GridLayout>
 
     <Accordion
+      data-testid="custom_java_env_vars_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -98,6 +99,7 @@ const GeneralConf = () => (
       </AccordionSummary>
       <AccordionDetails>
         <RecordField
+          name="custom_java_env_vars"
           source="general.custom_java_env_vars"
           kvLabels={["Name", "Value"]}
         />
@@ -105,6 +107,7 @@ const GeneralConf = () => (
     </Accordion>
 
     <Accordion
+      data-testid="custom_java_repositories_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -118,11 +121,15 @@ const GeneralConf = () => (
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <StringArrayField source="general.custom_java_repositories" />
+        <StringArrayField 
+          name="custom_java_repositories"
+          source="general.custom_java_repositories"
+        />
       </AccordionDetails>
     </Accordion>
 
     <Accordion
+      data-testid="custom_java_deps_accordion"
       sx={{
         "&::before": {
           display: "none",
@@ -136,7 +143,10 @@ const GeneralConf = () => (
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <StringArrayField source="general.custom_java_deps" />
+        <StringArrayField
+          name="custom_java_deps"
+          source="general.custom_java_deps"
+        />
       </AccordionDetails>
     </Accordion>
   </Stack>
