@@ -79,17 +79,6 @@ const UserMenu: React.FC = () => {
         <Box pb={1}>
           <MenuItem
             onClick={() => {
-              navigate("/payments");
-            }}
-          >
-            <ListItemIcon>
-              <PaymentIcon fontSize="small" />
-            </ListItemIcon>
-
-            <ListItemText>Payments</ListItemText>
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
               navigate("/pricing");
             }}
           >

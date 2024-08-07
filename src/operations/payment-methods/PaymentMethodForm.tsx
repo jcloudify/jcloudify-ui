@@ -7,10 +7,13 @@ import {
   Switch,
 } from "@mui/material";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
-import {useCreate} from "react-admin";
+import {useCreate, useNotify} from "react-admin";
 
-export const PaymentMethodForm = () => {
+export const PaymentMethodForm: React.FC<{onSuccess: () => void}> = ({
+  onSuccess,
+}) => {
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const notify = useNotify();
   const stripe = useStripe();
   const elements = useElements();
   const [create] = useCreate("paymentMethods");
@@ -31,15 +34,16 @@ export const PaymentMethodForm = () => {
           elements,
         });
 
-        const res = await create("paymentMethods", {
+        await create("paymentMethods", {
           data: {id: pm?.id, setDefault: isDefault},
         });
-        console.log("paymentMethod: ", res);
 
+        onSuccess();
+        notify("Payment method successfully added", {type: "success"});
         setIsSubmiting(false);
       }
-    } catch (error) {
-      console.log("err: ", error);
+    } catch (_err) {
+      notify("An error has occured", {type: "error"});
       setIsSubmiting(false);
     }
   };

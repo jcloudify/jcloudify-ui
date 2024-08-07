@@ -1,8 +1,12 @@
-import {Datagrid, FunctionField, ListBase, TextField} from "react-admin";
+import {useState} from "react";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  Datagrid,
+  FunctionField,
+  IconButtonWithTooltip,
+  ListBase,
+  TextField,
+} from "react-admin";
+import {
   Box,
   Divider,
   IconButton,
@@ -11,17 +15,18 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  Add as AddIcon,
+  Cancel as CancelIcon,
   Check as CheckIcon,
-  ExpandMore as ExpandMoreIcon,
   Remove as RemoveIcon,
 } from "@mui/icons-material";
 import {Elements} from "@stripe/react-stripe-js";
 import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js";
 import {PaymentMethod as PaymentMethodModel} from "@jcloudify-api/typescript-client";
-import {ContainerWithHeading} from "@/components/container";
 import {BillingInformation, PaymentMethodForm} from "./";
 
 export const PaymentMethod = () => {
+  const [addPm, setAddPm] = useState(false);
   const stripePk = process.env.REACT_APP_STRIPE_PK;
   const stripePromise = loadStripe(stripePk!);
 
@@ -37,26 +42,25 @@ export const PaymentMethod = () => {
     <Box>
       <Box sx={{width: {md: "75%", sm: "100%"}, p: 1}}>
         <BillingInformation />
-        <Typography variant="h5">Payment Methods</Typography>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="h5">Payment Methods</Typography>
+          <IconButtonWithTooltip
+            label={addPm ? "cancel" : "add payment method"}
+            onClick={() => setAddPm((v) => !v)}
+          >
+            {addPm ? <CancelIcon /> : <AddIcon />}
+          </IconButtonWithTooltip>
+        </Stack>
         <Divider />
         <Box my={4}>
-          <Elements stripe={stripePromise} options={options}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-              >
-                <Typography>Add Payment Method</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ContainerWithHeading title="Payment Method Information">
-                  <PaymentMethodForm />
-                </ContainerWithHeading>
-              </AccordionDetails>
-            </Accordion>
-            <PaymentMethodList />
-          </Elements>
+          {addPm ? (
+            <Elements stripe={stripePromise} options={options}>
+              <PaymentMethodForm onSuccess={() => setAddPm(false)} />
+            </Elements>
+          ) : (
+            <></>
+          )}
+          <PaymentMethodList />
         </Box>
       </Box>
     </Box>
