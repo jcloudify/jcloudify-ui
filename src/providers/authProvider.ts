@@ -1,19 +1,28 @@
 import {Configuration} from "@jcloudify-api/typescript-client";
+import {addRefreshAuthToAuthProvider} from "react-admin";
 import {authTokenCache, clearCaches, whoamiCache} from "@/providers/cache";
-import {tokenProvider} from "@/providers";
 import {PojaAuthProvider} from "@/providers/types";
 import {securityApi, unwrap} from "@/services/poja-api";
 
-export const whoami = async () => {};
+export const refreshAuthToken = async () => {
+  const token = await unwrap(() =>
+    securityApi().refreshToken({
+      refresh_token: authTokenCache.get()?.refresh_token,
+    })
+  );
+  // TODO: spec 'Token' typings is wrong
+  authTokenCache.replace(token);
+  return Promise.resolve();
+};
 
-export const authProvider: PojaAuthProvider = {
+export const _authProvider: PojaAuthProvider = {
   login: () => Promise.resolve(),
   whoami: async () => {
     const whoami = await unwrap(() => securityApi().whoami());
     return whoamiCache.replace(whoami);
   },
   exchangeAuthCode: async (code) => {
-    const token = await tokenProvider.getOne(code);
+    const token = await unwrap(() => securityApi().exchangeCode(code));
     // TODO: spec 'Token' typings is wrong
     return authTokenCache.replace(token);
   },
@@ -40,3 +49,8 @@ export const authProvider: PojaAuthProvider = {
     });
   },
 };
+
+export const authProvider = addRefreshAuthToAuthProvider(
+  _authProvider,
+  refreshAuthToken
+);
