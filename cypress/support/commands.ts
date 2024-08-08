@@ -5,7 +5,9 @@ import {
   preprod_env2,
   prod_env,
 } from "../fixtures/environment.mock";
+import {user1} from "../fixtures/user.mock";
 import {app1, app2, apps} from "../fixtures/application.mock";
+import {user1_installations} from "../fixtures/installation.mock";
 import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "./util";
 
@@ -35,7 +37,7 @@ Cypress.Commands.add("muiSelect", (selector, value) => {
 });
 
 Cypress.Commands.add("muiClear", (selector) => {
-  cy.get(selector).click();
+  cy.get(selector).click({force: true});
   cy.get('[aria-label="Clear value"]').click();
 });
 
@@ -90,6 +92,10 @@ Cypress.Commands.add("mockApiGet", () => {
     ),
     preprod_env_conf1
   ).as("getEnvironmentConfig");
+
+  cy.intercept("GET", jcloudify(`/users/${user1.id}/installations`), {
+    data: user1_installations,
+  }).as("getUserInstallations");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

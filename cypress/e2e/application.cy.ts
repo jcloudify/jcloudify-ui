@@ -3,6 +3,8 @@ import {app1, app2} from "../fixtures/application.mock";
 import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 import {log1, log2} from "../fixtures/logs.mock";
+import {user1_installations} from "../fixtures/installation.mock";
+import {jcloudify} from "../support/util";
 
 describe("Application", () => {
   beforeEach(() => {
@@ -39,6 +41,50 @@ describe("Application", () => {
         cy.contains(log2.log_type);
         cy.contains(log2.log_file_uri);
       });
+    });
+  });
+
+  context("create", () => {
+    specify("Create new application", () => {
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications`),
+        (req) => {
+          const toCreate = req.body.data[0];
+          const {name, github_repository, user_id} = toCreate;
+          expect({name, github_repository, user_id}).to.deep.eq({
+            user_id: user1.id,
+            name: app1.name,
+            github_repository: {
+              installation_id: user1_installations[0].id,
+              name: app1.name,
+              description: app1.name,
+              is_private: false,
+            },
+          });
+          return req.reply({
+            ...req,
+            statusCode: 201,
+          });
+        }
+      ).as("createNewApp");
+
+      cy.get('[href="/applications/create/new"]').click();
+
+      cy.wait("@getUserInstallations");
+
+      cy.getByName("name").type(app1.name!);
+      cy.muiSelect(
+        "[data-testid='select-installation-id']",
+        "user1_installation_1"
+      );
+      cy.get("[name='github_repository.name']").type(app1.name!);
+      cy.get("[name='github_repository.description']").type(app1.name!);
+
+      cy.get("[aria-label='Save']").click();
+      cy.wait("@createNewApp");
+
+      cy.pathnameEq("/applications");
     });
   });
 
@@ -85,8 +131,12 @@ describe("Application", () => {
 
         // repositories
         cy.getByTestid("custom_java_repositories_accordion").click();
-        cy.get("#custom_java_repositories-0-string-value").contains("mavenLocal");
-        cy.get("#custom_java_repositories-1-string-value").contains("gradleLocal");
+        cy.get("#custom_java_repositories-0-string-value").contains(
+          "mavenLocal"
+        );
+        cy.get("#custom_java_repositories-1-string-value").contains(
+          "gradleLocal"
+        );
       });
 
       specify("Compare Environment Differences", () => {
@@ -172,7 +222,7 @@ describe("Application", () => {
 
         cy.getByTestid("cancelCreateEnv").click();
       });
-    })
+    });
 
     context.skip("deployment", () => {
       context("Filter", () => {

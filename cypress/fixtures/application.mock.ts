@@ -16,6 +16,7 @@ const app = (id: string): ToRecord<Application> => ({
     name: "jcloudify-" + id,
     description: "jcloudify platform " + id,
     is_private: false,
+    installation_id: "1",
   },
 });
 
