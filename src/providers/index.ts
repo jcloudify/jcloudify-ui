@@ -11,5 +11,8 @@ export * from "./logsProvider";
 export * from "./stackProvider";
 export * from "./pojaConfProvider";
 export * from "./githubAppInstallationProvider";
+export * from "./paymentCustomerProvider";
+export * from "./paymentMethodProvider";
+export * from "./paymentProvider";
 
 export * from "./cache";

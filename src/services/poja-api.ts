@@ -8,6 +8,7 @@ import {
   StackApi,
   EnvironmentApi,
   GithubAppInstallationApi,
+  PaymentApi,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
@@ -25,6 +26,8 @@ export const environmentApi = () =>
 export const stackApi = () => new StackApi(authProvider.getCachedAuthConf());
 export const githubAppInstallationApi = () =>
   new GithubAppInstallationApi(authProvider.getCachedAuthConf());
+export const paymentApi = () =>
+  new PaymentApi(authProvider.getCachedAuthConf());
 
 export interface TODO_Deployment {
   id: string;
