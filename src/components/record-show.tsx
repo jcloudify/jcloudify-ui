@@ -35,10 +35,18 @@ export const RecordShow: React.FC<RecordShowProps> = ({
       {keys.map((key, idx) => {
         return (
           <GridLayout key={key + idx} xs={4} spacing={2}>
-            <Typography variant="body1" fontWeight="400" id={`${name}-${idx}-key`}>
+            <Typography
+              variant="body1"
+              fontWeight="400"
+              id={`${name}-${idx}-key`}
+            >
               {key}
             </Typography>
-            <Typography variant="body1" fontWeight="400" id={`${name}-${idx}-value`}>
+            <Typography
+              variant="body1"
+              fontWeight="400"
+              id={`${name}-${idx}-value`}
+            >
               {record[key]}
             </Typography>
           </GridLayout>

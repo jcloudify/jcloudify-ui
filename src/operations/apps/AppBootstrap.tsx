@@ -108,7 +108,11 @@ const CreateGitRepository: React.FC = () => {
       subheader="The generated application code will be pushed to the specified repository."
     >
       <GridLayout xs={12} md={6} lg={4} spacing={2} alignItems="center">
-        <FormControl variant="outlined" sx={{width: "100%", height: "100%"}}>
+        <FormControl
+          data-testid="select-installation-id"
+          variant="outlined"
+          sx={{width: "100%", height: "100%"}}
+        >
           <Select fullWidth size="medium" {...field}>
             {appInstallations.map((installation) => (
               <MenuItem

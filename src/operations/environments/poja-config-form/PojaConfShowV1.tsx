@@ -121,7 +121,7 @@ const GeneralConf = () => (
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <StringArrayField 
+        <StringArrayField
           name="custom_java_repositories"
           source="general.custom_java_repositories"
         />
