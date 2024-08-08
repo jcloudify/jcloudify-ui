@@ -25,7 +25,7 @@ export interface PojaAuthProvider extends AuthProvider {
   exchangeAuthCode: (code: string) => Promise<Token>;
   getCachedAuthConf: () => Configuration;
   getCachedWhoami: () => Whoami | null;
-  whoami: () => Promise<Whoami>;
+  whoami: () => Promise<Whoami | undefined>;
 }
 
 export interface PagedResponse<T> extends _PagedResponse {

@@ -1,4 +1,4 @@
-import {DataProvider, addRefreshAuthToDataProvider} from "react-admin";
+import {DataProvider} from "react-admin";
 import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
 import {
@@ -8,7 +8,6 @@ import {
   githubAppInstallationProvider,
   logsProvider,
   pojaConfProvider,
-  refreshAuthToken,
   stackProvider,
   userProvider,
 } from "./";
@@ -36,7 +35,7 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
   }
 };
 
-const _dataProvider: DataProvider = {
+export const dataProvider: DataProvider = {
   async getList(resource, raParams) {
     const {
       pagination: {page, perPage},
@@ -92,8 +91,3 @@ const _dataProvider: DataProvider = {
     throw new Error("Function not implemented.");
   },
 };
-
-export const dataProvider = addRefreshAuthToDataProvider(
-  _dataProvider,
-  refreshAuthToken
-);
