@@ -1,4 +1,3 @@
-import {useGetList} from "react-admin";
 import {useParams, useSearchParams} from "react-router-dom";
 import {LogList, LogShow} from "@/operations/logs";
 import {WithTab} from "@/components/tab";
