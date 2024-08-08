@@ -15,7 +15,7 @@ export const refreshAuthToken = async () => {
   return Promise.resolve();
 };
 
-export const _authProvider: PojaAuthProvider = {
+const _authProvider: PojaAuthProvider = {
   login: () => Promise.resolve(),
   whoami: async () => {
     const whoami = await unwrap(() => securityApi().whoami());
