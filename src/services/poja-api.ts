@@ -9,9 +9,10 @@ import {
   EnvironmentApi,
   GithubAppInstallationApi,
 } from "@jcloudify-api/typescript-client";
-import {AxiosResponse} from "axios";
+import {AxiosError, AxiosResponse, isAxiosError} from "axios";
 import {authProvider} from "@/providers";
 import {getEnumValues} from "@/utils/enum";
+import {extractApiError, getErrorMessage} from "@/utils/axios";
 
 // TODO: impl auth configurations
 export const healthApi = () => new HealthApi(authProvider.getCachedAuthConf());
@@ -68,8 +69,16 @@ export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
 export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   execute: Fn
 ): Promise<UnwrapResult<Fn>> => {
-  const _ = await execute();
-  return _.data;
+  let response = {} as Promise<UnwrapResult<Fn>>;
+  try {
+    response = (await execute()).data;
+  } catch (error) {
+    console.log("error", error);
+    console.log("api_error", extractApiError(error));
+    console.log("api_error", getErrorMessage(error as any));
+    throw extractApiError(error);
+  }
+  return response;
 };
 
 // TODO: naming
