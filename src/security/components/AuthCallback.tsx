@@ -20,7 +20,7 @@ export const AuthCallback: React.FC = () => {
       if (code && !isExchanged.current) {
         isExchanged.current = true;
         try {
-          await authProvider.exchangeAuthCode(code);
+          await authProvider.login(code);
           if (authProcess.get() === "login") {
             await authProvider.whoami();
           }
