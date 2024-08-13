@@ -1,5 +1,5 @@
 import {faker as m} from "@faker-js/faker/locale/en";
-import {Application, PojaConf1} from "@jcloudify-api/typescript-client";
+import {Application, PojaConf1, WithQueuesNbEnum} from "@jcloudify-api/typescript-client";
 import {app1} from "./application.mock";
 
 const createConf1 = (
@@ -8,10 +8,10 @@ const createConf1 = (
 ): PojaConf1 => ({
   version: "string",
   general: {
-    app_name: "string",
+    app_name: app.name,
     with_snapstart: true,
-    with_queues_nb: 0,
-    package_full_name: "string",
+    with_queues_nb: WithQueuesNbEnum.NUMBER_2,
+    package_full_name: "com.jcloudify.app",
     custom_java_repositories: ["mavenLocal", "gradleLocal"],
     custom_java_deps: ["lombok", "tika", "guava"],
     custom_java_env_vars: env_vars,

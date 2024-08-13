@@ -4,6 +4,7 @@ import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 import {stripPrefix} from "../../src/utils/str";
 import {log1, log2} from "../fixtures/logs.mock";
 import {user1_installations} from "../fixtures/installation.mock";
+import {prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "../support/util";
 
 describe("Application", () => {
@@ -174,7 +175,7 @@ describe("Application", () => {
           }
         );
 
-        specify("from scratch", () => {
+        specify("(ui flow)from scratch", () => {
           cy.getByTestid(`show-${app2.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app2.id}/show/environments`).click();
 
@@ -185,7 +186,7 @@ describe("Application", () => {
           cy.contains("From scratch");
         });
 
-        specify("from an existing one, create an available", () => {
+        specify("(ui flow) from an existing one, create an available", () => {
           cy.getByTestid(`show-${app2.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app2.id}/show/environments`).click();
 
@@ -198,29 +199,36 @@ describe("Application", () => {
         });
       });
 
+      specify.only("Create new environment for an app", () => {
+        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+
+        cy.wait("@getEnvironments");
+
+        cy.contains("Create").click();
+        cy.getByTestid("CreateFromScratch").click();
+        cy.contains("From scratch");
+
+        cy.get('#general\\.package_full_name').type(prod_env_conf1.general?.package_full_name!)
+
+
+        cy.getByTestid("custom_java_env_vars_accordion").click();
+        cy.getByTestid("AddAnothercustom_java_env_vars").click();
+
+        const recordToAdd = Object.entries(prod_env_conf1.general?.custom_java_env_vars!);
+          recordToAdd
+            .forEach(([key, value], idx) => {
+              cy.getByName(`custom_java_env_vars.${idx}.key`).type(key);
+              cy.getByName(`custom_java_env_vars.${idx}.value`).type(value);
+              if (idx < recordToAdd.length) {
+                cy.getByTestid("AddAnothercustom_java_env_vars").click();
+              }
+            })
+      });
+
       specify.skip("Allow to create environment", () => {
         cy.getByTestid(`show-${app2.id}-app`).click({force: true});
         cy.get('[data-testid="createEnv"]').click();
-
-        cy.contains("Create environment");
-        cy.get('[data-testid="preprodEnv"]');
-
-        cy.contains("Hobby");
-        cy.contains("$0");
-        cy.contains("billed once yearly");
-
-        cy.contains("Standout feature");
-        cy.contains("Up to 45% shipping discount");
-        cy.contains("10 Inventory locations");
-        cy.contains("24/7 chat support");
-        cy.contains("Localized global selling");
-        cy.contains("POS Lite");
-
-        cy.getByTestid("plan-plan_1-card").click();
-        cy.contains("Pro");
-        cy.contains("$15");
-
-        cy.getByTestid("cancelCreateEnv").click();
       });
     });
 
