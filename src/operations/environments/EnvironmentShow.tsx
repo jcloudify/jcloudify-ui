@@ -1,4 +1,4 @@
-import {Environment} from "@jcloudify-api/typescript-client";
+import {Application, Environment} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
 import {
   ShowBase,
@@ -6,6 +6,7 @@ import {
   Labeled,
   useRecordContext,
   IconButtonWithTooltip,
+  useGetOne,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
@@ -17,22 +18,32 @@ import {
   PojaConfEditV1,
   PojaConfShowV1,
 } from "@/operations/environments/poja-config-form";
+import {GitBranch} from "@/components/source_control";
+import {ToRecord} from "@/providers";
 
 const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
   const [isEditConf, setIsEditConf] = useState(false);
-  const record = useRecordContext<Environment>();
+  const {data: app} = useGetOne<ToRecord<Application>>("applications", {
+    id: appId,
+  });
+  const environment = useRecordContext<Environment>();
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
       <ContainerWithHeading title="Environment" sx={{fontSize: "1.2rem"}}>
         <Stack gap={1.5}>
           <GridLayout xs={6} sm={4}>
-            <Labeled>
-              <TextField label="Environment ID" source="id" />
+            <Labeled label="Type">
+              <EnvironmentType value={environment.environment_type!} />
             </Labeled>
 
-            <Labeled label="Type">
-              <EnvironmentType value={record.environment_type!} />
+            <Labeled label="Source control">
+              <GitBranch
+                githubRepoURL={app?.repositoryUrl!}
+                branchName={
+                  environment.environment_type?.toLowerCase() ?? "preprod"
+                }
+              />
             </Labeled>
           </GridLayout>
         </Stack>
@@ -57,11 +68,11 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
         {isEditConf ? (
           <PojaConfEditV1
             appId={appId}
-            envId={record.id!}
+            envId={environment.id!}
             onSettled={() => setIsEditConf(false)}
           />
         ) : (
-          <PojaConfShowV1 appId={appId} envId={record.id!} />
+          <PojaConfShowV1 appId={appId} envId={environment.id!} />
         )}
       </ContainerWithHeading>
     </Stack>

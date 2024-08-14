@@ -114,7 +114,10 @@ describe("Application", () => {
 
         cy.wait("@getEnvironmentById");
 
-        cy.contains("Prod");
+        cy.contains("Prod"); // type
+        cy.get(
+          "[href='https://github.com/poja-app/jcloudify-api-app1/tree/prod']"
+        ).should("exist"); // branch url
 
         // env variables
         cy.getByTestid("custom_java_env_vars_accordion").click();
