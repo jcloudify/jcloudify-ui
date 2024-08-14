@@ -3,7 +3,7 @@ import {Stack, Typography} from "@mui/material";
 import {Commit} from "@mui/icons-material";
 import {FaCodeBranch as Branch} from "react-icons/fa";
 import {TODO_Deployment} from "@/services/poja-api";
-import {getURLComponent} from "@/utils/github_url";
+import {getURLComponent, githubURLFactory} from "@/utils/github_url";
 
 export type VCSProps = TODO_Deployment["github_meta"];
 
@@ -46,3 +46,20 @@ export const VCS: React.FC<VCSProps> = ({
     </Stack>
   );
 };
+
+export const GitBranch: React.FC<{
+  githubRepoURL: string;
+  branchName: string;
+}> = ({githubRepoURL, branchName}) => (
+  <Stack direction="row" spacing={0.5}>
+    <Branch size="18px" />
+    <Typography
+      flex={1}
+      target="_blank"
+      component={Link}
+      to={githubURLFactory(githubRepoURL).branch(branchName)}
+    >
+      {branchName}
+    </Typography>
+  </Stack>
+);
