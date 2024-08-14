@@ -2,7 +2,6 @@ import {Application, Environment} from "@jcloudify-api/typescript-client";
 import {useState} from "react";
 import {
   ShowBase,
-  TextField,
   Labeled,
   useRecordContext,
   IconButtonWithTooltip,
