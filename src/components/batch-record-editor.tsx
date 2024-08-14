@@ -45,7 +45,7 @@ export const BatchRecordEditor: React.FC<BatchRecordEditorProps> = ({
   placeholders = ["Name", "Value"],
   defaultRecord = [],
 }) => {
-  const onChange = useDebounceCallback(optional(_onChange).call, 500);
+  const onChange = useDebounceCallback(optional(_onChange).call, 250);
   const toRemove = useSet<KeyValue>();
 
   const form = useForm({

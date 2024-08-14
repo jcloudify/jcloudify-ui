@@ -1,4 +1,7 @@
-import {DatabaseConf1WithDatabaseEnum, WithQueuesNbEnum} from "@jcloudify-api/typescript-client";
+import {
+  DatabaseConf1WithDatabaseEnum,
+  WithQueuesNbEnum,
+} from "@jcloudify-api/typescript-client";
 
 const baseConf = {
   version: "string",
@@ -54,12 +57,12 @@ export const with_gen_api_client_enabled = {
     ts_client_default_openapi_server_url: `http://mock.com/api/v1`,
     ts_client_api_url_env_var_name: "API_BASE_URL",
   },
-}
+};
 
 export const with_gen_api_client_disabled = {
   ...baseConf,
   gen_api_client: undefined,
-}
+};
 
 export const with_publish_to_npm_registry = {
   ...baseConf,
@@ -70,12 +73,12 @@ export const with_publish_to_npm_registry = {
     ts_client_api_url_env_var_name: "API_BASE_URL",
     codeartifact_repository_name: `mock-store`,
     codeartifact_domain_name: `npm-mock-app`,
-  }
+  },
 };
 
 export const with_database_none = {
   ...baseConf,
-}
+};
 
 export const with_database_sqlite = {
   ...baseConf,
@@ -83,8 +86,8 @@ export const with_database_sqlite = {
     ...baseConf.database,
     with_database: DatabaseConf1WithDatabaseEnum.SQLITE,
     prod_db_cluster_timeout: 300,
-  }
-}
+  },
+};
 
 export const with_database_aurora_postgres = {
   ...baseConf,
@@ -99,14 +102,13 @@ export const with_database_aurora_postgres = {
     aurora_scale_point: 60,
     aurora_sleep: 900,
     aurora_auto_pause: false,
-  }
-}
+  },
+};
 
 export const custom_java_env_vars = {
   CLIENT_ID: "clientId",
-  SECRET_KEY: "secretKey"
-}
+  SECRET_KEY: "secretKey",
+};
 
-export const custom_java_deps = ["lombok", "tika", "guava"]
-export const custom_java_repositories = ["mavenLocal", "gradleLocal"]
-
+export const custom_java_deps = ["lombok", "tika", "guava"];
+export const custom_java_repositories = ["mavenLocal", "gradleLocal"];

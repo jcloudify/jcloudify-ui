@@ -1,6 +1,5 @@
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
-import {prod_env_conf1} from "../fixtures/config.mock";
 
 describe("Environment", () => {
   beforeEach(() => {
@@ -51,9 +50,7 @@ describe("Environment", () => {
 
       // repositories
       cy.getByTestid("custom_java_repositories_accordion").click();
-      cy.get("#custom_java_repositories-0-string-value").contains(
-        "mavenLocal"
-      );
+      cy.get("#custom_java_repositories-0-string-value").contains("mavenLocal");
       cy.get("#custom_java_repositories-1-string-value").contains(
         "gradleLocal"
       );
@@ -74,8 +71,7 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentConfig");
       // TODO: a way to test this in a better way
     });
-
-  })
+  });
 
   context("Create environment", () => {
     specify(
@@ -119,34 +115,4 @@ describe("Environment", () => {
       cy.contains("From Preprod");
     });
   });
-
-  context("Crupdate", () => {
-    specify.only("Create new environment for an app", () => {
-      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app2.id}/show/environments`).click();
-
-      cy.wait("@getEnvironments");
-
-      cy.contains("Create").click();
-      cy.getByTestid("CreateFromScratch").click();
-      cy.contains("From scratch");
-
-      cy.get('#general\\.package_full_name').type(prod_env_conf1.general?.package_full_name!)
-
-
-      cy.getByTestid("custom_java_env_vars_accordion").click();
-      cy.getByTestid("AddAnothercustom_java_env_vars").click();
-
-      const recordToAdd = Object.entries(prod_env_conf1.general?.custom_java_env_vars!);
-      recordToAdd
-        .forEach(([key, value], idx) => {
-          cy.getByName(`custom_java_env_vars.${idx}.key`).type(key);
-          cy.getByName(`custom_java_env_vars.${idx}.value`).type(value);
-          if (idx < recordToAdd.length) {
-            cy.getByTestid("AddAnothercustom_java_env_vars").click();
-          }
-        })
-    });
-
-  })
 });

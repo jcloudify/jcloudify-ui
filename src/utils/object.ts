@@ -21,4 +21,4 @@ export const omit = <T extends object, K extends keyof T>(
 
 export const removeNestedUndefined = (o: object) => {
   return JSON.parse(JSON.stringify(o));
-}
+};

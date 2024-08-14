@@ -98,15 +98,11 @@ describe.skip("Deployment", () => {
     cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
 
     cy.getByTestid(`depl-${depl1.id}`).contains("prod");
-    cy.getByTestid(`depl-${depl1.id}`).contains(
-      `by ${depl1.creator.username}`
-    );
+    cy.getByTestid(`depl-${depl1.id}`).contains(`by ${depl1.creator.username}`);
     cy.getByTestid(`depl-${depl1.id}`).contains("Ready");
 
     cy.getByTestid(`depl-${depl2.id}`).contains("preprod");
-    cy.getByTestid(`depl-${depl2.id}`).contains(
-      `by ${depl2.creator.username}`
-    );
+    cy.getByTestid(`depl-${depl2.id}`).contains(`by ${depl2.creator.username}`);
     cy.getByTestid(`depl-${depl2.id}`).contains("In Progress");
 
     cy.getByHref(
@@ -136,9 +132,7 @@ describe.skip("Deployment", () => {
     cy.getByHref(`/applications/${app2.id}/show/deployments`).click();
 
     cy.getByTestid(`depl-${depl3.id}`).contains("prod");
-    cy.getByTestid(`depl-${depl3.id}`).contains(
-      `by ${depl3.creator.username}`
-    );
+    cy.getByTestid(`depl-${depl3.id}`).contains(`by ${depl3.creator.username}`);
     cy.getByTestid(`depl-${depl3.id}`).contains("Failed");
   });
 
@@ -153,9 +147,7 @@ describe.skip("Deployment", () => {
     cy.contains("prod");
     cy.contains("fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef".slice(0, 7));
     cy.contains("poja: bootstrap");
-    cy.contains(
-      "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod"
-    );
+    cy.contains("https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod");
     cy.contains("by user1");
 
     // TODO: depl logs
@@ -181,5 +173,4 @@ describe.skip("Deployment", () => {
       // TODO: depl logs
     }
   );
-
-})
+});

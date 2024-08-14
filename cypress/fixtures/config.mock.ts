@@ -1,5 +1,9 @@
 import {faker as m} from "@faker-js/faker/locale/en";
-import {Application, PojaConf1, WithQueuesNbEnum} from "@jcloudify-api/typescript-client";
+import {
+  Application,
+  PojaConf1,
+  WithQueuesNbEnum,
+} from "@jcloudify-api/typescript-client";
 import {app1} from "./application.mock";
 
 const createConf1 = (
