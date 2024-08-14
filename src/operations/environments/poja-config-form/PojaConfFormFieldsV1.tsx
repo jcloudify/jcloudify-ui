@@ -11,6 +11,7 @@ import {
   Form,
   Toolbar,
   SaveButton,
+  NumberInput,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -245,7 +246,7 @@ const IntegrationConf = () => (
 );
 
 const GenAPIClientConf = () => {
-  const withGenClients = useWatch({name: "__conf.with_gen_clients"});
+  const withGenClients = useWatch({name: "__flags.with_gen_clients"});
   const withPublishToNpmRegistry = useWatch({
     name: "gen_api_client.with_publish_to_npm_registry",
   });
@@ -257,7 +258,7 @@ const GenAPIClientConf = () => {
           <TitleWithToggle
             size="sm"
             title="Gen API Client"
-            fieldSource="__conf.with_gen_clients"
+            fieldSource="__flags.with_gen_clients"
           />
         }
       />
@@ -303,7 +304,7 @@ const GenAPIClientConf = () => {
           rowSpacing={0.5}
           alignItems="center"
         >
-          <TextInput
+          <NumberInput
             label="AWS Account ID"
             source="gen_api_client.aws_account_id"
             variant="outlined"
@@ -334,20 +335,18 @@ const ConcurrencyConf = () => (
   <Stack>
     <Heading size="sm" title="Concurrency" mb={2} />
     <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
-      <TextInput
+      <NumberInput
         label="Frontal Reserved Concurrent Executions NB"
         source="concurrency.frontal_reserved_concurrent_executions_nb"
         variant="outlined"
         size="medium"
-        type="number"
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Worker Reserved Concurrent Executions NB"
         source="concurrency.worker_reserved_concurrent_executions_nb"
         variant="outlined"
         size="medium"
-        type="number"
         fullWidth
       />
     </GridLayout>
@@ -358,57 +357,51 @@ const ComputeConf = () => (
   <Stack>
     <Heading size="sm" title="Compute" mb={2} />
     <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
-      <TextInput
+      <NumberInput
         label="Frontal Memory"
         source="compute.frontal_memory"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={2048}
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Frontal Function Timeout"
         source="compute.frontal_function_timeout"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={30}
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Worker Memory"
         source="compute.worker_memory"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={1024}
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Worker Batch"
         source="compute.worker_batch"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={5}
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Worker Function 1 Timeout"
         source="compute.worker_function_1_timeout"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={600}
         fullWidth
       />
-      <TextInput
+      <NumberInput
         label="Worker Function 2 Timeout"
         source="compute.worker_function_2_timeout"
         variant="outlined"
         size="medium"
-        type="number"
         defaultValue={600}
         fullWidth
       />
@@ -449,7 +442,6 @@ const TestingConf = () => (
         variant="outlined"
         size="medium"
         defaultValue="0.2"
-        type="string"
         fullWidth
       />
     </GridLayout>
@@ -495,13 +487,12 @@ const DBConf = () => {
             type="password"
             fullWidth
           />
-          <TextInput
+          <NumberInput
             label="Prod DB Cluster Timeout"
             source="database.prod_db_cluster_timeout"
             variant="outlined"
             size="medium"
             defaultValue="300"
-            type="string"
             fullWidth
           />
         </GridLayout>
@@ -516,40 +507,36 @@ const DBConf = () => {
           rowSpacing={0.5}
           alignItems="center"
         >
-          <TextInput
+          <NumberInput
             label="Aurora Min Capacity"
             source="database.aurora_min_capacity"
             variant="outlined"
             size="medium"
             fullWidth
-            type="number"
             defaultValue={2}
           />
-          <TextInput
+          <NumberInput
             label="Aurora Max Capacity"
             source="database.aurora_max_capacity"
             variant="outlined"
             size="medium"
             fullWidth
-            type="number"
             defaultValue={16}
           />
-          <TextInput
+          <NumberInput
             label="Aurora Scale Point"
             source="database.aurora_scale_point"
             variant="outlined"
             size="medium"
             fullWidth
-            type="number"
             defaultValue={60}
           />
-          <TextInput
+          <NumberInput
             label="Aurora Sleep"
             source="database.aurora_sleep"
             variant="outlined"
             size="medium"
             fullWidth
-            type="number"
             defaultValue={900}
           />
           <BooleanInput

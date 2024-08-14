@@ -32,7 +32,7 @@ Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
 });
 
 Cypress.Commands.add("muiSelect", (selector, value) => {
-  cy.get(selector).click();
+  cy.get(selector).click({force: true});
   cy.get(`[data-value="${value}"]`).click();
 });
 
