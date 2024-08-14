@@ -7,6 +7,8 @@ import {user1_installations} from "../fixtures/installation.mock";
 import {prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "../support/util";
 
+// TODO: separate app, environment and deployment tests
+
 describe("Application", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
