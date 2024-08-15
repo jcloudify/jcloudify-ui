@@ -31,35 +31,35 @@ export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
   defaultValues = [],
   name = "Value",
 }) => {
-  const onChange = useDebounceCallback(optional(_onChange).call, 500);
+  const onChange = useDebounceCallback(optional(_onChange).call, 250);
   const toRemove = useSet<StringValue>();
   const form = useForm({
     mode: "onChange",
     resolver: zodResolver(
       z.object({
-        stringValues: z.array(schema),
+        [name]: z.array(schema),
       })
     ),
     values: {
-      stringValues: defaultValues,
+      [name]: defaultValues,
     },
   });
 
   const {append, remove} = useFieldArray({
     control: form.control,
-    name: "stringValues",
+    name,
   });
 
   useEffect(() => {
     const subs = form.watch((v = {}) => {
-      onChange(v.stringValues as StringValue[]);
+      onChange(v[name] as StringValue[]);
     });
     return () => {
       subs.unsubscribe();
     };
   }, [form.watch]);
 
-  const stringValues = form.watch("stringValues");
+  const stringValues = form.watch(name);
 
   return (
     <Stack direction="column" p={1}>
@@ -72,7 +72,7 @@ export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
               <OutlinedInput
                 placeholder={placeholder}
                 fullWidth
-                {...form.register(`stringValues.${idx}.value`)}
+                {...form.register(`${name}.${idx}.value`)}
               />
               <FormHelperText error>
                 {errors?.message?.toString() ?? " "}
@@ -84,7 +84,7 @@ export const BatchArrayEditor: React.FC<BatchArrayEditorProps> = ({
                 label={_deleted ? "Cancel removal" : "Remove"}
                 onClick={() => {
                   if (!_newlyAdded) {
-                    form.setValue(`stringValues.${idx}`, {
+                    form.setValue(`${name}.${idx}`, {
                       ...stringValue,
                       _deleted: !_deleted,
                     });

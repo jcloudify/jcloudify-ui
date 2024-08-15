@@ -16,6 +16,7 @@ import {
 import {
   FormHelperText,
   Stack,
+  Box,
   Select,
   MenuItem,
   FormControl,
@@ -118,12 +119,11 @@ const CreateGitRepository: React.FC = () => {
               <MenuItem
                 value={installation.id}
                 key={`installation-${installation.id}`}
+                sx={{gap: 1.5}}
               >
-                <Stack direction="row" alignItems="center" spacing={2}>
-                  <GitHub />
+                <GitHub />
 
-                  <span>{installation.owner}</span>
-                </Stack>
+                <Box flex={1}>{installation.owner}</Box>
               </MenuItem>
             ))}
             <Divider />

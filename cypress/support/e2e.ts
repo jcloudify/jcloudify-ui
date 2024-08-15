@@ -27,6 +27,7 @@ declare global {
       getByName<Subject>(name: string): Chainable<Subject>;
 
       muiSelect(selector: string, value: string): Chainable;
+      muiSelect2(formControl: string, optionText: string): Chainable;
       muiClear(selector: string): Chainable;
 
       /**
