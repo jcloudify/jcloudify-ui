@@ -64,8 +64,8 @@ describe("Environment", () => {
       cy.contains("Environment Diff");
       cy.contains("Compare Environment Differences");
 
-      cy.muiSelect("#select-env-0", "prod_env");
-      cy.muiSelect("#select-env-1", "preprod_env");
+      cy.muiSelect2("#select-env-0", "Prod");
+      cy.muiSelect2("#select-env-1", "Preprod");
 
       cy.wait("@getEnvironments");
       cy.wait("@getEnvironmentConfig");

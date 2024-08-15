@@ -36,6 +36,11 @@ Cypress.Commands.add("muiSelect", (selector, value) => {
   cy.get(`[data-value="${value}"]`).click();
 });
 
+Cypress.Commands.add("muiSelect2", (formControl, optionText) => {
+  cy.get(formControl).click({force: true});
+  cy.contains(optionText).click();
+});
+
 Cypress.Commands.add("muiClear", (selector) => {
   cy.get(selector).click({force: true});
   cy.get('[aria-label="Clear value"]').click();

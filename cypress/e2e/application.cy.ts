@@ -75,10 +75,12 @@ describe("Application", () => {
       cy.wait("@getUserInstallations");
 
       cy.getByName("name").type(app1.name!);
-      cy.muiSelect(
-        "[data-testid='select-installation-id']",
-        "user1_installation_1"
+
+      cy.muiSelect2(
+        "#mui-component-select-github_repository\\.installation_id",
+        "user1"
       );
+
       cy.get("[name='github_repository.name']").type(app1.name!);
       cy.get("[name='github_repository.description']").type(app1.name!);
 
