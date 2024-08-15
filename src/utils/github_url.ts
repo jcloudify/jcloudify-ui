@@ -9,3 +9,9 @@ export const getURLComponent = (owner: string, repo: string) => {
       GITHUB_URL_PREFIX + owner + "/" + repo + "/commit/" + sha,
   };
 };
+
+export const githubURLFactory = (repoURL: string) => ({
+  url: repoURL,
+  branch: (branchName: string) => repoURL + "/tree/" + branchName,
+  commit: (sha: string) => repoURL + "/commit/" + sha,
+});
