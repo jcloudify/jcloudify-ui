@@ -9,6 +9,7 @@ import {AuthCallback, AuthRegistration, Authentication} from "@/security";
 import {apps, billing} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {AppInstallationCallback} from "@/operations/github";
+import {PaymentDetails} from "@/operations/payment-details";
 import {defaultTheme} from "@/themes";
 import {renderRouteMap} from "@/components/router";
 
@@ -33,6 +34,8 @@ const JCAdmin = () => (
       <Route path="/applications/create">
         {renderRouteMap(appCreateViews)}
       </Route>
+
+      <Route path="/billing/payment-details" element={<PaymentDetails />} />
     </CustomRoutes>
   </Admin>
 );
