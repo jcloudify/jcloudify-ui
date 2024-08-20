@@ -1,15 +1,25 @@
 import React, {useState} from "react";
 import {
+  EditBase,
   EmailField,
   IconButtonWithTooltip,
   Labeled,
+  required,
+  SaveButton,
   ShowBase,
+  SimpleForm,
   SimpleShowLayout,
   TextField,
+  TextInput,
 } from "react-admin";
 import {Box, Divider, Stack, Typography} from "@mui/material";
 import {Cancel as CancelIcon, Edit as EditIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
+
+export interface BillingDetailsFormProps {
+  customerId: string;
+  onSettled: () => void;
+}
 
 export const BillingInformation: React.FC = () => {
   const customerId = authProvider.getCachedWhoami()?.user?.stripe_id!;
@@ -31,7 +41,14 @@ export const BillingInformation: React.FC = () => {
       </Stack>
       <Divider />
       <Box my={1}>
-        <BillingDetailsShow customerId={customerId} />
+        {editCustomer ? (
+          <BillingDetailsForm
+            customerId={customerId}
+            onSettled={() => setEditCustomer(false)}
+          />
+        ) : (
+          <BillingDetailsShow customerId={customerId} />
+        )}
       </Box>
     </Box>
   );
@@ -66,5 +83,56 @@ const BillingDetailsShow: React.FC<{customerId: string}> = ({customerId}) => {
         </Stack>
       </SimpleShowLayout>
     </ShowBase>
+  );
+};
+
+const BillingDetailsForm: React.FC<BillingDetailsFormProps> = ({
+  customerId,
+  onSettled,
+}) => {
+  return (
+    <EditBase
+      resource="paymentDetails"
+      redirect={false}
+      id={customerId}
+      mutationOptions={{onSettled}}
+    >
+      <SimpleForm toolbar={<SaveButton />}>
+        <Stack
+          direction={{md: "row", sm: "column"}}
+          spacing={1}
+          my={2}
+          px={1}
+          justifyContent="space-between"
+        >
+          <Box width="100%">
+            <TextInput
+              source="name"
+              size="medium"
+              fullWidth
+              validate={required()}
+            />
+          </Box>
+          <Box width="100%">
+            <TextInput
+              type="email"
+              source="email"
+              size="medium"
+              fullWidth
+              validate={required()}
+            />
+          </Box>
+          <Box width="100%">
+            <TextInput
+              type="phone"
+              source="phone"
+              size="medium"
+              fullWidth
+              validate={required()}
+            />
+          </Box>
+        </Stack>
+      </SimpleForm>
+    </EditBase>
   );
 };
