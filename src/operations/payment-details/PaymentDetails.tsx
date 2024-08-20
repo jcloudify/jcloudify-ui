@@ -2,7 +2,8 @@ import {IconButtonWithTooltip} from "react-admin";
 import {useNavigate} from "react-router-dom";
 import {Box, Stack, Typography} from "@mui/material";
 import {Settings as SettingsIcon} from "@mui/icons-material";
-import {BillingInformation} from "./BillingDetails";
+import {authProvider} from "@/providers";
+import {BillingDetailsSummary, BillingInformation} from "./BillingDetails";
 
 export const PaymentDetails: React.FC = () => {
   return (
@@ -13,7 +14,9 @@ export const PaymentDetails: React.FC = () => {
 };
 
 export const PaymentDetailsSummary: React.FC = () => {
+  const customerId = authProvider.getCachedWhoami()?.user?.stripe_id!;
   const navigate = useNavigate();
+
   return (
     <Stack direction="column" spacing={1}>
       <Stack direction="row" spacing={1} justifyContent="space-between">
@@ -26,9 +29,7 @@ export const PaymentDetailsSummary: React.FC = () => {
         </IconButtonWithTooltip>
       </Stack>
       <Stack direction="column" spacing={1}>
-        <Typography variant="body1">Name of customer</Typography>
-        <Typography variant="body1">Email of customer</Typography>
-        <Typography variant="body1">Phone of customer</Typography>
+        <BillingDetailsSummary customerId={customerId} />
       </Stack>
     </Stack>
   );

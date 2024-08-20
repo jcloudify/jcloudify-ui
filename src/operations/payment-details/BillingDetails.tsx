@@ -54,7 +54,23 @@ export const BillingInformation: React.FC = () => {
   );
 };
 
-const BillingDetailsShow: React.FC<{customerId: string}> = ({customerId}) => {
+export const BillingDetailsSummary: React.FC<{customerId: string}> = ({
+  customerId,
+}) => {
+  return (
+    <ShowBase resource="paymentDetails" id={customerId}>
+      <SimpleShowLayout>
+        <TextField source="name" label={false} />
+        <TextField source="email" label={false} />
+        <TextField source="phone" label={false} />
+      </SimpleShowLayout>
+    </ShowBase>
+  );
+};
+
+export const BillingDetailsShow: React.FC<{customerId: string}> = ({
+  customerId,
+}) => {
   return (
     <ShowBase resource="paymentDetails" id={customerId}>
       <SimpleShowLayout>
