@@ -2,20 +2,12 @@ import {IconButtonWithTooltip} from "react-admin";
 import {useNavigate} from "react-router-dom";
 import {Box, Stack, Typography} from "@mui/material";
 import {Settings as SettingsIcon} from "@mui/icons-material";
-import React from "react";
+import {BillingInformation} from "./BillingDetails";
 
 export const PaymentDetails: React.FC = () => {
   return (
     <Box>
-      Aliqua nulla sint ex ipsum. Occaecat laboris irure enim voluptate. Qui
-      duis deserunt proident anim amet enim. Ut minim nulla veniam proident sunt
-      non Lorem ex duis velit. Laborum labore sit culpa laboris cupidatat nulla
-      quis velit exercitation cillum. Officia nisi ullamco ullamco dolor
-      cupidatat consectetur do in consequat excepteur. Sint sint ex ullamco
-      aliquip occaecat reprehenderit pariatur fugiat proident commodo. Laboris
-      cupidatat cupidatat id dolor in nulla esse aliquip culpa commodo dolor
-      adipisicing excepteur sint. Ut aliqua sint commodo occaecat ex quis
-      occaecat eu adipisicing exercitation do sit.
+      <BillingInformation />
     </Box>
   );
 };
