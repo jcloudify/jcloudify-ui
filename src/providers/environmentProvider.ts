@@ -1,4 +1,4 @@
-import {Environment} from "@jcloudify-api/typescript-client";
+import {Environment, PojaConf1} from "@jcloudify-api/typescript-client";
 import {
   PagedResponse,
   PojaDataProvider,
@@ -25,22 +25,27 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
       )
     )) as ToRecord<Environment>;
   },
-  async save(toCreate, meta = {}) {
+  async save(environment_with_config, meta = {}) {
+    const {to_create, ...pojaConf} =
+      environment_with_config as unknown as PojaConf1 & {
+        to_create: ToRecord<Environment>;
+      };
+
     const uid = authProvider.getCachedWhoami()?.user?.id!;
 
-    const created = (
+    const [created] = (
       await unwrap(() =>
         environmentApi().crupdateApplicationEnvironments(uid, meta.appId, {
-          data: [toCreate],
+          data: [to_create],
         })
       )
     ).data as ToRecord<Environment>[];
 
-    await pojaConfProvider.save(meta.with_config, {
+    await pojaConfProvider.save(pojaConf, {
       appId: meta.appId,
-      envId: toCreate.id,
+      envId: created.id,
     });
-    return created[0];
+    return created;
   },
   saveAll(): Promise<any> {
     throw new Error("Function not implemented.");

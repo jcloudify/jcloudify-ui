@@ -1,3 +1,4 @@
+import {NO_PUBLISH_CLIENT_CONF} from "@/operations/environments/poja-config-form";
 import {
   DatabaseConf1WithDatabaseEnum,
   WithQueuesNbEnum,
@@ -39,13 +40,13 @@ const baseConf = {
   },
   database: {
     with_database: DatabaseConf1WithDatabaseEnum.NONE,
-    database_non_root_username: undefined,
-    database_non_root_password: undefined,
-    prod_db_cluster_timeout: undefined,
-    aurora_min_capacity: undefined,
-    aurora_max_capacity: undefined,
-    aurora_scale_point: undefined,
-    aurora_sleep: undefined,
+    database_non_root_username: null,
+    database_non_root_password: null,
+    prod_db_cluster_timeout: null,
+    aurora_min_capacity: null,
+    aurora_max_capacity: null,
+    aurora_scale_point: null,
+    aurora_sleep: null,
     aurora_auto_pause: false,
   },
 };
@@ -53,6 +54,9 @@ const baseConf = {
 export const with_gen_api_client_enabled = {
   ...baseConf,
   gen_api_client: {
+    aws_account_id: null,
+    codeartifact_repository_name: null,
+    codeartifact_domain_name: null,
     with_publish_to_npm_registry: false,
     ts_client_default_openapi_server_url: `http://mock.com/api/v1`,
     ts_client_api_url_env_var_name: "API_BASE_URL",
@@ -61,7 +65,7 @@ export const with_gen_api_client_enabled = {
 
 export const with_gen_api_client_disabled = {
   ...baseConf,
-  gen_api_client: undefined,
+  gen_api_client: null,
 };
 
 export const with_publish_to_npm_registry = {
