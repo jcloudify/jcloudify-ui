@@ -248,9 +248,6 @@ describe("PojaConfV1", () => {
         "#database\\.with_database",
         DatabaseConf1WithDatabaseEnum.SQLITE
       );
-      cy.get("#database\\.prod_db_cluster_timeout")
-        .clear()
-        .type(String(with_database_sqlite.database.prod_db_cluster_timeout));
     });
   });
 
