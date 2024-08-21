@@ -1,6 +1,7 @@
 import {
   Application,
   DatabaseConf1WithDatabaseEnum,
+  GenApiClient1,
   OneOfPojaConf,
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
@@ -82,8 +83,13 @@ const normalizeDBConf = ({database}: PojaConfFormDataV1) => {
 const normalizeGenApiClientConf = ({
   __flags,
   gen_api_client,
-}: PojaConfFormDataV1) => {
-  if (!__flags?.with_gen_clients) return null;
+}: PojaConfFormDataV1): GenApiClient1 => {
+  if (!__flags?.with_gen_clients)
+    return {
+      ...NO_PUBLISH_CLIENT_CONF,
+      ts_client_api_url_env_var_name: null,
+      ts_client_default_openapi_server_url: null,
+    };
   const {
     codeartifact_domain_name,
     codeartifact_repository_name,
