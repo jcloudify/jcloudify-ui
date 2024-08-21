@@ -13,6 +13,7 @@ import {
   useGetOne,
   CreateBase,
   useBasename,
+  useRedirect,
 } from "react-admin";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
@@ -28,6 +29,7 @@ import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
 import {ToRecord} from "@/providers";
+import {useNavigate} from "react-router-dom";
 
 export interface EnvironmentCreateProps {
   appId: string;
@@ -39,7 +41,7 @@ const _EnvironmentCreate: React.FC<{
   template: Environment | undefined;
 }> = ({template, appId}) => {
   const newEnvironmentId = useMemo(() => nanoid(), []);
-  const basename = useBasename();
+  const redirect = useRedirect();
 
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId!,
@@ -65,13 +67,15 @@ const _EnvironmentCreate: React.FC<{
   return (
     <CreateBase
       resource="environments"
-      redirect={(_resource, id) =>
-        `${basename}/applications/${appId}/show/environments/${id}`
-      }
       transform={(data) => fromPojaConfFormData(data, app!)}
       mutationOptions={{
         meta: {
           appId: app?.id,
+        },
+        onSuccess: (environment) => {
+          redirect(
+            `/applications/${appId}/show/environments/${environment.id}`
+          );
         },
       }}
     >

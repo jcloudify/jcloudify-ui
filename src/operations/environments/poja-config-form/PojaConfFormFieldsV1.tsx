@@ -1,4 +1,5 @@
 import {
+  Application,
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
   WithQueuesNbEnum,
@@ -14,6 +15,7 @@ import {
   SaveButton,
   NumberInput,
   WithRecord,
+  useGetOne,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -35,6 +37,8 @@ import {
   BatchRecordEditorField,
 } from "@/operations/components/field";
 import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
+import {fromPojaConfFormData} from ".";
+import {ToRecord} from "@/providers";
 
 export interface PojaConfEditV1Props {
   appId: string;
@@ -47,9 +51,13 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
   envId,
   onSettled,
 }) => {
+  const {data: app} = useGetOne<ToRecord<Application>>("applications", {
+    id: appId,
+  });
   return (
     <EditBase
       mutationMode="pessimistic"
+      transform={(data) => fromPojaConfFormData(data, app!)}
       resource="pojaConf"
       id={envId}
       queryOptions={{
