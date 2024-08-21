@@ -12,6 +12,7 @@ import {
   required,
   useGetOne,
   CreateBase,
+  useBasename,
 } from "react-admin";
 import {Stack} from "@mui/material";
 import {nanoid} from "nanoid";
@@ -25,6 +26,7 @@ import {
 import {fromPojaConfFormData} from "@/operations/environments/poja-config-form";
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
+import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
 import {ToRecord} from "@/providers";
 
 export interface EnvironmentCreateProps {
@@ -37,20 +39,18 @@ const _EnvironmentCreate: React.FC<{
   template: Environment | undefined;
 }> = ({template, appId}) => {
   const newEnvironmentId = useMemo(() => nanoid(), []);
+  const basename = useBasename();
 
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId!,
   });
 
-  const {data: fromConfig = {}} = useGetOne<ToRecord<OneOfPojaConf>>(
-    "pojaConf",
-    {
-      id: template?.id?.toString()!,
-      meta: {
-        appId,
-      },
-    }
-  );
+  const {data: fromConfig} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
+    id: template?.id?.toString()!,
+    meta: {
+      appId,
+    },
+  });
 
   const {creatable} = useEnvironmentCreation(appId);
 
@@ -65,6 +65,9 @@ const _EnvironmentCreate: React.FC<{
   return (
     <CreateBase
       resource="environments"
+      redirect={(_resource, id) =>
+        `${basename}/applications/${appId}/show/environments/${id}`
+      }
       transform={(data) => fromPojaConfFormData(data, app!)}
       mutationOptions={{
         meta: {
@@ -75,9 +78,13 @@ const _EnvironmentCreate: React.FC<{
       <Form
         values={{
           to_create: {id: newEnvironmentId},
-          __flags: {with_gen_clients: false},
+          __flags: {
+            with_gen_clients: !fromConfig
+              ? false
+              : checkPojaConf(fromConfig).is_with_gen_api_client,
+          },
           version: "3.6.2",
-          ...fromConfig,
+          ...(fromConfig || {}),
         }}
         noValidate
       >
