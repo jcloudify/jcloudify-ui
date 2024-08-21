@@ -12,7 +12,6 @@ import {
   required,
   useGetOne,
   CreateBase,
-  useBasename,
   useRedirect,
 } from "react-admin";
 import {Stack} from "@mui/material";
@@ -29,7 +28,6 @@ import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
 import {ToRecord} from "@/providers";
-import {useNavigate} from "react-router-dom";
 
 export interface EnvironmentCreateProps {
   appId: string;

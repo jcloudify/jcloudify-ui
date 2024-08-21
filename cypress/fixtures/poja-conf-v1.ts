@@ -64,7 +64,14 @@ export const with_gen_api_client_enabled = {
 
 export const with_gen_api_client_disabled = {
   ...baseConf,
-  gen_api_client: null,
+  gen_api_client: {
+    aws_account_id: null,
+    with_publish_to_npm_registry: false,
+    ts_client_default_openapi_server_url: null,
+    ts_client_api_url_env_var_name: null,
+    codeartifact_repository_name: null,
+    codeartifact_domain_name: null,
+  },
 };
 
 export const with_publish_to_npm_registry = {
