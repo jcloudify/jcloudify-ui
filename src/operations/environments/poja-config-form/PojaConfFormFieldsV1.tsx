@@ -452,7 +452,7 @@ const DBConf = () => {
   const withDatabase = useWatch({name: "database.with_database"});
   const noneOrNonManaged =
     withDatabase === DatabaseConf1WithDatabaseEnum.NONE ||
-    withDatabase === DatabaseConf1WithDatabaseEnum.NON_MANAGED_POSTGRES;
+    withDatabase === DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES;
 
   return (
     <Stack>
