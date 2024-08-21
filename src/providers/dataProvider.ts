@@ -9,6 +9,7 @@ import {
   logsProvider,
   paymentProvider,
   paymentDetailsProvider,
+  paymentMethodsProvider,
   pojaConfProvider,
   stackEventProvider,
   stackOutputProvider,
@@ -42,6 +43,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return paymentProvider;
     case "paymentDetails":
       return paymentDetailsProvider;
+    case "paymentMethods":
+      return paymentMethodsProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

@@ -4,11 +4,13 @@ import {Box, Stack, Typography} from "@mui/material";
 import {Settings as SettingsIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
 import {BillingDetailsSummary, BillingInformation} from "./BillingDetails";
+import {PaymentMethods} from "../payment-methods";
 
 export const PaymentDetails: React.FC = () => {
   return (
     <Box>
       <BillingInformation />
+      <PaymentMethods />
     </Box>
   );
 };

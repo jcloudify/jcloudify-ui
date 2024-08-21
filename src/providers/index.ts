@@ -15,5 +15,6 @@ export * from "./pojaConfProvider";
 export * from "./githubAppInstallationProvider";
 export * from "./paymentProvider";
 export * from "./paymentDetailsProvider";
+export * from "./paymentMethodsProvoder";
 
 export * from "./cache";

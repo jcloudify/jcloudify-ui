@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {
   EditBase,
   EmailField,
+  FunctionField,
   IconButtonWithTooltip,
   Labeled,
   required,
@@ -15,6 +16,8 @@ import {
 import {Box, Divider, Stack, Typography} from "@mui/material";
 import {Cancel as CancelIcon, Edit as EditIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
+import {PaymentCustomer} from "@jcloudify-api/typescript-client";
+import {BankCardShow} from "../payment-methods";
 
 export interface BillingDetailsFormProps {
   customerId: string;
@@ -63,6 +66,19 @@ export const BillingDetailsSummary: React.FC<{customerId: string}> = ({
         <TextField source="name" label={false} />
         <TextField source="email" label={false} />
         <TextField source="phone" label={false} />
+        <FunctionField
+          source="default_payment_method"
+          render={(record: PaymentCustomer) =>
+            record.default_payment_method ? (
+              <BankCardShow last4={record.default_payment_method.last4!} />
+            ) : (
+              <Typography variant="body2">
+                No default payment method.
+              </Typography>
+            )
+          }
+          label={false}
+        />
       </SimpleShowLayout>
     </ShowBase>
   );
