@@ -1,5 +1,6 @@
 import {
   DatabaseConf1WithDatabaseEnum,
+  PojaConf1,
   WithQueuesNbEnum,
 } from "@jcloudify-api/typescript-client";
 import {memo} from "react";
@@ -12,6 +13,7 @@ import {
   Toolbar,
   SaveButton,
   NumberInput,
+  WithRecord,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -32,6 +34,7 @@ import {
   BatchArrayEditorField,
   BatchRecordEditorField,
 } from "@/operations/components/field";
+import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
 
 export interface PojaConfEditV1Props {
   appId: string;
@@ -63,14 +66,27 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
         onSuccess: onSettled,
       }}
     >
-      <Form validate={() => ({})} noValidate>
-        <PojaConfFormFieldsV1 />
-        <Toolbar sx={{mt: 2}}>
-          <Stack direction="row" spacing={2}>
-            <SaveButton />
-          </Stack>
-        </Toolbar>
-      </Form>
+      <WithRecord<PojaConf1>
+        render={(pojaConf) => (
+          <Form
+            validate={() => ({})}
+            noValidate
+            values={{
+              __flags: {
+                with_gen_clients:
+                  checkPojaConf(pojaConf).is_with_gen_api_client,
+              },
+            }}
+          >
+            <PojaConfFormFieldsV1 />
+            <Toolbar sx={{mt: 2}}>
+              <Stack direction="row" spacing={2}>
+                <SaveButton />
+              </Stack>
+            </Toolbar>
+          </Form>
+        )}
+      />
     </EditBase>
   );
 };
