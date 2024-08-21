@@ -1,14 +1,22 @@
 import {Box} from "@mui/material";
 import {CardNumberElement, Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
-import {colors} from "../../themes";
+import {colors} from "@/themes";
 
 export const BankCardShow: React.FC<{last4: string}> = ({last4}) => {
   const stripePk = process.env.REACT_APP_STRIPE_PK;
   const stripe = loadStripe(stripePk!);
 
   return (
-    <Box sx={{bgcolor: colors("gray-1"), borderRadius: 1, maxWidth: 320, p: 1}}>
+    <Box
+      sx={{
+        bgcolor: colors("gray-1"),
+        borderRadius: 1,
+        width: 200,
+        maxWidth: 320,
+        p: 1,
+      }}
+    >
       <Elements stripe={stripe}>
         <CardNumberElement
           options={{

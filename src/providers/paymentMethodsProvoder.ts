@@ -5,7 +5,7 @@ import {authProvider} from "./authProvider";
 
 export const paymentMethodsProvider: PojaDataProvider<ToRecord<PaymentMethod>> =
   {
-    getList: async (page: number, perPage: number) => {
+    getList: async (_page: number, _perPage: number) => {
       const uid = authProvider.getCachedWhoami()?.user?.id!;
       return (await unwrap(() =>
         paymentApi().getPaymentMethods(uid)
