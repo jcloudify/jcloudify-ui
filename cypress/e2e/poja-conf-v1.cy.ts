@@ -9,6 +9,7 @@ import {
   custom_java_env_vars,
   custom_java_repositories,
   with_database_aurora_postgres,
+  with_database_non_poja_managed,
   with_database_none,
   with_database_sqlite,
   with_gen_api_client_disabled,
@@ -160,6 +161,29 @@ describe("PojaConfV1", () => {
       cy.muiSelect(
         "#database\\.with_database",
         DatabaseConf1WithDatabaseEnum.NONE
+      );
+    });
+
+    specify("with DB 'NON_POJA_MANAGED'", () => {
+      cy.intercept(
+        "PUT",
+        jcloudify("/users/*/applications/*/environments/*/config"),
+        (req) => {
+          const pojaConf = req.body as PojaConf1;
+          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
+          expect(pojaConf.database).to.deep.eq(
+            removeNestedUndefined(with_database_non_poja_managed.database)
+          );
+          req.reply({
+            statusCode: 201,
+            body: pojaConf,
+          });
+        }
+      ).as("saveConfig");
+
+      cy.muiSelect(
+        "#database\\.with_database",
+        DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES
       );
     });
 

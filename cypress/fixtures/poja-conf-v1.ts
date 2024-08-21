@@ -80,6 +80,12 @@ export const with_publish_to_npm_registry = {
 };
 
 export const with_database_none = {
+  with_database: DatabaseConf1WithDatabaseEnum.NONE,
+  ...baseConf,
+};
+
+export const with_database_non_poja_managed = {
+  with_database: DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES,
   ...baseConf,
 };
 
