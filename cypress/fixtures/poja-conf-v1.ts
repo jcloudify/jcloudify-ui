@@ -82,7 +82,7 @@ export const with_publish_to_npm_registry = {
 export const with_database_none = {
   ...baseConf,
   database: {
-    ...baseConf,
+    ...baseConf.database,
     with_database: DatabaseConf1WithDatabaseEnum.NONE,
   },
 };
@@ -90,7 +90,7 @@ export const with_database_none = {
 export const with_database_non_poja_managed = {
   ...baseConf,
   database: {
-    ...baseConf,
+    ...baseConf.database,
     with_database: DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES,
   },
 };
