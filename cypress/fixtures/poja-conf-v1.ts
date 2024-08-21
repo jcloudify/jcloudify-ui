@@ -100,7 +100,6 @@ export const with_database_sqlite = {
   database: {
     ...baseConf.database,
     with_database: DatabaseConf1WithDatabaseEnum.SQLITE,
-    prod_db_cluster_timeout: 300,
   },
 };
 

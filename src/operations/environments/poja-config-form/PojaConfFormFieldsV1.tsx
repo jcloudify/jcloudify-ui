@@ -450,9 +450,8 @@ const TestingConf = () => (
 
 const DBConf = () => {
   const withDatabase = useWatch({name: "database.with_database"});
-  const noneOrNonManaged =
-    withDatabase === DatabaseConf1WithDatabaseEnum.NONE ||
-    withDatabase === DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES;
+  const isAurora =
+    withDatabase === DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES;
 
   return (
     <Stack>
@@ -470,7 +469,7 @@ const DBConf = () => {
         />
       </GridLayout>
 
-      {!noneOrNonManaged && (
+      {isAurora && (
         <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
           <TextInput
             label="Non Root Username"
@@ -495,18 +494,6 @@ const DBConf = () => {
             defaultValue="300"
             fullWidth
           />
-        </GridLayout>
-      )}
-
-      {withDatabase === DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES && (
-        <GridLayout
-          xs={12}
-          md={6}
-          lg={4}
-          spacing={2}
-          rowSpacing={0.5}
-          alignItems="center"
-        >
           <NumberInput
             label="Aurora Min Capacity"
             source="database.aurora_min_capacity"

@@ -297,6 +297,10 @@ const TestingConf = () => (
 
 const DBConf = () => {
   const record = useRecordContext<PojaConf1>();
+  const isAurora =
+    record.database?.with_database ===
+    DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES;
+
   return (
     <Stack>
       <Heading size="sm" title="DB" mb={2} />
@@ -309,22 +313,9 @@ const DBConf = () => {
         render={renderWithLabel}
       >
         <TextField label="DB" source="database.with_database" />
-        <TextField
-          label="Non Root Username"
-          source="database.database_non_root_username"
-        />
-        <PasswordField
-          label="Non Root Password"
-          source="database.database_non_root_password"
-        />
-        <TextField
-          label="Prod DB Cluster Timeout"
-          source="database.prod_db_cluster_timeout"
-        />
       </GridLayout>
 
-      {record.database?.with_database ===
-        DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES && (
+      {isAurora && (
         <GridLayout
           xs={12}
           md={6}
@@ -334,6 +325,18 @@ const DBConf = () => {
           rowSpacing={0.5}
           render={renderWithLabel}
         >
+          <TextField
+            label="Non Root Username"
+            source="database.database_non_root_username"
+          />
+          <PasswordField
+            label="Non Root Password"
+            source="database.database_non_root_password"
+          />
+          <TextField
+            label="Prod DB Cluster Timeout"
+            source="database.prod_db_cluster_timeout"
+          />
           <TextField
             label="Aurora Min Capacity"
             source="database.aurora_min_capacity"
