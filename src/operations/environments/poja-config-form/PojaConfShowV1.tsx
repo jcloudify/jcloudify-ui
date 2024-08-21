@@ -172,16 +172,20 @@ const IntegrationConf = () => (
 );
 
 const GenAPIClient = () => {
-  const record = useRecordContext<PojaConf1>();
+  const {gen_api_client} = useRecordContext<PojaConf1>();
+  const isEnabled = !!(
+    gen_api_client?.ts_client_api_url_env_var_name ||
+    gen_api_client?.ts_client_default_openapi_server_url
+  );
   return (
     <Stack>
       <Heading
         size="sm"
         title="Gen API Client"
-        subtitle={record.gen_api_client ? "" : "disabled"}
+        subtitle={isEnabled ? "" : "disabled"}
       />
 
-      {record.gen_api_client && (
+      {isEnabled && (
         <GridLayout
           xs={12}
           md={6}
