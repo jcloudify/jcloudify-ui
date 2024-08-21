@@ -65,6 +65,7 @@ const normalizeGeneralConf = (
 const normalizeDBConf = ({database}: PojaConfFormDataV1) => {
   switch (database?.with_database!) {
     case DatabaseConf1WithDatabaseEnum.NONE:
+    case DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES:
       return {
         ...database,
         database_non_root_username: null,
