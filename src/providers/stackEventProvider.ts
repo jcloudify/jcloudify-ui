@@ -20,7 +20,10 @@ export const stackEventProvider: PojaDataProvider<ToRecord<StackEvent>> = {
     )) as PagedResponse<ToRecord<StackEvent>>;
     return {
       ...eventResponse,
-      data: eventResponse.data.map((event) => ({...event, id: event.event_id!})),
+      data: eventResponse.data.map((event) => ({
+        ...event,
+        id: event.event_id!,
+      })),
     };
   },
   getOne() {
