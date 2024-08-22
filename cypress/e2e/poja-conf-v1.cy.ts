@@ -47,242 +47,294 @@ describe("PojaConfV1", () => {
     cy.get("#general\\.package_full_name").type("com.mock.app");
   });
 
-  afterEach(() => {
-    cy.get("[aria-label='Create']").click();
-    cy.wait("@createEnvironment");
-    cy.wait("@saveConfig");
-  });
-
-  context("Gen API client", () => {
-    specify("with gen_api_client disabled", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.gen_api_client).to.deep.eq(
-            with_gen_api_client_disabled.gen_api_client
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
+  context("PojaConfFormat", () => {
+    afterEach(() => {
+      cy.get("[aria-label='Create']").click();
+      cy.wait("@createEnvironment");
+      cy.wait("@saveConfig");
     });
 
-    specify("with gen_api_client enabled", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.gen_api_client).to.deep.eq(
-            with_gen_api_client_enabled.gen_api_client
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
-
-      cy.get("#__flags\\.with_gen_clients").click();
-      cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
-        with_gen_api_client_enabled.gen_api_client
-          .ts_client_default_openapi_server_url!
-      );
-      cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
-        with_gen_api_client_enabled.gen_api_client
-          .ts_client_api_url_env_var_name!
-      );
-    });
-
-    specify("with publish_to_npm_registry", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.gen_api_client).to.deep.eq(
-            with_publish_to_npm_registry.gen_api_client
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
-
-      cy.get("#__flags\\.with_gen_clients").click();
-      cy.get("#gen_api_client\\.with_publish_to_npm_registry").click();
-      cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
-        with_publish_to_npm_registry.gen_api_client
-          .ts_client_default_openapi_server_url!
-      );
-      cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
-        with_publish_to_npm_registry.gen_api_client
-          .ts_client_api_url_env_var_name!
-      );
-      cy.get("#gen_api_client\\.codeartifact_repository_name").type(
-        with_publish_to_npm_registry.gen_api_client
-          .codeartifact_repository_name!
-      );
-      cy.get("#gen_api_client\\.codeartifact_domain_name").type(
-        with_publish_to_npm_registry.gen_api_client.codeartifact_domain_name!
-      );
-      cy.get("#gen_api_client\\.aws_account_id").type(
-        String(with_publish_to_npm_registry.gen_api_client.aws_account_id!)
-      );
-    });
-  });
-
-  context("Database", () => {
-    specify("with DB 'NONE'", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.database).to.deep.eq(
-            removeNestedUndefined(with_database_none.database)
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
-
-      cy.muiSelect(
-        "#database\\.with_database",
-        DatabaseConf1WithDatabaseEnum.NONE
-      );
-    });
-
-    specify("with DB 'NON_POJA_MANAGED'", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.database).to.deep.eq(
-            removeNestedUndefined(with_database_non_poja_managed.database)
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
-
-      cy.muiSelect(
-        "#database\\.with_database",
-        DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES
-      );
-    });
-
-    specify("with DB 'AURORA_POSTGRES'", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.database).to.deep.eq(
-            removeNestedUndefined(with_database_aurora_postgres.database)
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
-
-      cy.muiSelect(
-        "#database\\.with_database",
-        DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES
-      );
-      (
-        [
-          "database_non_root_username",
-          "database_non_root_password",
-          "prod_db_cluster_timeout",
-          "aurora_min_capacity",
-          "aurora_max_capacity",
-          "aurora_scale_point",
-          "aurora_sleep",
-        ] as const
-      ).forEach((key) => {
-        cy.get(`#database\\.${key}`)
-          .clear()
-          .type(String(with_database_aurora_postgres.database[key]));
+    context("Gen API client", () => {
+      specify("with gen_api_client disabled", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.gen_api_client).to.deep.eq(
+              with_gen_api_client_disabled.gen_api_client
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
       });
-      if (with_database_aurora_postgres.database.aurora_auto_pause) {
-        cy.get("#database\\.aurora_auto_pause").click();
-      }
+
+      specify("with gen_api_client enabled", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.gen_api_client).to.deep.eq(
+              with_gen_api_client_enabled.gen_api_client
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.get("#__flags\\.with_gen_clients").click();
+        cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
+          with_gen_api_client_enabled.gen_api_client
+            .ts_client_default_openapi_server_url!
+        );
+        cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
+          with_gen_api_client_enabled.gen_api_client
+            .ts_client_api_url_env_var_name!
+        );
+      });
+
+      specify("with publish_to_npm_registry", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.gen_api_client).to.deep.eq(
+              with_publish_to_npm_registry.gen_api_client
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.get("#__flags\\.with_gen_clients").click();
+        cy.get("#gen_api_client\\.with_publish_to_npm_registry").click();
+        cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
+          with_publish_to_npm_registry.gen_api_client
+            .ts_client_default_openapi_server_url!
+        );
+        cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
+          with_publish_to_npm_registry.gen_api_client
+            .ts_client_api_url_env_var_name!
+        );
+        cy.get("#gen_api_client\\.codeartifact_repository_name").type(
+          with_publish_to_npm_registry.gen_api_client
+            .codeartifact_repository_name!
+        );
+        cy.get("#gen_api_client\\.codeartifact_domain_name").type(
+          with_publish_to_npm_registry.gen_api_client.codeartifact_domain_name!
+        );
+        cy.get("#gen_api_client\\.aws_account_id").type(
+          String(with_publish_to_npm_registry.gen_api_client.aws_account_id!)
+        );
+      });
     });
 
-    specify("with DB 'SQLITE'", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.database).to.deep.eq(
-            removeNestedUndefined(with_database_sqlite.database)
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
+    context("Database", () => {
+      specify("with DB 'NONE'", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.database).to.deep.eq(
+              removeNestedUndefined(with_database_none.database)
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.muiSelect(
+          "#database\\.with_database",
+          DatabaseConf1WithDatabaseEnum.NONE
+        );
+      });
+
+      specify("with DB 'NON_POJA_MANAGED'", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.database).to.deep.eq(
+              removeNestedUndefined(with_database_non_poja_managed.database)
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.muiSelect(
+          "#database\\.with_database",
+          DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES
+        );
+      });
+
+      specify("with DB 'AURORA_POSTGRES'", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.database).to.deep.eq(
+              removeNestedUndefined(with_database_aurora_postgres.database)
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.muiSelect(
+          "#database\\.with_database",
+          DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES
+        );
+        (
+          [
+            "database_non_root_username",
+            "database_non_root_password",
+            "prod_db_cluster_timeout",
+            "aurora_min_capacity",
+            "aurora_max_capacity",
+            "aurora_scale_point",
+            "aurora_sleep",
+          ] as const
+        ).forEach((key) => {
+          cy.get(`#database\\.${key}`)
+            .clear()
+            .type(String(with_database_aurora_postgres.database[key]));
+        });
+        if (with_database_aurora_postgres.database.aurora_auto_pause) {
+          cy.get("#database\\.aurora_auto_pause").click();
         }
-      ).as("saveConfig");
-      cy.muiSelect(
-        "#database\\.with_database",
-        DatabaseConf1WithDatabaseEnum.SQLITE
-      );
+      });
+
+      specify("with DB 'SQLITE'", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.database).to.deep.eq(
+              removeNestedUndefined(with_database_sqlite.database)
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+        cy.muiSelect(
+          "#database\\.with_database",
+          DatabaseConf1WithDatabaseEnum.SQLITE
+        );
+      });
+    });
+
+    context("General", () => {
+      specify("env vars, deps, repos", () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            const pojaConf = req.body as PojaConf1;
+            expect(pojaConf.general?.package_full_name).to.be.eq(
+              "com.mock.app"
+            );
+            expect(pojaConf.general?.custom_java_env_vars).to.deep.eq(
+              custom_java_env_vars
+            );
+            expect(pojaConf.general?.custom_java_repositories).to.deep.eq(
+              custom_java_repositories
+            );
+            expect(pojaConf.general?.custom_java_deps).to.deep.eq(
+              custom_java_deps
+            );
+            req.reply({
+              statusCode: 201,
+              body: pojaConf,
+            });
+          }
+        ).as("saveConfig");
+
+        cy.getByTestid("custom_java_env_vars_accordion").click();
+        putRecordOnEditor("custom_java_env_vars", custom_java_env_vars);
+
+        cy.getByTestid("custom_java_repositories_accordion").click();
+        putStringArray("custom_java_repositories", custom_java_repositories);
+
+        cy.getByTestid("custom_java_deps_accordion").click();
+        putStringArray("custom_java_deps", custom_java_deps);
+      });
     });
   });
 
-  context("General", () => {
-    specify("env vars, deps, repos", () => {
-      cy.intercept(
-        "PUT",
-        jcloudify("/users/*/applications/*/environments/*/config"),
-        (req) => {
-          const pojaConf = req.body as PojaConf1;
-          expect(pojaConf.general?.package_full_name).to.be.eq("com.mock.app");
-          expect(pojaConf.general?.custom_java_env_vars).to.deep.eq(
-            custom_java_env_vars
-          );
-          expect(pojaConf.general?.custom_java_repositories).to.deep.eq(
-            custom_java_repositories
-          );
-          expect(pojaConf.general?.custom_java_deps).to.deep.eq(
-            custom_java_deps
-          );
-          req.reply({
-            statusCode: 201,
-            body: pojaConf,
-          });
-        }
-      ).as("saveConfig");
+  context("Server Side Validation", () => {
+    specify(
+      "Display 400_BadRequest error message to corresponding inputs",
+      () => {
+        cy.intercept(
+          "PUT",
+          jcloudify("/users/*/applications/*/environments/*/config"),
+          (req) => {
+            req.reply({
+              statusCode: 400,
+              body: {
+                message: `general.package_full_name must be three parts separated by dot. emailing.ses_source must be valid mail.`,
+              },
+            });
+          }
+        ).as("saveConfig");
 
-      cy.getByTestid("custom_java_env_vars_accordion").click();
-      putRecordOnEditor("custom_java_env_vars", custom_java_env_vars);
+        cy.get("#general\\.package_full_name").type("com.mock"); // 2 parts
+        cy.get("#emailing\\.ses_source").type("invalid_mail");
 
-      cy.getByTestid("custom_java_repositories_accordion").click();
-      putStringArray("custom_java_repositories", custom_java_repositories);
+        cy.get("[aria-label='Create']").click();
+        cy.wait("@createEnvironment");
+        cy.wait("@saveConfig");
 
-      cy.getByTestid("custom_java_deps_accordion").click();
-      putStringArray("custom_java_deps", custom_java_deps);
-    });
+        cy.get("#general\\.package_full_name-helper-text").contains(
+          "must be three parts separated by dot"
+        );
+        cy.get("#emailing\\.ses_source-helper-text").contains(
+          "must be valid mail"
+        );
+      }
+    );
   });
 });

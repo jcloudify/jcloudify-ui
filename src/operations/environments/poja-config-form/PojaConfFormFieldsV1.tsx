@@ -487,6 +487,7 @@ const DBConf = () => {
           choices={makeSelectChoices(
             Object.keys(DatabaseConf1WithDatabaseEnum)
           )}
+          defaultValue={DatabaseConf1WithDatabaseEnum.NONE}
           variant="outlined"
           size="medium"
           fullWidth
