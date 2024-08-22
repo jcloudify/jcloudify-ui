@@ -9,9 +9,11 @@ import {
   EnvironmentApi,
   GithubAppInstallationApi,
 } from "@jcloudify-api/typescript-client";
-import {AxiosResponse} from "axios";
+import {AxiosResponse, isAxiosError} from "axios";
 import {authProvider} from "@/providers";
 import {getEnumValues} from "@/utils/enum";
+import {HttpError} from "react-admin";
+import {make_error_map_from_400_bad_request} from "@/operations/utils/errors";
 
 // TODO: impl auth configurations
 export const healthApi = () => new HealthApi(authProvider.getCachedAuthConf());
@@ -67,9 +69,20 @@ export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
 
 export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   execute: Fn
-): Promise<UnwrapResult<Fn>> => {
-  const _ = await execute();
-  return _.data;
+): Promise<UnwrapResult<Fn> | undefined> => {
+  try {
+    const _ = await execute();
+    return _.data;
+  } catch (e) {
+    if (isAxiosError(e)) {
+      if (e.response?.status === 400) {
+        throw new HttpError("", 400, {
+          errors: make_error_map_from_400_bad_request(e.response?.data.message),
+        });
+      }
+    }
+    throw e;
+  }
 };
 
 // TODO: naming
