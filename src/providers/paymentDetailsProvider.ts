@@ -1,5 +1,5 @@
 import {PaymentCustomer} from "@jcloudify-api/typescript-client";
-import {Dict, PagedResponse, PojaDataProvider, ToRecord} from "./types";
+import {PagedResponse, PojaDataProvider, ToRecord} from "./types";
 import {authProvider} from "./authProvider";
 import {unwrap} from "../services/poja-api";
 import axios from "axios";
@@ -23,12 +23,11 @@ export const paymentDetailsProvider: PojaDataProvider<
     )) as ToRecord<PaymentCustomer>;
   },
   saveAll: function (
-    resources: ToRecord<PaymentCustomer>[],
-    meta?: Dict<any>
+    _resources: ToRecord<PaymentCustomer>[]
   ): Promise<ToRecord<PaymentCustomer>[]> {
     throw new Error("Function not implemented.");
   },
-  delete: function (id: string): Promise<ToRecord<PaymentCustomer>> {
+  delete: function (_id: string): Promise<ToRecord<PaymentCustomer>> {
     throw new Error("Function not implemented.");
   },
 };
