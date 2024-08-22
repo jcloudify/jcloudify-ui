@@ -7,29 +7,29 @@ import {getEnumValues} from "../../src/utils/enum";
 import {snakeToKebab} from "../../src/utils/str";
 
 export const app1_prod_stacks: ToRecord<Stack>[] = getEnumValues(StackType).map(
-  (stackType) => ({
-    id: `app1-prod-${stackType}-stack`,
-    name: `${app1.name}-prod-${snakeToKebab(stackType).toLowerCase()}`,
+  (stack_type) => ({
+    id: `app1-prod-${stack_type}-stack`,
+    name: `${app1.name}-prod-${snakeToKebab(stack_type).toLowerCase()}`,
     cf_stack_id: nanoid(),
     creation_datetime: new Date("2024-07-25T05:12:58.615Z"),
     update_datetime: new Date("2024-07-25T05:12:58.615Z"),
     application: app1,
     environment: prod_env,
-    stackType,
+    stack_type,
   })
 );
 
 export const app1_preprod_stacks: ToRecord<Stack>[] = getEnumValues(
   StackType
-).map((stackType) => ({
-  id: `app1-preprod-${stackType}-stack`,
-  name: `${app1.name}-preprod-${snakeToKebab(stackType).toLowerCase()}`,
+).map((stack_type) => ({
+  id: `app1-preprod-${stack_type}-stack`,
+  name: `${app1.name}-preprod-${snakeToKebab(stack_type).toLowerCase()}`,
   cf_stack_id: nanoid(),
   creation_datetime: new Date("2024-07-25T05:12:58.615Z"),
   update_datetime: new Date("2024-07-25T05:12:58.615Z"),
   application: app1,
   environment: preprod_env,
-  stackType,
+  stack_type,
 }));
 
 export const stacks = {

@@ -61,7 +61,7 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
         <TextField label="Stack name" source="name" />
         <FunctionField<Stack>
           label="Stack type"
-          render={(stack) => <StackType value={stack.stack_type} />}
+          render={(stack) => <StackType value={stack.stack_type!} />}
         />
         <FunctionField<Stack>
           label="Creation datetime"
