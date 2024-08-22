@@ -2,9 +2,10 @@ import React, {useState} from "react";
 import {
   IconButtonWithTooltip,
   ListBase,
+  useCreate,
+  useDelete,
   useGetOne,
   useListContext,
-  useRecordContext,
 } from "react-admin";
 import {Box, Divider, Stack, Tooltip, Typography} from "@mui/material";
 import {
@@ -14,15 +15,29 @@ import {
   DoneAll as DoneAllIcon,
   RemoveCircleOutlineOutlined as RemoveIcon,
 } from "@mui/icons-material";
-import {PaymentMethod} from "@jcloudify-api/typescript-client";
+import {
+  PaymentMethod,
+  PaymentMethodsAction,
+} from "@jcloudify-api/typescript-client";
 import {authProvider} from "@/providers";
 import {colors} from "@/themes";
 import {BankCardShow} from "./BankCardShow";
+import {Elements} from "@stripe/react-stripe-js";
+import {PaymentMethodForm} from "./PaymentMethodForm";
+import {loadStripe, StripeElementsOptions} from "@stripe/stripe-js";
 
 export const PaymentMethods: React.FC = () => {
   const [addPaymentMethod, setAddPaymentMethod] = useState(false);
-  const record = useRecordContext();
-  console.log("record: ", record);
+  const stripePk = process.env.REACT_APP_STRIPE_PK;
+  const stripePromise = loadStripe(stripePk!);
+
+  const options: StripeElementsOptions = {
+    mode: "setup",
+    currency: "usd",
+    payment_method_types: ["card"],
+    setupFutureUsage: "off_session",
+    paymentMethodCreation: "manual",
+  };
 
   return (
     <Box>
@@ -41,7 +56,16 @@ export const PaymentMethods: React.FC = () => {
       </Stack>
       <Divider />
       <Box my={1}>
-        <PaymentMethodsList />
+        {addPaymentMethod ? (
+          <Elements stripe={stripePromise} options={options}>
+            <PaymentMethodForm onSuccess={() => setAddPaymentMethod(false)} />
+          </Elements>
+        ) : (
+          <></>
+        )}
+        <Box my={1}>
+          <PaymentMethodsList />
+        </Box>
       </Box>
     </Box>
   );
@@ -97,16 +121,44 @@ const PaymentMethodItem: React.FC<{
             <DoneAllIcon />
           </Tooltip>
         ) : (
-          <Stack direction="row" spacing={1}>
-            <IconButtonWithTooltip label="Set default">
-              <CheckIcon />
-            </IconButtonWithTooltip>
-            <IconButtonWithTooltip label="Remove">
-              <RemoveIcon />
-            </IconButtonWithTooltip>
-          </Stack>
+          <PaymentMethodAction paymentMethodId={paymentMethod.id!} />
         )}
       </Stack>
     </Box>
+  );
+};
+
+const PaymentMethodAction: React.FC<{paymentMethodId: string}> = ({
+  paymentMethodId,
+}) => {
+  const [create] = useCreate("paymentMethods");
+  const [deleteOne] = useDelete("paymentMethods");
+
+  const setDefaultPm = async () => {
+    const pmAction: PaymentMethodsAction = {
+      payment_method_id: paymentMethodId,
+      action: "ATTACH",
+      set_default: true,
+    };
+    await create("paymentMethods", {
+      data: pmAction,
+    });
+  };
+
+  const detachPm = async () => {
+    await deleteOne("paymentMethods", {
+      id: paymentMethodId,
+    });
+  };
+
+  return (
+    <Stack direction="row" spacing={1}>
+      <IconButtonWithTooltip label="Set default" onClick={setDefaultPm}>
+        <CheckIcon />
+      </IconButtonWithTooltip>
+      <IconButtonWithTooltip label="Remove" onClick={detachPm}>
+        <RemoveIcon />
+      </IconButtonWithTooltip>
+    </Stack>
   );
 };
