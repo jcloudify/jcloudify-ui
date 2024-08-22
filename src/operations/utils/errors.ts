@@ -1,9 +1,7 @@
 import {stripSuffix} from "@/utils/str";
 
-export const make_error_entries_from_400_bad_request = (
-  errorMessage: string
-) => {
-  return errorMessage
+export const make_error_map_from_400_bad_request = (errorMessage: string) => {
+  const messages = errorMessage
     .split(/\.\s/)
     .filter((m) => !!m)
     .map((m) => stripSuffix(m, ".") + ".")
@@ -12,4 +10,5 @@ export const make_error_entries_from_400_bad_request = (
       const source = splitted[0];
       return [source, splitted.slice(1).join(" ")];
     });
+  return Object.fromEntries(messages);
 };
