@@ -1,4 +1,4 @@
-import {Stack} from "@jcloudify-api/typescript-client";
+import {StackEvent} from "@jcloudify-api/typescript-client";
 import {
   List,
   Datagrid,
@@ -6,8 +6,9 @@ import {
   RaRecord,
   TextField,
   useGetOne,
+  FunctionField,
 } from "react-admin";
-import {ToRecord} from "@/providers";
+import {StackResourceStatusType} from "@/operations/stacks";
 
 export type StackEventListProps<Record extends RaRecord<string> = any> = Omit<
   ListProps<Record>,
@@ -15,29 +16,47 @@ export type StackEventListProps<Record extends RaRecord<string> = any> = Omit<
 > & {
   appId: string;
   stackId: string;
+  envId: string;
 };
 
 export const StackEventList: React.FC<StackEventListProps> = ({
   appId,
   stackId,
+  envId,
   ...rest
 }) => {
-  const {data: stack} = useGetOne<ToRecord<Stack>>("stacks", {id: stackId});
+  const {data: environments = []} = useGetOne("stacks", {
+    id: stackId,
+    meta: {
+      appId,
+      envId,
+    },
+  });
+
   return (
     <List
-      resource="stacks"
+      resource="stackEvents"
       empty={false}
       filter={{
         appId,
-        stackId,
-        envId: stack?.environment?.id,
+        stack_id: stackId,
+        env_id: envId,
+      }}
+      filterDefaultValues={{
+        env_id: environments[0]?.id,
       }}
       {...rest}
     >
-      <Datagrid rowClick={(id) => id.toString()} bulkActionButtons={false}>
+      <Datagrid bulkActionButtons={false}>
         <TextField source="timestamp" />
-        <TextField label="logical ID" source="logical_resource_id" />
-        <TextField label="Status" source="resource_status" />
+        <TextField label="Logical ID" source="logical_resource_id" />
+        <TextField label="Resource type" source="resource_type" />
+        <FunctionField<StackEvent>
+          label="Resource status"
+          render={(stack) => (
+            <StackResourceStatusType value={stack.resource_status!} />
+          )}
+        />
         <TextField label="Status reason" source="status_message" />
       </Datagrid>
     </List>

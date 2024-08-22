@@ -57,7 +57,12 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
       }
       {...rest}
     >
-      <Datagrid rowClick={(id) => id.toString()} bulkActionButtons={false}>
+      <Datagrid
+        rowClick={(_id, _resource, stack) =>
+          `/applications/${appId}/show/environments/${stack.environment.id}/stacks/${stack.id}`
+        }
+        bulkActionButtons={false}
+      >
         <TextField label="Stack name" source="name" />
         <FunctionField<Stack>
           label="Stack type"

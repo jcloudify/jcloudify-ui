@@ -20,7 +20,7 @@ export const appShowViews: RouteMap = {
     "create": <AppEnvironmentCreate />,
     "diff": <AppEnvironmentDiff />,
     "stacks": <AppEnvironmentStackList />,
-    "stacks/:stackId": <AppEnvironmentStackEventList />,
+    ":envId/stacks/:stackId": <AppEnvironmentStackEventList />,
   },
   deployments: {
     "$$index": <AppDeploymentList />,
