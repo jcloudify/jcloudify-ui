@@ -1,8 +1,7 @@
 import {PaymentCustomer} from "@jcloudify-api/typescript-client";
 import {PagedResponse, PojaDataProvider, ToRecord} from "./types";
 import {authProvider} from "./authProvider";
-import {unwrap} from "../services/poja-api";
-import axios from "axios";
+import {paymentApi, unwrap} from "../services/poja-api";
 
 export const paymentDetailsProvider: PojaDataProvider<
   ToRecord<PaymentCustomer>
@@ -12,14 +11,15 @@ export const paymentDetailsProvider: PojaDataProvider<
   },
   getOne: async (id) => {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
+    console.log(id);
     return (await unwrap(() =>
-      axios.get(`http://localhost:5000/users/${uid}/payment-details/${id}`)
+      paymentApi().getCustomer(uid)
     )) as ToRecord<PaymentCustomer>;
   },
   save: async (resource: ToRecord<PaymentCustomer>) => {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     return (await unwrap(() =>
-      axios.put(`http://localhost:5000/users/${uid}/payment-details`, resource)
+      paymentApi().updatePaymentCustomer(uid, resource)
     )) as ToRecord<PaymentCustomer>;
   },
   saveAll: function (
