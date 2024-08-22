@@ -1,6 +1,8 @@
 import {stripSuffix} from "@/utils/str";
 
-export const make_error_map_from_400_bad_request = (errorMessage: string) => {
+export const make_error_entries_from_400_bad_request = (
+  errorMessage: string
+) => {
   const messages = errorMessage
     .split(/\.\s/)
     .filter((m) => !!m)
