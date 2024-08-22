@@ -36,7 +36,7 @@ describe("Stack", () => {
       });
     });
 
-    specify.only("List events for a stack", () => {
+    specify("List events for a stack", () => {
       cy.muiSelect2("#env_id", "Prod");
       cy.wait("@getEnvironmentStacks");
 
