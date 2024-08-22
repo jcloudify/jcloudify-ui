@@ -9,7 +9,7 @@ import {
   EnvironmentApi,
   GithubAppInstallationApi,
 } from "@jcloudify-api/typescript-client";
-import {AxiosResponse, isAxiosError} from "axios";
+import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
 import {getEnumValues} from "@/utils/enum";
 
