@@ -9,6 +9,7 @@ export * from "./deploymentProvider";
 export * from "./tokenProvider";
 export * from "./logsProvider";
 export * from "./stackProvider";
+export * from "./stackEventProvider";
 export * from "./pojaConfProvider";
 export * from "./githubAppInstallationProvider";
 

@@ -106,17 +106,23 @@ export const AppEnvironmentStackList: React.FC = () => {
 };
 
 export const AppEnvironmentStackEventList: React.FC = () => {
-  const {appId, stackId} = useParams();
-  if (!appId || !stackId) return;
+  const {appId, stackId, envId} = useParams();
+  if (!appId || !stackId || !envId) return;
   return (
     <WithTab tab="Environments">
       <Box mt={3}>
         <Heading
           title={
             <Typography variant="body1" fontWeight="400">
-              <Chip size="small" label={stackId} color="primary" />
+              Stack{" "}
+              <Chip
+                size="small"
+                label={stackId}
+                variant="outlined"
+                color="primary"
+              />
               &nbsp; &nbsp;
-              <span>Stack Events</span>
+              <span>Events</span>
             </Typography>
           }
           subtitle="List of events"
@@ -126,8 +132,9 @@ export const AppEnvironmentStackEventList: React.FC = () => {
 
         <StackEventList
           appId={appId}
-          actions={false}
           stackId={stackId}
+          envId={envId}
+          actions={false}
           exporter={false}
           title=" "
           pagination={<Pagination />}
