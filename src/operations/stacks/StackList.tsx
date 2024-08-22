@@ -13,6 +13,7 @@ import {
 } from "react-admin";
 import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
 import {EnvironmentType} from "@/operations/environments";
+import {StackType} from "@/operations/stacks";
 
 export type StackListProps<Record extends RaRecord<string> = any> = Omit<
   ListProps<Record>,
@@ -58,7 +59,10 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
     >
       <Datagrid rowClick={(id) => id.toString()} bulkActionButtons={false}>
         <TextField label="Stack name" source="name" />
-        <TextField label="Stack type" source="stackType" />
+        <FunctionField<Stack>
+          label="Stack type"
+          render={(stack) => <StackType value={stack.stack_type} />}
+        />
         <FunctionField<Stack>
           label="Creation datetime"
           render={(stack) => stack.creation_datetime?.toLocaleString()}
