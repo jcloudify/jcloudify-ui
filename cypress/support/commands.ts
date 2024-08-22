@@ -8,6 +8,7 @@ import {
 import {user1} from "../fixtures/user.mock";
 import {app1, app2, apps} from "../fixtures/application.mock";
 import {user1_installations} from "../fixtures/installation.mock";
+import {stacks} from "../fixtures/stack.mock";
 import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "./util";
 
@@ -38,7 +39,7 @@ Cypress.Commands.add("muiSelect", (selector, value) => {
 
 Cypress.Commands.add("muiSelect2", (formControl, optionText) => {
   cy.get(formControl).click({force: true});
-  cy.contains(optionText).click();
+  cy.contains(optionText).click({force: true});
 });
 
 Cypress.Commands.add("muiClear", (selector) => {
@@ -101,6 +102,25 @@ Cypress.Commands.add("mockApiGet", () => {
   cy.intercept("GET", jcloudify(`/users/${user1.id}/installations`), {
     data: user1_installations,
   }).as("getUserInstallations");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks`
+    ),
+    {
+      data: stacks[app1.id][prod_env.id],
+    }
+  );
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${preprod_env.id}/stacks`
+    ),
+    {
+      data: stacks[app1.id][preprod_env.id],
+    }
+  );
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {
