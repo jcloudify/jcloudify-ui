@@ -5,6 +5,13 @@ export const stripPrefix = (str: string, prefix: string) => {
   return str;
 };
 
+export const stripSuffix = (str: string, suffix: string) => {
+  if (str.endsWith(suffix)) {
+    return str.slice(0, -suffix.length);
+  }
+  return str;
+};
+
 export const humanizeSnakeStr = (s: string) => {
   return s.replace(/_/g, " ");
 };
