@@ -8,7 +8,7 @@ import {
 import {user1} from "../fixtures/user.mock";
 import {app1, app2, apps} from "../fixtures/application.mock";
 import {user1_installations} from "../fixtures/installation.mock";
-import {stacks} from "../fixtures/stack.mock";
+import {app1_prod_stack_events, stacks} from "../fixtures/stack.mock";
 import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "./util";
 
@@ -111,7 +111,8 @@ Cypress.Commands.add("mockApiGet", () => {
     {
       data: stacks[app1.id][prod_env.id],
     }
-  );
+  ).as("getEnvironmentStacks");
+
   cy.intercept(
     "GET",
     jcloudify(
@@ -120,7 +121,17 @@ Cypress.Commands.add("mockApiGet", () => {
     {
       data: stacks[app1.id][preprod_env.id],
     }
-  );
+  ).as("getEnvironmentStacks");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks/*/events`
+    ),
+    {
+      data: app1_prod_stack_events,
+    }
+  ).as("getEnvironmentStackEvents");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

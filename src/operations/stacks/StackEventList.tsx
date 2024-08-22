@@ -50,6 +50,7 @@ export const StackEventList: React.FC<StackEventListProps> = ({
       <Datagrid bulkActionButtons={false}>
         <TextField source="timestamp" />
         <TextField label="Logical ID" source="logical_resource_id" />
+        <TextField label="Resource type" source="resource_type" />
         <FunctionField<StackEvent>
           label="Resource status"
           render={(stack) => (

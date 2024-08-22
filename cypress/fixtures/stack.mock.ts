@@ -1,4 +1,4 @@
-import {Stack, StackType} from "@jcloudify-api/typescript-client";
+import {Stack, StackEvent, StackType} from "@jcloudify-api/typescript-client";
 import {nanoid} from "nanoid";
 import {app1} from "./application.mock";
 import {preprod_env, prod_env} from "./environment.mock";
@@ -38,3 +38,62 @@ export const stacks = {
     [preprod_env.id]: app1_preprod_stacks,
   },
 };
+
+export const app1_prod_stack_events: StackEvent[] = [
+  {
+    event_id: "39166810-6073-11ef-ad18-0a78309a1bb3",
+    logical_resource_id: "prod-compute-permission-jcloudify-cloudy",
+    resource_type: "AWS::CloudFormation::Stack",
+    timestamp: new Date("2024-08-22T10:42:26.688Z"),
+    resource_status: "CREATE_COMPLETE",
+    status_message: "",
+  },
+  {
+    event_id: "ExecutionRoleArnSSM-CREATE_COMPLETE-2024-08-22T10:42:25.916Z",
+    logical_resource_id: "ExecutionRoleArnSSM",
+    resource_type: "AWS::SSM::Parameter",
+    timestamp: new Date("2024-08-22T10:42:25.916Z"),
+    resource_status: "CREATE_COMPLETE",
+    status_message: "",
+  },
+  {
+    event_id: "ExecutionRoleArnSSM-CREATE_IN_PROGRESS-2024-08-22T10:42:25.591Z",
+    logical_resource_id: "ExecutionRoleArnSSM",
+    resource_type: "AWS::SSM::Parameter",
+    timestamp: new Date("2024-08-22T10:42:25.591Z"),
+    resource_status: "CREATE_IN_PROGRESS",
+    status_message: "Resource creation Initiated",
+  },
+  {
+    event_id: "ExecutionRoleArnSSM-CREATE_IN_PROGRESS-2024-08-22T10:42:24.680Z",
+    logical_resource_id: "ExecutionRoleArnSSM",
+    resource_type: "AWS::SSM::Parameter",
+    timestamp: new Date("2024-08-22T10:42:24.680Z"),
+    resource_status: "CREATE_IN_PROGRESS",
+    status_message: "",
+  },
+  {
+    event_id: "ExecutionRole-CREATE_COMPLETE-2024-08-22T10:42:23.619Z",
+    logical_resource_id: "ExecutionRole",
+    resource_type: "AWS::IAM::Role",
+    timestamp: new Date("2024-08-22T10:42:23.619Z"),
+    resource_status: "CREATE_COMPLETE",
+    status_message: "",
+  },
+  {
+    event_id: "ExecutionRole-CREATE_IN_PROGRESS-2024-08-22T10:42:05.872Z",
+    logical_resource_id: "ExecutionRole",
+    resource_type: "AWS::IAM::Role",
+    timestamp: new Date("2024-08-22T10:42:05.872Z"),
+    resource_status: "CREATE_IN_PROGRESS",
+    status_message: "Resource creation Initiated",
+  },
+  {
+    event_id: "ExecutionRole-CREATE_IN_PROGRESS-2024-08-22T10:42:04.781Z",
+    logical_resource_id: "ExecutionRole",
+    resource_type: "AWS::IAM::Role",
+    timestamp: new Date("2024-08-22T10:42:04.781Z"),
+    resource_status: "CREATE_IN_PROGRESS",
+    status_message: "",
+  },
+];
