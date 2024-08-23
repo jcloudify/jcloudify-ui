@@ -1,5 +1,8 @@
-import {useLocation, useParams} from "react-router-dom";
-import {Box, Stack} from "@mui/material";
+import {Button} from "react-admin";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Box, Stack, Typography} from "@mui/material";
+import {FaCubesStacked as StackIcon} from "react-icons/fa6";
+import {Settings} from "@mui/icons-material";
 import {
   EnvironmentCreate,
   EnvironmentCreation,
@@ -88,13 +91,33 @@ export const AppEnvironmentDiff: React.FC = () => {
 
 export const AppEnvironmentStackList: React.FC = () => {
   const {appId} = useParams();
+  const to = useNavigate();
   if (!appId) return;
   return (
     <WithTab tab="Environments">
       <Box mt={3}>
         <Heading
-          title="Stacks"
-          subtitle="Overview of Environment Components"
+          title={
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
+              <Typography variant="h6" fontWeight="450">
+                Stacks
+              </Typography>
+              <Box>
+                <Button
+                  variant="outlined"
+                  startIcon={<Settings />}
+                  label="Environments"
+                  onClick={() => to(`/applications/${appId}/show/environments`)}
+                />
+              </Box>
+            </Stack>
+          }
+          subtitle="List of environment components"
           size="sm"
           p={1}
         />
@@ -112,14 +135,30 @@ export const AppEnvironmentStackList: React.FC = () => {
 
 export const AppEnvironmentStackEventList: React.FC = () => {
   const {appId, stackId, envId} = useParams();
+  const to = useNavigate();
   if (!appId || !stackId || !envId) return;
   return (
     <WithTab tab="Environments">
       <Box mt={3}>
         <Heading
           title={
-            <Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
               <StackId appId={appId} stackId={stackId} envId={envId} />
+              <Box>
+                <Button
+                  variant="outlined"
+                  startIcon={<StackIcon />}
+                  label="Stacks"
+                  onClick={() =>
+                    to(`/applications/${appId}/show/environments/stacks`)
+                  }
+                />
+              </Box>
             </Stack>
           }
           subtitle="List of events"
@@ -143,14 +182,30 @@ export const AppEnvironmentStackEventList: React.FC = () => {
 
 export const AppEnvironmentStackOutputList: React.FC = () => {
   const {appId, stackId, envId} = useParams();
+  const to = useNavigate();
   if (!appId || !stackId || !envId) return;
   return (
     <WithTab tab="Environments">
       <Box mt={3}>
         <Heading
           title={
-            <Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
               <StackId appId={appId} stackId={stackId} envId={envId} />
+              <Box>
+                <Button
+                  variant="outlined"
+                  startIcon={<StackIcon />}
+                  label="Stacks"
+                  onClick={() =>
+                    to(`/applications/${appId}/show/environments/stacks`)
+                  }
+                />
+              </Box>
             </Stack>
           }
           subtitle="List of outputs"
