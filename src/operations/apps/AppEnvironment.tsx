@@ -98,7 +98,7 @@ export const AppEnvironmentStackList: React.FC = () => {
           appId={appId}
           exporter={false}
           title=" "
-          pagination={false}
+          pagination={<Pagination />}
         />
       </Box>
     </WithTab>

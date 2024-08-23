@@ -8,15 +8,17 @@ export interface StackTypeProps {
 const INDICATOR_COLORS = {
   [StackTypeEnum.EVENT]: "#e4b866",
   [StackTypeEnum.STORAGE_DATABASE_SQLITE]: "#1E5893",
-  [StackTypeEnum.COMPUTE_PERMISSION]: "#ED8134",
+  [StackTypeEnum.COMPUTE_PERMISSION]: "#72973E",
   [StackTypeEnum.STORAGE_BUCKET]: "#3A7E21",
+  [StackTypeEnum.COMPUTE]: "#EE8134",
 } as const;
 
 export const STACK_TYPE_TEXT = {
-  [StackTypeEnum.EVENT]: "Event",
-  [StackTypeEnum.STORAGE_DATABASE_SQLITE]: "Storage Database SQlite",
-  [StackTypeEnum.COMPUTE_PERMISSION]: "Compute Permission",
-  [StackTypeEnum.STORAGE_BUCKET]: "Storage Bucket",
+  [StackTypeEnum.EVENT]: "EVENT",
+  [StackTypeEnum.STORAGE_DATABASE_SQLITE]: "STORAGE DATABASE SQLITE",
+  [StackTypeEnum.COMPUTE_PERMISSION]: "COMPUTE PERMISSION",
+  [StackTypeEnum.STORAGE_BUCKET]: "STORAGE BUCKET",
+  [StackTypeEnum.COMPUTE]: "COMPUTE",
 } as const;
 
 export const StackType: React.FC<StackTypeProps> = ({value}) => {

@@ -8,14 +8,16 @@ import {
 } from "@/providers";
 
 export const stackEventProvider: PojaDataProvider<ToRecord<StackEvent>> = {
-  async getList(_page, _perPage, filter = {}, _meta) {
+  async getList(page, perPage, filter = {}, _meta) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     const eventResponse = (await unwrap(() =>
       stackApi().getStackEvents(
         uid,
         filter.appId,
         filter.env_id,
-        filter.stack_id
+        filter.stack_id,
+        page,
+        perPage
       )
     )) as PagedResponse<ToRecord<StackEvent>>;
     return {
