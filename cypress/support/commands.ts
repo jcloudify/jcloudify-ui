@@ -120,7 +120,7 @@ Cypress.Commands.add("mockApiGet", () => {
   cy.intercept(
     "GET",
     jcloudify(
-      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks`
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks?page=*&page_size=*`
     ),
     {
       data: stacks[app1.id][prod_env.id],
@@ -130,7 +130,7 @@ Cypress.Commands.add("mockApiGet", () => {
   cy.intercept(
     "GET",
     jcloudify(
-      `/users/${user1.id}/applications/${app1.id}/environments/${preprod_env.id}/stacks`
+      `/users/${user1.id}/applications/${app1.id}/environments/${preprod_env.id}/stacks?page=*&page_size=*`
     ),
     {
       data: stacks[app1.id][preprod_env.id],
@@ -140,7 +140,7 @@ Cypress.Commands.add("mockApiGet", () => {
   cy.intercept(
     "GET",
     jcloudify(
-      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks/*/events`
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/stacks/*/events?page=*&page_size=*`
     ),
     {
       data: app1_prod_stack_events,

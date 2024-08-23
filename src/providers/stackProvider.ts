@@ -9,10 +9,16 @@ import {
 } from "@/providers";
 
 export const stackProvider: PojaDataProvider<ToRecord<Stack>> = {
-  async getList(_page, _perPage, filter = {}, _meta) {
+  async getList(page, perPage, filter = {}, _meta) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     return (await unwrap(() =>
-      stackApi().getEnvironmentStacks(uid, filter.appId, filter.env_id)
+      stackApi().getEnvironmentStacks(
+        uid,
+        filter.appId,
+        filter.env_id,
+        page,
+        perPage
+      )
     )) as PagedResponse<ToRecord<Stack>>;
   },
   async getOne(id, meta: Dict<string> = {}) {
