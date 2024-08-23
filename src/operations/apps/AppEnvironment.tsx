@@ -186,7 +186,7 @@ export const AppEnvironmentStackOutputList: React.FC = () => {
   if (!appId || !stackId || !envId) return;
   return (
     <WithTab tab="Environments">
-      <Box mt={3} width="100%">
+      <Box mt={3}>
         <Heading
           title={
             <Stack
