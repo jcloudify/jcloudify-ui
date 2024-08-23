@@ -6,6 +6,7 @@ import {
   AppEnvironmentShow,
   AppEnvironmentStackEventList,
   AppEnvironmentStackList,
+  AppEnvironmentStackOutputList,
 } from "./AppEnvironment";
 import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
@@ -20,7 +21,8 @@ export const appShowViews: RouteMap = {
     "create": <AppEnvironmentCreate />,
     "diff": <AppEnvironmentDiff />,
     "stacks": <AppEnvironmentStackList />,
-    ":envId/stacks/:stackId": <AppEnvironmentStackEventList />,
+    ":envId/stacks/:stackId/events": <AppEnvironmentStackEventList />,
+    ":envId/stacks/:stackId/outputs": <AppEnvironmentStackOutputList />,
   },
   deployments: {
     "$$index": <AppDeploymentList />,

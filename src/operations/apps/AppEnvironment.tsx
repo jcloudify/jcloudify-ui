@@ -1,5 +1,5 @@
 import {useLocation, useParams} from "react-router-dom";
-import {Box, Typography, Chip} from "@mui/material";
+import {Box, Typography, Chip, Stack} from "@mui/material";
 import {
   EnvironmentCreate,
   EnvironmentCreation,
@@ -7,7 +7,12 @@ import {
   EnvironmentShow,
   EnvironmentDiff,
 } from "@/operations/environments";
-import {StackList, StackEventList} from "@/operations/stacks";
+import {
+  StackList,
+  StackEventList,
+  StackOutputList,
+  StackId,
+} from "@/operations/stacks";
 import {WithTab} from "@/components/tab";
 import {Heading} from "@/components/head";
 import {Pagination} from "@/operations/components/list";
@@ -113,17 +118,9 @@ export const AppEnvironmentStackEventList: React.FC = () => {
       <Box mt={3}>
         <Heading
           title={
-            <Typography variant="body1" fontWeight="400">
-              Stack{" "}
-              <Chip
-                size="small"
-                label={stackId}
-                variant="outlined"
-                color="primary"
-              />
-              &nbsp; &nbsp;
-              <span>Events</span>
-            </Typography>
+            <Stack>
+              <StackId appId={appId} stackId={stackId} envId={envId} />
+            </Stack>
           }
           subtitle="List of events"
           size="sm"
@@ -131,6 +128,37 @@ export const AppEnvironmentStackEventList: React.FC = () => {
         />
 
         <StackEventList
+          appId={appId}
+          stackId={stackId}
+          envId={envId}
+          actions={false}
+          exporter={false}
+          title=" "
+          pagination={<Pagination />}
+        />
+      </Box>
+    </WithTab>
+  );
+};
+
+export const AppEnvironmentStackOutputList: React.FC = () => {
+  const {appId, stackId, envId} = useParams();
+  if (!appId || !stackId || !envId) return;
+  return (
+    <WithTab tab="Environments">
+      <Box mt={3}>
+        <Heading
+          title={
+            <Stack>
+              <StackId appId={appId} stackId={stackId} envId={envId} />
+            </Stack>
+          }
+          subtitle="List of outputs"
+          size="sm"
+          p={1}
+        />
+
+        <StackOutputList
           appId={appId}
           stackId={stackId}
           envId={envId}
