@@ -1,5 +1,5 @@
 import {useLocation, useParams} from "react-router-dom";
-import {Box, Typography, Chip, Stack} from "@mui/material";
+import {Box, Stack} from "@mui/material";
 import {
   EnvironmentCreate,
   EnvironmentCreation,
