@@ -1,6 +1,7 @@
 import {
   app1_preprod_stacks,
   app1_prod_stack_events,
+  app1_prod_stack_outputs,
   app1_prod_stacks,
 } from "../fixtures/stack.mock";
 import {app1} from "../fixtures/application.mock";
@@ -37,10 +38,10 @@ describe("Stack", () => {
     });
 
     specify("List events for a stack", () => {
-      cy.muiSelect2("#env_id", "Prod");
+      cy.muiSelect("#env_id", "prod_env");
       cy.wait("@getEnvironmentStacks");
 
-      cy.contains(app1_prod_stacks[0].name!).click({force: true});
+      cy.getByTestid(`events-${app1_prod_stacks[0].id}`).click();
 
       cy.wait("@getEnvironmentStackEvents");
 
@@ -59,6 +60,27 @@ describe("Stack", () => {
             event.status_message
           );
         }
+      });
+    });
+
+    specify("List outputs for a stack", () => {
+      cy.muiSelect("#env_id", "prod_env");
+      cy.wait("@getEnvironmentStacks");
+
+      cy.getByTestid(`outputs-${app1_prod_stacks[0].id}`).click();
+
+      cy.wait("@getEnvironmentStackOutputs");
+
+      cy.wrap(app1_prod_stack_outputs).each((output: any, idx) => {
+        cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
+          output.key
+        );
+        cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
+          output.value
+        );
+        cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
+          output.description
+        );
       });
     });
   });

@@ -1,4 +1,9 @@
-import {Stack, StackEvent, StackType} from "@jcloudify-api/typescript-client";
+import {
+  Stack,
+  StackEvent,
+  StackOutput,
+  StackType,
+} from "@jcloudify-api/typescript-client";
 import {nanoid} from "nanoid";
 import {app1} from "./application.mock";
 import {preprod_env, prod_env} from "./environment.mock";
@@ -95,5 +100,18 @@ export const app1_prod_stack_events: StackEvent[] = [
     timestamp: new Date("2024-08-22T10:42:04.781Z"),
     resource_status: "CREATE_IN_PROGRESS",
     status_message: "",
+  },
+];
+
+export const app1_prod_stack_outputs: StackOutput[] = [
+  {
+    key: "ApiUrl",
+    value: "https://nsqk8hbcv.execute-api.eu-west-3.amazonaws.com/Prod",
+    description: "API Gateway endpoint URL",
+  },
+  {
+    key: "ELB-VPCID",
+    value: "a-vpcid",
+    description: "The ID of the VPC",
   },
 ];

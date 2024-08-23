@@ -9,6 +9,7 @@ import {
   logsProvider,
   pojaConfProvider,
   stackEventProvider,
+  stackOutputProvider,
   stackProvider,
   userProvider,
 } from "./";
@@ -29,6 +30,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return stackProvider;
     case "stackEvents":
       return stackEventProvider;
+    case "stackOutputs":
+      return stackOutputProvider;
     case "pojaConf":
       return pojaConfProvider;
     case "githubAppInstallation":

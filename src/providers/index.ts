@@ -10,6 +10,7 @@ export * from "./tokenProvider";
 export * from "./logsProvider";
 export * from "./stackProvider";
 export * from "./stackEventProvider";
+export * from "./stackOutputProvider";
 export * from "./pojaConfProvider";
 export * from "./githubAppInstallationProvider";
 
