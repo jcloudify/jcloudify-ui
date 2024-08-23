@@ -70,9 +70,6 @@ const normalizeDBConf = ({database}: PojaConfFormDataV1) => {
     case DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES:
       return {
         ...database,
-        database_non_root_username: null,
-        database_non_root_password: null,
-        prod_db_cluster_timeout: null,
         ...NO_AURORA_CONF,
       };
     default:

@@ -142,7 +142,6 @@ const GeneralConf = () => (
         label="Queues NB"
         source="general.with_queues_nb"
         choices={makeSelectChoices(Object.values(WithQueuesNbEnum))}
-        defaultValue={WithQueuesNbEnum.NUMBER_2}
         variant="outlined"
         size="medium"
         fullWidth
@@ -386,7 +385,6 @@ const ComputeConf = () => (
         source="compute.frontal_memory"
         variant="outlined"
         size="medium"
-        defaultValue={2048}
         fullWidth
       />
       <NumberInput
@@ -394,7 +392,6 @@ const ComputeConf = () => (
         source="compute.frontal_function_timeout"
         variant="outlined"
         size="medium"
-        defaultValue={30}
         fullWidth
       />
       <NumberInput
@@ -402,7 +399,6 @@ const ComputeConf = () => (
         source="compute.worker_memory"
         variant="outlined"
         size="medium"
-        defaultValue={1024}
         fullWidth
       />
       <NumberInput
@@ -410,7 +406,6 @@ const ComputeConf = () => (
         source="compute.worker_batch"
         variant="outlined"
         size="medium"
-        defaultValue={5}
         fullWidth
       />
       <NumberInput
@@ -418,7 +413,6 @@ const ComputeConf = () => (
         source="compute.worker_function_1_timeout"
         variant="outlined"
         size="medium"
-        defaultValue={600}
         fullWidth
       />
       <NumberInput
@@ -426,7 +420,6 @@ const ComputeConf = () => (
         source="compute.worker_function_2_timeout"
         variant="outlined"
         size="medium"
-        defaultValue={600}
         fullWidth
       />
     </GridLayout>
@@ -456,7 +449,6 @@ const TestingConf = () => (
         label="Java Facade IT"
         source="testing.java_facade_it"
         variant="outlined"
-        defaultValue="FacadeIT"
         size="medium"
         fullWidth
       />
@@ -465,7 +457,6 @@ const TestingConf = () => (
         source="testing.jacoco_min_coverage"
         variant="outlined"
         size="medium"
-        defaultValue="0.2"
         fullWidth
       />
     </GridLayout>
@@ -487,7 +478,6 @@ const DBConf = () => {
           choices={makeSelectChoices(
             Object.keys(DatabaseConf1WithDatabaseEnum)
           )}
-          defaultValue={DatabaseConf1WithDatabaseEnum.NONE}
           variant="outlined"
           size="medium"
           fullWidth
@@ -516,7 +506,6 @@ const DBConf = () => {
             source="database.prod_db_cluster_timeout"
             variant="outlined"
             size="medium"
-            defaultValue="300"
             fullWidth
           />
           <NumberInput
@@ -525,7 +514,6 @@ const DBConf = () => {
             variant="outlined"
             size="medium"
             fullWidth
-            defaultValue={2}
           />
           <NumberInput
             label="Aurora Max Capacity"
@@ -533,7 +521,6 @@ const DBConf = () => {
             variant="outlined"
             size="medium"
             fullWidth
-            defaultValue={16}
           />
           <NumberInput
             label="Aurora Scale Point"
@@ -541,7 +528,6 @@ const DBConf = () => {
             variant="outlined"
             size="medium"
             fullWidth
-            defaultValue={60}
           />
           <NumberInput
             label="Aurora Sleep"
@@ -549,7 +535,6 @@ const DBConf = () => {
             variant="outlined"
             size="medium"
             fullWidth
-            defaultValue={900}
           />
           <BooleanInput
             label="Aurora Auto Pause"

@@ -113,6 +113,10 @@ describe("Environment", () => {
       cy.muiSelect("#select-creation-template", "preprod_env2");
       cy.getByTestid("CreateFromExisting").click();
       cy.contains("From Preprod");
+
+      // BUGFIX
+      // should be able to create an env from an existing one without editing any config
+      cy.get("[aria-label='Create']").should("be.enabled");
     });
   });
 });

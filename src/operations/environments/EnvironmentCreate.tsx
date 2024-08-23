@@ -23,7 +23,10 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
-import {fromPojaConfFormData} from "@/operations/environments/poja-config-form";
+import {
+  POJA_CONF_V1_DEFAULT_VALUES,
+  fromPojaConfFormData,
+} from "@/operations/environments/poja-config-form";
 import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
@@ -62,6 +65,19 @@ const _EnvironmentCreate: React.FC<{
     "From scratch"
   );
 
+  const defaultValues = useMemo(() => {
+    return {
+      ...POJA_CONF_V1_DEFAULT_VALUES,
+      to_create: {id: newEnvironmentId},
+      __flags: {
+        with_gen_clients: !fromConfig
+          ? false
+          : checkPojaConf(fromConfig).is_with_gen_api_client,
+      },
+      ...(fromConfig || {}),
+    };
+  }, [newEnvironmentId, fromConfig]);
+
   return (
     <CreateBase
       resource="environments"
@@ -77,19 +93,7 @@ const _EnvironmentCreate: React.FC<{
         },
       }}
     >
-      <Form
-        values={{
-          to_create: {id: newEnvironmentId},
-          __flags: {
-            with_gen_clients: !fromConfig
-              ? false
-              : checkPojaConf(fromConfig).is_with_gen_api_client,
-          },
-          version: "3.6.2",
-          ...(fromConfig || {}),
-        }}
-        noValidate
-      >
+      <Form values={defaultValues} validate={() => Promise.resolve()}>
         <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
           <Heading
             title="Create New Environment"
@@ -124,7 +128,7 @@ const _EnvironmentCreate: React.FC<{
 
           <Toolbar sx={{mt: 2}}>
             <Stack direction="row" spacing={2}>
-              <SaveButton label="Create" />
+              <SaveButton label="Create" alwaysEnable />
             </Stack>
           </Toolbar>
         </Stack>
