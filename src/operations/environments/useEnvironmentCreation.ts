@@ -11,6 +11,10 @@ export const useEnvironmentCreation = (appId: string | undefined) => {
       filter: {
         appId,
       },
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
 

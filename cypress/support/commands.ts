@@ -56,6 +56,13 @@ Cypress.Commands.add("mockApiGet", () => {
     data: apps,
   }).as("getApplications");
 
+  cy.intercept("GET", jcloudify(`/users/*/applications/${app1.id}`), app1).as(
+    "getApplication"
+  );
+  cy.intercept("GET", jcloudify(`/users/*/applications/${app2.id}`), app2).as(
+    "getApplication"
+  );
+
   cy.intercept(
     "GET",
     jcloudify(`/users/*/applications/${app1.id}/environments`),
@@ -95,6 +102,13 @@ Cypress.Commands.add("mockApiGet", () => {
     "GET",
     jcloudify(
       `/users/*/applications/${app1.id}/environments/preprod_env/config`
+    ),
+    preprod_env_conf1
+  ).as("getEnvironmentConfig");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app2.id}/environments/preprod_env2/config`
     ),
     preprod_env_conf1
   ).as("getEnvironmentConfig");

@@ -44,7 +44,7 @@ describe("PojaConfV1", () => {
     cy.contains("Create").click();
     cy.getByTestid("CreateFromScratch").click();
 
-    cy.get("#general\\.package_full_name").type("com.mock.app");
+    cy.get("#general\\.package_full_name").clear().type("com.mock.app");
   });
 
   context("PojaConfFormat", () => {
