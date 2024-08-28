@@ -5,3 +5,4 @@ export const gh = {
 };
 
 export const baseUrl = process.env.GH_APP_CLIENT_ID!;
+export const stripePk = process.env.REACT_APP_STRIPE_PK;

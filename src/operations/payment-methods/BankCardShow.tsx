@@ -2,9 +2,9 @@ import {Box} from "@mui/material";
 import {CardNumberElement, Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
 import {colors} from "@/themes";
+import {stripePk} from "@/config/env";
 
 export const BankCardShow: React.FC<{last4Digit: string}> = ({last4Digit}) => {
-  const stripePk = process.env.REACT_APP_STRIPE_PK;
   const stripe = loadStripe(stripePk!);
 
   return (

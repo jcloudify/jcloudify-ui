@@ -21,14 +21,14 @@ import {
 } from "@jcloudify-api/typescript-client";
 import {authProvider} from "@/providers";
 import {colors} from "@/themes";
-import {BankCardShow} from "./BankCardShow";
 import {Elements} from "@stripe/react-stripe-js";
-import {PaymentMethodForm} from "./PaymentMethodForm";
 import {loadStripe, StripeElementsOptions} from "@stripe/stripe-js";
+import {stripePk} from "@/config/env";
+import {BankCardShow} from "./BankCardShow";
+import {PaymentMethodForm} from "./PaymentMethodForm";
 
 export const PaymentMethods: React.FC = () => {
   const [addPaymentMethod, setAddPaymentMethod] = useState(false);
-  const stripePk = process.env.REACT_APP_STRIPE_PK;
   const stripePromise = loadStripe(stripePk!);
 
   const options: StripeElementsOptions = {
