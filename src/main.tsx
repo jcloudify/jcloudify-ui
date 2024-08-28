@@ -6,9 +6,10 @@ import {ThemeProvider, createTheme} from "@mui/material";
 import {Layout} from "@/layout";
 import {authProvider, dataProvider} from "@/providers";
 import {AuthCallback, AuthRegistration, Authentication} from "@/security";
-import {apps} from "@/operations";
+import {apps, billing} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {AppInstallationCallback} from "@/operations/github";
+import {PaymentDetails} from "@/operations/payments";
 import {defaultTheme} from "@/themes";
 import {renderRouteMap} from "@/components/router";
 
@@ -22,6 +23,7 @@ const JCAdmin = () => (
     requireAuth
   >
     <Resource {...apps} />
+    <Resource {...billing} />
 
     <CustomRoutes>
       <Route path="/applications/:appId/show" element={<AppShowLayout />}>
@@ -32,6 +34,8 @@ const JCAdmin = () => (
       <Route path="/applications/create">
         {renderRouteMap(appCreateViews)}
       </Route>
+
+      <Route path="/billing/payment-details" element={<PaymentDetails />} />
     </CustomRoutes>
   </Admin>
 );
