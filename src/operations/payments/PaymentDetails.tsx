@@ -3,8 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {Box, Stack, Typography} from "@mui/material";
 import {Settings as SettingsIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
-import {BillingDetailsSummary, BillingInformation} from "./BillingDetails";
-import {PaymentMethods} from "../payment-methods";
+import {BillingDetailsSummary, BillingInformation, PaymentMethods} from "./";
 
 export const PaymentDetails: React.FC = () => {
   return (

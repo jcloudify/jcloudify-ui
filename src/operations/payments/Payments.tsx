@@ -1,8 +1,8 @@
 import {Datagrid, DateField, FunctionField, List, TextField} from "react-admin";
 import {Box, Divider, Stack, Typography} from "@mui/material";
-import {printMoney} from "../utils/print-money";
-import {PaymentDetailsSummary} from "../payment-details";
+import {printMoney} from "@/operations/utils/print-money";
 import {colors} from "@/themes";
+import {PaymentDetailsSummary} from "./";
 
 export const Payments: React.FC = () => {
   return (

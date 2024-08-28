@@ -9,7 +9,7 @@ import {AuthCallback, AuthRegistration, Authentication} from "@/security";
 import {apps, billing} from "@/operations";
 import {AppShowLayout, appShowViews, appCreateViews} from "@/operations/apps";
 import {AppInstallationCallback} from "@/operations/github";
-import {PaymentDetails} from "@/operations/payment-details";
+import {PaymentDetails} from "@/operations/payments";
 import {defaultTheme} from "@/themes";
 import {renderRouteMap} from "@/components/router";
 

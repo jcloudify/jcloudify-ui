@@ -15,9 +15,9 @@ import {
 } from "react-admin";
 import {Box, Divider, Stack, Typography} from "@mui/material";
 import {Cancel as CancelIcon, Edit as EditIcon} from "@mui/icons-material";
-import {authProvider} from "@/providers";
 import {PaymentCustomer} from "@jcloudify-api/typescript-client";
-import {BankCardShow} from "../payment-methods";
+import {authProvider} from "@/providers";
+import {BankCardShow} from "./";
 
 export interface BillingDetailsFormProps {
   customerId: string;
