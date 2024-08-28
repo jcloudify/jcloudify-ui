@@ -1,7 +1,6 @@
 import {Button} from "react-admin";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {Box, Stack, Typography} from "@mui/material";
-import {FaCubesStacked as StackIcon} from "react-icons/fa6";
 import {Settings} from "@mui/icons-material";
 import {
   EnvironmentCreate,
@@ -10,7 +9,7 @@ import {
   EnvironmentShow,
   EnvironmentDiff,
 } from "@/operations/environments";
-import {StackList, StackId} from "@/operations/stacks";
+import {StackList} from "@/operations/stacks";
 import {WithTab} from "@/components/tab";
 import {Heading} from "@/components/head";
 import {Pagination} from "@/operations/components/list";

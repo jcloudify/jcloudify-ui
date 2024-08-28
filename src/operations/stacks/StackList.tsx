@@ -10,10 +10,7 @@ import {
   Filter,
   required,
   useGetList,
-  IconButtonWithTooltip,
 } from "react-admin";
-import {useNavigate} from "react-router-dom";
-import {History, Output} from "@mui/icons-material";
 import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
 import {EnvironmentType} from "@/operations/environments";
 import {StackType} from "@/operations/stacks";
