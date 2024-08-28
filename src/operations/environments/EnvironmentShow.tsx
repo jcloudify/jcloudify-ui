@@ -1,30 +1,36 @@
-import {Application, Environment} from "@jcloudify-api/typescript-client";
-import {useState} from "react";
+import {
+  Application,
+  Environment,
+  OneOfPojaConf,
+} from "@jcloudify-api/typescript-client";
 import {
   ShowBase,
   Labeled,
   useRecordContext,
   IconButtonWithTooltip,
   useGetOne,
+  Loading,
 } from "react-admin";
 import {Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
+import {useToggle} from "usehooks-ts";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
 import {EnvironmentType} from "@/operations/environments";
 import {
-  PojaConfEditV1,
-  PojaConfShowV1,
-} from "@/operations/environments/poja-config-form";
+  PojaConfComponent,
+  PojaConfEdit,
+  PojaConfView,
+} from "@/operations/environments/poja-conf-form";
 import {GitBranch} from "@/components/source_control";
 import {ToRecord} from "@/providers";
 
 const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
-  const [isEditConf, setIsEditConf] = useState(false);
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId,
   });
+
   const environment = useRecordContext<Environment>();
 
   return (
@@ -48,33 +54,55 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
         </Stack>
       </ContainerWithHeading>
 
-      <ContainerWithHeading
-        title={
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="h6" fontWeight="450">
-              Poja Configuration
-            </Typography>
-            <IconButtonWithTooltip
-              label={isEditConf ? "cancel edit" : "edit"}
-              onClick={() => setIsEditConf((v) => !v)}
-            >
-              {isEditConf ? <Cancel /> : <Edit />}
-            </IconButtonWithTooltip>
-          </Stack>
-        }
-        sx={{fontSize: "1.2rem"}}
-      >
-        {isEditConf ? (
-          <PojaConfEditV1
+      {environment && <PojaConf envId={environment.id!} appId={appId} />}
+    </Stack>
+  );
+};
+
+const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
+  const [isEditConf, toggleIsEditConf, setIsEditConf] = useToggle(false);
+
+  const environment = useRecordContext<Environment>();
+  const {data: pojaConf, isLoading} = useGetOne<ToRecord<OneOfPojaConf>>(
+    "pojaConf",
+    {id: envId, meta: {appId}}
+  );
+
+  return (
+    <ContainerWithHeading
+      title={
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography variant="h6" fontWeight="450">
+            Poja Configuration
+          </Typography>
+          <IconButtonWithTooltip
+            label={isEditConf ? "cancel edit" : "edit"}
+            onClick={toggleIsEditConf}
+          >
+            {isEditConf ? <Cancel /> : <Edit />}
+          </IconButtonWithTooltip>
+        </Stack>
+      }
+      sx={{fontSize: "1.2rem"}}
+    >
+      {isLoading && <Loading loadingPrimary="" loadingSecondary="" />}
+
+      {!!pojaConf &&
+        (isEditConf ? (
+          <PojaConfEdit
+            version={pojaConf.version as PojaConfComponent["version"]}
             appId={appId}
             envId={environment.id!}
-            onSettled={() => setIsEditConf(false)}
+            onSuccess={() => setIsEditConf(false)}
           />
         ) : (
-          <PojaConfShowV1 appId={appId} envId={environment.id!} />
-        )}
-      </ContainerWithHeading>
-    </Stack>
+          <PojaConfView
+            version={pojaConf.version as PojaConfComponent["version"]}
+            appId={appId}
+            envId={environment.id!}
+          />
+        ))}
+    </ContainerWithHeading>
   );
 };
 

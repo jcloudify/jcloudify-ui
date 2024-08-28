@@ -23,7 +23,7 @@ import {
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
 
-export const PojaConfShowV1: React.FC<{envId: string; appId: string}> = ({
+export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
   envId,
   appId,
 }) => {

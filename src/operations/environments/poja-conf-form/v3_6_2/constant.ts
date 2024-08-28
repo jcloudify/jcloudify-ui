@@ -37,7 +37,7 @@ export const NO_CONCURRENCY_CONF: ConcurrencyConf1 = {
   worker_reserved_concurrent_executions_nb: null,
 };
 
-export const POJA_CONF_V1_DEFAULT_VALUES: PojaConf1 = {
+export const POJA_CONF_V3_6_2_DEFAULT_VALUES: PojaConf1 = {
   version: "3.6.2",
   general: {
     app_name: "",

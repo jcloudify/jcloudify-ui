@@ -12,9 +12,9 @@ import {
   NO_PUBLISH_CLIENT_CONF,
   NO_MAILING_CONF,
   NO_CONCURRENCY_CONF,
-} from ".";
+} from "./constant";
 
-export interface PojaConfFormDataV1 extends Omit<OneOfPojaConf, "version"> {
+export interface PojaConfFormDataV3_6_2 extends OneOfPojaConf {
   general?: OneOfPojaConf["general"] & {
     custom_java_deps: StringValue[];
     custom_java_repositories: StringValue[];
@@ -23,12 +23,11 @@ export interface PojaConfFormDataV1 extends Omit<OneOfPojaConf, "version"> {
   __flags?: {
     with_gen_clients?: boolean;
   };
-  version?: OneOfPojaConf["version"];
 }
 
 // TODO: make facade for versioning
-export const fromPojaConfFormData = (
-  pojaConf: PojaConfFormDataV1,
+export const transformFormValuesV3_6_2 = (
+  pojaConf: PojaConfFormDataV3_6_2,
   with_app: Application
 ): PojaConf1 => {
   const {__flags, ...normalizedConf} = {
@@ -36,7 +35,7 @@ export const fromPojaConfFormData = (
     general: normalizeGeneralConf(pojaConf, with_app),
     gen_api_client: normalizeGenApiClientConf(pojaConf) as any,
     database: normalizeDBConf(pojaConf),
-    version: pojaConf.version! || "3.6.2",
+    version: pojaConf.version!,
     concurrency: pojaConf.concurrency || NO_CONCURRENCY_CONF,
     emailing: pojaConf.emailing || NO_MAILING_CONF,
   };
@@ -44,7 +43,7 @@ export const fromPojaConfFormData = (
 };
 
 const normalizeGeneralConf = (
-  {general}: PojaConfFormDataV1,
+  {general}: PojaConfFormDataV3_6_2,
   with_app: Application
 ) => {
   const {
@@ -63,7 +62,7 @@ const normalizeGeneralConf = (
   };
 };
 
-const normalizeDBConf = ({database}: PojaConfFormDataV1) => {
+const normalizeDBConf = ({database}: PojaConfFormDataV3_6_2) => {
   switch (database?.with_database!) {
     case DatabaseConf1WithDatabaseEnum.NONE:
     case DatabaseConf1WithDatabaseEnum.SQLITE:
@@ -80,7 +79,7 @@ const normalizeDBConf = ({database}: PojaConfFormDataV1) => {
 const normalizeGenApiClientConf = ({
   __flags,
   gen_api_client,
-}: PojaConfFormDataV1): GenApiClient1 => {
+}: PojaConfFormDataV3_6_2): GenApiClient1 => {
   if (!__flags?.with_gen_clients)
     return {
       ...NO_PUBLISH_CLIENT_CONF,

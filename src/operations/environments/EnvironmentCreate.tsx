@@ -23,13 +23,12 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
+import {getPojaConfComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {
-  POJA_CONF_V1_DEFAULT_VALUES,
-  fromPojaConfFormData,
-} from "@/operations/environments/poja-config-form";
-import {PojaConfFormFieldsV1} from "@/operations/environments/poja-config-form";
+  PojaConfFF,
+  is_with_gen_api_client,
+} from "@/operations/environments/poja-conf-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
 import {ToRecord} from "@/providers";
 
 export interface EnvironmentCreateProps {
@@ -65,14 +64,16 @@ const _EnvironmentCreate: React.FC<{
     "From scratch"
   );
 
+  const pojaConfComponent = getPojaConfComponent("3.6.2");
+
   const defaultValues = useMemo(() => {
     return {
-      ...POJA_CONF_V1_DEFAULT_VALUES,
+      ...(pojaConfComponent.defaultValues || {}),
       to_create: {id: newEnvironmentId},
       __flags: {
         with_gen_clients: !fromConfig
           ? false
-          : checkPojaConf(fromConfig).is_with_gen_api_client,
+          : is_with_gen_api_client(fromConfig),
       },
       ...(fromConfig || {}),
     };
@@ -81,7 +82,7 @@ const _EnvironmentCreate: React.FC<{
   return (
     <CreateBase
       resource="environments"
-      transform={(data) => fromPojaConfFormData(data, app!)}
+      transform={(data) => pojaConfComponent.transformFormValues(data, app!)}
       mutationOptions={{
         meta: {
           appId: app?.id,
@@ -123,7 +124,7 @@ const _EnvironmentCreate: React.FC<{
             title="Poja Configuration"
             sx={{fontSize: "1.2rem"}}
           >
-            <PojaConfFormFieldsV1 />
+            <PojaConfFF version="3.6.2" />
           </ContainerWithHeading>
 
           <Toolbar sx={{mt: 2}}>
