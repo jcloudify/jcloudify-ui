@@ -94,6 +94,8 @@ export const Tabs: React.FC<TabsProps> = ({
             to={`${tab.toLowerCase()}?${p}`}
             sx={{
               "textTransform": "none",
+              "textDecoration": "none !important",
+              "border": "0 !important",
               "&.Mui-selected": solid
                 ? {
                     bgcolor: "#fff !important",
