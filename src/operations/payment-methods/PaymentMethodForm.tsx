@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {BaseSyntheticEvent, useState} from "react";
+import {useCreate, useNotify} from "react-admin";
 import {
   Button,
   FormControl,
@@ -7,7 +8,6 @@ import {
   Switch,
 } from "@mui/material";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
-import {useCreate, useNotify} from "react-admin";
 import {PaymentMethodsAction} from "@jcloudify-api/typescript-client";
 
 export const PaymentMethodForm: React.FC<{onSuccess: () => void}> = ({
@@ -18,12 +18,13 @@ export const PaymentMethodForm: React.FC<{onSuccess: () => void}> = ({
   const stripe = useStripe();
   const elements = useElements();
   const [create] = useCreate("paymentMethods");
-  const submitPaymentInfo = async (e: any) => {
+
+  const submitPaymentInfo = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
 
     try {
       if (stripe && elements) {
-        const isDefault = e.currentTarget.elements.isDefault.checked || false;
+        const isDefault = e.target.isDefault.checked || false;
         setIsSubmiting(true);
         const {error} = await elements.submit();
         if (error) {
