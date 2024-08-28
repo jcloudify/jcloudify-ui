@@ -115,7 +115,7 @@ const PaymentMethodItem: React.FC<{
       }}
     >
       <Stack direction="row" spacing={3} alignItems="center">
-        <BankCardShow last4={paymentMethod.last4!} />
+        <BankCardShow last4Digit={paymentMethod.last4!} />
         {isDefault ? (
           <Tooltip title="Default payment method">
             <DoneAllIcon />

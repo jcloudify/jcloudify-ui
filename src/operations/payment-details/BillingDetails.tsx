@@ -70,7 +70,7 @@ export const BillingDetailsSummary: React.FC<{customerId: string}> = ({
           source="default_payment_method"
           render={(record: PaymentCustomer) =>
             record.default_payment_method ? (
-              <BankCardShow last4={record.default_payment_method.last4!} />
+              <BankCardShow last4Digit={record.default_payment_method.last4!} />
             ) : (
               <Typography variant="body2">
                 No default payment method.

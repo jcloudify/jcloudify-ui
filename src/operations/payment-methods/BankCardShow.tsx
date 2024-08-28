@@ -3,7 +3,7 @@ import {CardNumberElement, Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
 import {colors} from "@/themes";
 
-export const BankCardShow: React.FC<{last4: string}> = ({last4}) => {
+export const BankCardShow: React.FC<{last4Digit: string}> = ({last4Digit}) => {
   const stripePk = process.env.REACT_APP_STRIPE_PK;
   const stripe = loadStripe(stripePk!);
 
@@ -20,7 +20,7 @@ export const BankCardShow: React.FC<{last4: string}> = ({last4}) => {
       <Elements stripe={stripe}>
         <CardNumberElement
           options={{
-            placeholder: `xxxx xxxx xxxx ${last4}`,
+            placeholder: `xxxx xxxx xxxx ${last4Digit}`,
             showIcon: true,
             iconStyle: "solid",
             disabled: true,
