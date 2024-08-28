@@ -41,7 +41,8 @@ describe("Stack", () => {
       cy.muiSelect("#env_id", "prod_env");
       cy.wait("@getEnvironmentStacks");
 
-      cy.getByTestid(`events-${app1_prod_stacks[0].id}`).click();
+      cy.get(`.MuiTableBody-root > :nth-child(1)`).click(); // app1_prod_stacks[0]
+      cy.contains("Events").click();
 
       cy.wait("@getEnvironmentStackEvents");
 
@@ -67,9 +68,10 @@ describe("Stack", () => {
       cy.muiSelect("#env_id", "prod_env");
       cy.wait("@getEnvironmentStacks");
 
-      cy.getByTestid(`outputs-${app1_prod_stacks[0].id}`).click();
+      cy.get(`.MuiTableBody-root > :nth-child(1)`).click(); // app1_prod_stacks[0]
 
       cy.wait("@getEnvironmentStackOutputs");
+      cy.contains("Outputs").click();
 
       cy.wrap(app1_prod_stack_outputs).each((output: any, idx) => {
         cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(

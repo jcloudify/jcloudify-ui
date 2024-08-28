@@ -25,39 +25,6 @@ export type StackListProps<Record extends RaRecord<string> = any> = Omit<
   appId: string;
 };
 
-const LinkButtons: React.FC<{appId: string; stack: Stack}> = ({
-  appId,
-  stack,
-}) => {
-  const to = useNavigate();
-  return (
-    <>
-      <IconButtonWithTooltip
-        label="Events"
-        data-testid={`events-${stack.id}`}
-        onClick={() =>
-          to(
-            `/applications/${appId}/show/environments/${stack.environment?.id}/stacks/${stack.id}/events`
-          )
-        }
-      >
-        <History />
-      </IconButtonWithTooltip>
-      <IconButtonWithTooltip
-        label="Outputs"
-        data-testid={`outputs-${stack.id}`}
-        onClick={() =>
-          to(
-            `/applications/${appId}/show/environments/${stack.environment?.id}/stacks/${stack.id}/outputs`
-          )
-        }
-      >
-        <Output />
-      </IconButtonWithTooltip>
-    </>
-  );
-};
-
 export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
   const {data: environments = []} = useGetList("environments", {
     filter: {appId},
@@ -93,7 +60,12 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
       }
       {...rest}
     >
-      <Datagrid rowClick={false} bulkActionButtons={false}>
+      <Datagrid
+        rowClick={(_id, _resource, stack) =>
+          `/applications/${appId}/show/environments/${stack.environment?.id}/stacks/${stack.id}/events`
+        }
+        bulkActionButtons={false}
+      >
         <TextField label="Stack name" source="name" />
         <FunctionField<Stack>
           label="Stack type"
@@ -106,10 +78,6 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
         <FunctionField<Stack>
           label="Update datetime"
           render={(stack) => stack.update_datetime?.toLocaleString()}
-        />
-
-        <FunctionField<Stack>
-          render={(stack) => <LinkButtons appId={appId} stack={stack} />}
         />
       </Datagrid>
     </List>

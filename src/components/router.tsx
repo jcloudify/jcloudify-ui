@@ -10,6 +10,7 @@ export const renderRouteMap = (rm: RouteMap) => {
   const keys = Object.keys(rm);
 
   return keys.map((key) => {
+    if (key == "$$layout") return null;
     const v = rm[key];
 
     if (isElement(v)) {
@@ -25,7 +26,11 @@ export const renderRouteMap = (rm: RouteMap) => {
     }
 
     return (
-      <Route key={key} path={key}>
+      <Route
+        key={key}
+        path={key}
+        element={v["$$layout" as keyof typeof v] as React.ReactNode}
+      >
         {renderRouteMap(v as RouteMap)}
       </Route>
     );
