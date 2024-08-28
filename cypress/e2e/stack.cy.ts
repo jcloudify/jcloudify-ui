@@ -69,9 +69,9 @@ describe("Stack", () => {
       cy.wait("@getEnvironmentStacks");
 
       cy.get(`.MuiTableBody-root > :nth-child(1)`).click(); // app1_prod_stacks[0]
+      cy.contains("Outputs").click();
 
       cy.wait("@getEnvironmentStackOutputs");
-      cy.contains("Outputs").click();
 
       cy.wrap(app1_prod_stack_outputs).each((output: any, idx) => {
         cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
