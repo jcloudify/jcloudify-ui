@@ -74,7 +74,7 @@ export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
 
 const PojaConfVersion = () => (
   <Stack>
-    <Heading size="sm" title="Versionn" mb={1} />
+    <Heading size="sm" title="Version" mb={1} />
     <Chip
       size="small"
       label={
