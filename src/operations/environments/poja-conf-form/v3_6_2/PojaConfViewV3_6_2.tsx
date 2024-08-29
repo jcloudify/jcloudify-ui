@@ -42,6 +42,7 @@ export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
       <ShowLayout>
         <Stack gap={1.5}>
           <PojaConfVersion />
+          <Divider />
 
           <GeneralConf />
           <Divider />
@@ -94,7 +95,7 @@ const PojaConfVersion = () => (
           />
         </Stack>
       }
-      mb={2}
+      mb={1}
     />
   </Stack>
 );

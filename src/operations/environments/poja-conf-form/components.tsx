@@ -1,4 +1,8 @@
 import {getPojaConfComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
+import {Stack, Typography, Chip} from "@mui/material";
+import {Heading} from "@/components/head";
+import {Divider} from "@/components/divider";
+import {typoSizes} from "@/components/typo";
 import {
   PojaConfEditComponent,
   PojaConfFFComponent,
@@ -14,6 +18,7 @@ const PojaConfViewFacade: PojaConfFacadeCmp<PojaConfViewComponent> = ({
   ...props
 }) => {
   const Cmp = getPojaConfComponent(version);
+  if (!Cmp) return null;
   return <Cmp.view {...props} />;
 };
 
@@ -22,6 +27,7 @@ const PojaConfFFFacade: PojaConfFacadeCmp<PojaConfFFComponent> = ({
   ...props
 }) => {
   const Cmp = getPojaConfComponent(version);
+  if (!Cmp) return null;
   return <Cmp.ff {...props} />;
 };
 
@@ -30,7 +36,35 @@ const PojaConfEditFacade: PojaConfFacadeCmp<PojaConfEditComponent> = ({
   ...props
 }) => {
   const Cmp = getPojaConfComponent(version);
-  return <Cmp.edit {...props} />;
+  if (!Cmp) return null;
+  return (
+    <Stack gap={1.5}>
+      <Stack>
+        <Heading
+          size="sm"
+          title={
+            <Stack spacing={1}>
+              <Typography variant={typoSizes.sm.primary}>Version</Typography>
+              <Chip
+                size="small"
+                label={<Typography variant="body2">{version}</Typography>}
+                variant="filled"
+                sx={{
+                  width: "fit-content",
+                  bgcolor: "gray",
+                  color: "#fff",
+                }}
+              />
+            </Stack>
+          }
+          mb={1}
+        />
+      </Stack>
+      <Divider />
+
+      <Cmp.edit {...props} />
+    </Stack>
+  );
 };
 
 export {
