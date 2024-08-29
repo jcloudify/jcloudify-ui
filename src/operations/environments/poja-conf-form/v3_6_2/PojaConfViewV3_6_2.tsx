@@ -23,7 +23,6 @@ import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
-import {typoSizes} from "@/components/typo";
 
 export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
   envId,
