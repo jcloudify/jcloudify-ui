@@ -82,7 +82,7 @@ const PojaConfVersion = () => (
             size="small"
             label={
               <Typography variant="body2">
-                <TextField label="Package name" source="version" />
+                <TextField source="version" />
               </Typography>
             }
             variant="filled"

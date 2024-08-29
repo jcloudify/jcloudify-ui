@@ -13,6 +13,7 @@ import {
   stackProvider,
   userProvider,
 } from "./";
+import {pojaVersionProvider} from "./pojaVersionProvider";
 
 const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
@@ -34,6 +35,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return stackOutputProvider;
     case "pojaConf":
       return pojaConfProvider;
+    case "pojaVersions":
+      return pojaVersionProvider;
     case "githubAppInstallation":
       return githubAppInstallationProvider;
     default:

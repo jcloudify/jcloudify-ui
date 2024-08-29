@@ -35,7 +35,7 @@ export const transformFormValuesV3_6_2 = (
     general: normalizeGeneralConf(pojaConf, with_app),
     gen_api_client: normalizeGenApiClientConf(pojaConf) as any,
     database: normalizeDBConf(pojaConf),
-    version: pojaConf.version!,
+    version: "3.6.2",
     concurrency: pojaConf.concurrency || NO_CONCURRENCY_CONF,
     emailing: pojaConf.emailing || NO_MAILING_CONF,
   };

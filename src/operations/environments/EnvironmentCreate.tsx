@@ -14,11 +14,12 @@ import {
   CreateBase,
   useRedirect,
 } from "react-admin";
-import {Stack} from "@mui/material";
+import {Stack, Select, MenuItem, Chip, Typography} from "@mui/material";
 import {nanoid} from "nanoid";
 import {ContainerWithHeading} from "@/components/container";
 import {Heading} from "@/components/head";
 import {GridLayout} from "@/components/grid";
+import {Divider} from "@/components/divider";
 import {
   EnvironmentType,
   useEnvironmentCreation,
@@ -30,59 +31,61 @@ import {
 } from "@/operations/environments/poja-conf-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {ToRecord} from "@/providers";
+import {usePojaVersionState} from "@/operations/environments/poja-conf-form/hooks/usePojaVersionState";
 
 export interface EnvironmentCreateProps {
   appId: string;
   template?: Environment;
 }
 
-const _EnvironmentCreate: React.FC<{
-  appId: string;
-  template: Environment | undefined;
-}> = ({template, appId}) => {
-  const newEnvironmentId = useMemo(() => nanoid(), []);
+const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
+  template,
+  appId,
+}) => {
   const redirect = useRedirect();
+  const newEnvironmentId = useMemo(() => nanoid(), []);
 
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId!,
   });
 
-  const {data: fromConfig} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
+  const {data: templateConf} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
     id: template?.id?.toString()!,
     meta: {
       appId,
     },
   });
 
-  const {creatable} = useEnvironmentCreation(appId);
-
-  const subtitle = template ? (
-    <div>
-      From <EnvironmentType value={template.environment_type!} />
-    </div>
-  ) : (
-    "From scratch"
+  const {pojaVersion, setPojaVersion, pojaVersions} = usePojaVersionState(
+    templateConf?.version
   );
 
-  const pojaConfComponent = getPojaConfComponent("3.6.2");
+  const {creatable} = useEnvironmentCreation(appId);
+
+  const pojaConfComponent = useMemo(
+    () => getPojaConfComponent(pojaVersion),
+    [pojaVersion]
+  );
 
   const defaultValues = useMemo(() => {
     return {
-      ...(pojaConfComponent.defaultValues || {}),
+      ...(pojaConfComponent?.defaultValues || {}),
       to_create: {id: newEnvironmentId},
       __flags: {
-        with_gen_clients: !fromConfig
+        with_gen_clients: !templateConf
           ? false
-          : is_with_gen_api_client(fromConfig),
+          : is_with_gen_api_client(templateConf),
       },
-      ...(fromConfig || {}),
+      ...(templateConf || {}),
     };
-  }, [newEnvironmentId, fromConfig]);
+  }, [newEnvironmentId, templateConf, pojaConfComponent]);
+
+  if (!pojaVersion) return null;
 
   return (
     <CreateBase
       resource="environments"
-      transform={(data) => pojaConfComponent.transformFormValues(data, app!)}
+      transform={(data) => pojaConfComponent?.transformFormValues(data, app!)}
       mutationOptions={{
         meta: {
           appId: app?.id,
@@ -98,7 +101,15 @@ const _EnvironmentCreate: React.FC<{
         <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
           <Heading
             title="Create New Environment"
-            subtitle={subtitle}
+            subtitle={
+              template ? (
+                <div>
+                  From <EnvironmentType value={template.environment_type!} />
+                </div>
+              ) : (
+                "From scratch"
+              )
+            }
             mb={4}
             size="sm"
             p={1}
@@ -124,7 +135,40 @@ const _EnvironmentCreate: React.FC<{
             title="Poja Configuration"
             sx={{fontSize: "1.2rem"}}
           >
-            <PojaConfFF version="3.6.2" />
+            <Stack gap={1.5}>
+              <Stack mb={1.5}>
+                <Heading size="sm" title="Version" mb={2} />
+                <GridLayout xs={12} md={6} lg={4} spacing={2}>
+                  <Select
+                    fullWidth
+                    value={pojaVersion}
+                    size="medium"
+                    onChange={(ev) => setPojaVersion(ev.target.value as string)}
+                  >
+                    {pojaVersions.map((version) => (
+                      <MenuItem value={version} key={`pojaVersion-${version}`}>
+                        <Chip
+                          size="small"
+                          label={
+                            <Typography variant="body2">{version}</Typography>
+                          }
+                          variant="filled"
+                          sx={{
+                            width: "fit-content",
+                            bgcolor: "gray",
+                            color: "#fff",
+                          }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </GridLayout>
+              </Stack>
+
+              <Divider />
+
+              <PojaConfFF version={pojaVersion} />
+            </Stack>
           </ContainerWithHeading>
 
           <Toolbar sx={{mt: 2}}>
