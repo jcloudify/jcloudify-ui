@@ -39,27 +39,25 @@ const PojaConfEditFacade: PojaConfFacadeCmp<PojaConfEditComponent> = ({
   if (!Cmp) return null;
   return (
     <Stack gap={1.5}>
-      <Stack>
-        <Heading
-          size="sm"
-          title={
-            <Stack spacing={1}>
-              <Typography variant={typoSizes.sm.primary}>Version</Typography>
-              <Chip
-                size="small"
-                label={<Typography variant="body2">{version}</Typography>}
-                variant="filled"
-                sx={{
-                  width: "fit-content",
-                  bgcolor: "gray",
-                  color: "#fff",
-                }}
-              />
-            </Stack>
-          }
-          mb={1}
-        />
-      </Stack>
+      <Heading
+        size="sm"
+        title={
+          <Stack spacing={1}>
+            <Typography variant={typoSizes.sm.primary}>Version</Typography>
+            <Chip
+              size="small"
+              label={<Typography variant="body2">{version}</Typography>}
+              variant="filled"
+              sx={{
+                width: "fit-content",
+                bgcolor: "gray",
+                color: "#fff",
+              }}
+            />
+          </Stack>
+        }
+        mb={1}
+      />
       <Divider />
 
       <Cmp.edit {...props} />

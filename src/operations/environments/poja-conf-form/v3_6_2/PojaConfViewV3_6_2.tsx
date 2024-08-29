@@ -74,28 +74,20 @@ export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
 
 const PojaConfVersion = () => (
   <Stack>
-    <Heading
-      size="sm"
-      title={
-        <Stack spacing={1}>
-          <Typography variant={typoSizes.sm.primary}>Version</Typography>
-          <Chip
-            size="small"
-            label={
-              <Typography variant="body2">
-                <TextField source="version" />
-              </Typography>
-            }
-            variant="filled"
-            sx={{
-              width: "fit-content",
-              bgcolor: "gray",
-              color: "#fff",
-            }}
-          />
-        </Stack>
+    <Heading size="sm" title="Versionn" mb={1} />
+    <Chip
+      size="small"
+      label={
+        <Typography variant="body2">
+          <TextField source="version" />
+        </Typography>
       }
-      mb={1}
+      variant="filled"
+      sx={{
+        width: "fit-content",
+        bgcolor: "gray",
+        color: "#fff",
+      }}
     />
   </Stack>
 );

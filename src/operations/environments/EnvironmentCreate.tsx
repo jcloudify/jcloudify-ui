@@ -82,6 +82,8 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
   if (!pojaVersion) return null;
 
+  const isFromScratch = !templateConf;
+
   return (
     <CreateBase
       resource="environments"
@@ -138,31 +140,52 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
             <Stack gap={1.5}>
               <Stack mb={1.5}>
                 <Heading size="sm" title="Version" mb={2} />
-                <GridLayout xs={12} md={6} lg={4} spacing={2}>
-                  <Select
-                    fullWidth
-                    value={pojaVersion}
-                    size="medium"
-                    onChange={(ev) => setPojaVersion(ev.target.value as string)}
-                  >
-                    {pojaVersions.map((version) => (
-                      <MenuItem value={version} key={`pojaVersion-${version}`}>
-                        <Chip
-                          size="small"
-                          label={
-                            <Typography variant="body2">{version}</Typography>
-                          }
-                          variant="filled"
-                          sx={{
-                            width: "fit-content",
-                            bgcolor: "gray",
-                            color: "#fff",
-                          }}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </GridLayout>
+                {isFromScratch ? (
+                  <GridLayout xs={12} md={6} lg={4} spacing={2}>
+                    <Select
+                      fullWidth
+                      value={pojaVersion}
+                      size="medium"
+                      onChange={(ev) =>
+                        setPojaVersion(ev.target.value as string)
+                      }
+                      disabled={!!templateConf}
+                    >
+                      {pojaVersions.map((version) => (
+                        <MenuItem
+                          value={version}
+                          key={`pojaVersion-${version}`}
+                        >
+                          <Chip
+                            size="small"
+                            label={
+                              <Typography variant="body2">{version}</Typography>
+                            }
+                            variant="filled"
+                            sx={{
+                              width: "fit-content",
+                              bgcolor: "gray",
+                              color: "#fff",
+                            }}
+                          />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </GridLayout>
+                ) : (
+                  <Chip
+                    size="small"
+                    label={
+                      <Typography variant="body2">{pojaVersion}</Typography>
+                    }
+                    variant="filled"
+                    sx={{
+                      width: "fit-content",
+                      bgcolor: "gray",
+                      color: "#fff",
+                    }}
+                  />
+                )}
               </Stack>
 
               <Divider />
