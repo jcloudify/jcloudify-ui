@@ -119,11 +119,14 @@ const CreateGitRepository: React.FC = () => {
               <MenuItem
                 value={installation.id}
                 key={`installation-${installation.id}`}
-                sx={{gap: 1.5}}
               >
-                <GitHub />
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Box>
+                    <GitHub />
+                  </Box>
 
-                <Box flex={1}>{installation.owner}</Box>
+                  <Box flex={1}>{installation.owner}</Box>
+                </Stack>
               </MenuItem>
             ))}
             <Divider />

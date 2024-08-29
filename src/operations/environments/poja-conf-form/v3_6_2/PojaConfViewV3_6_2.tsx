@@ -2,6 +2,7 @@ import React from "react";
 import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
 import {
   Stack,
+  Chip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -22,6 +23,7 @@ import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
+import {typoSizes} from "@/components/typo";
 
 export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
   envId,
@@ -39,6 +41,8 @@ export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
     >
       <ShowLayout>
         <Stack gap={1.5}>
+          <PojaConfVersion />
+
           <GeneralConf />
           <Divider />
 
@@ -66,6 +70,34 @@ export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
     </ShowBase>
   );
 };
+
+const PojaConfVersion = () => (
+  <Stack>
+    <Heading
+      size="sm"
+      title={
+        <Stack spacing={1}>
+          <Typography variant={typoSizes.sm.primary}>Version</Typography>
+          <Chip
+            size="small"
+            label={
+              <Typography variant="body2">
+                <TextField label="Package name" source="version" />
+              </Typography>
+            }
+            variant="filled"
+            sx={{
+              width: "fit-content",
+              bgcolor: "gray",
+              color: "#fff",
+            }}
+          />
+        </Stack>
+      }
+      mb={2}
+    />
+  </Stack>
+);
 
 const GeneralConf = () => (
   <Stack>
