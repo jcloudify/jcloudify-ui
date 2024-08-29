@@ -25,13 +25,13 @@ import {
   useEnvironmentCreation,
 } from "@/operations/environments";
 import {getPojaConfComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
+import {usePojaVersionState} from "@/operations/environments/poja-conf-form/hooks";
 import {
   PojaConfFF,
   is_with_gen_api_client,
 } from "@/operations/environments/poja-conf-form";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {ToRecord} from "@/providers";
-import {usePojaVersionState} from "@/operations/environments/poja-conf-form/hooks/usePojaVersionState";
 
 export interface EnvironmentCreateProps {
   appId: string;

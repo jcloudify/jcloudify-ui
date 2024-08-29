@@ -169,6 +169,10 @@ Cypress.Commands.add("mockApiGet", () => {
       data: app1_prod_stack_outputs,
     }
   ).as("getEnvironmentStackOutputs");
+
+  cy.intercept("GET", jcloudify(`/poja-versions`), {
+    data: ["3.6.2"],
+  }).as("getPojaVersions");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {
