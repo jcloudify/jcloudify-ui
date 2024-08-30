@@ -40,4 +40,7 @@ export const stackEventProvider: PojaDataProvider<ToRecord<StackEvent>> = {
   delete() {
     throw new Error("Function not implemented.");
   },
+  deleteMany(): Promise<any> {
+    throw new Error("Function not implemented.");
+  },
 };

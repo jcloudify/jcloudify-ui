@@ -48,7 +48,7 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
     });
     return created;
   },
-  async delete(environment, meta) {
+  async delete(environment, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     const [deleted] = (
       await unwrap(() =>

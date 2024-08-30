@@ -27,4 +27,7 @@ export const pojaVersionProvider: PojaDataProvider<ToRecord<PojaVersion>> = {
   delete() {
     throw new Error("Function not implemented.");
   },
+  deleteMany(): Promise<any> {
+    throw new Error("Function not implemented.");
+  },
 };

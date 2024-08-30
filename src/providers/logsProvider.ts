@@ -22,4 +22,7 @@ export const logsProvider: PojaDataProvider<Required<Log>> = {
   delete(): Promise<any> {
     throw new Error("Function not implemented.");
   },
+  deleteMany(): Promise<any> {
+    throw new Error("Function not implemented.");
+  },
 };

@@ -18,4 +18,7 @@ export const tokenProvider: PojaDataProvider<ToRecord<Token>> = {
   delete(): Promise<any> {
     throw new Error("Function not implemented.");
   },
+  deleteMany() {
+    throw new Error("Function not implemented.");
+  },
 };
