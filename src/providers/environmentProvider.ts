@@ -7,6 +7,7 @@ import {
   pojaConfProvider,
 } from "@/providers";
 import {environmentApi, unwrap} from "@/services/poja-api";
+import {toArchived} from "@/providers/util";
 
 export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
   async getList(_page, _perPage, filter = {}) {
@@ -47,10 +48,20 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
     });
     return created;
   },
-  saveAll(): Promise<any> {
-    throw new Error("Function not implemented.");
+  async deleteMany(environments, meta = {}) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (
+      await unwrap(() =>
+        environmentApi().crupdateApplicationEnvironments(uid, meta.appId, {
+          data: environments.map(toArchived),
+        })
+      )
+    ).data as ToRecord<Environment>[];
   },
   delete(): Promise<any> {
+    throw new Error("Function not implemented.");
+  },
+  saveAll(): Promise<any> {
     throw new Error("Function not implemented.");
   },
 };

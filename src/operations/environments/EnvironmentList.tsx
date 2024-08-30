@@ -18,6 +18,7 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
+import {BulkDeleteButton} from "@/operations/components/list";
 
 export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   Omit<ListProps<Record>, "resource" | "children"> & {
@@ -72,7 +73,12 @@ export const EnvironmentList: React.FC<EnvironmentListProps> = ({
       actions={<ListActions appId={appId} />}
       {...rest}
     >
-      <Datagrid rowClick={(id) => id.toString()}>
+      <Datagrid
+        rowClick={(id) => id.toString()}
+        bulkActionButtons={
+          <BulkDeleteButton mutationOptions={{meta: {appId}}} />
+        }
+      >
         <TextField source="id" />
         <FunctionField<Environment>
           label="Type"
