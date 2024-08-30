@@ -36,20 +36,15 @@ import {
   BatchArrayEditorField,
   BatchRecordEditorField,
 } from "@/operations/components/field";
-import {checkPojaConf} from "@/operations/environments/poja-config-form/util";
-import {fromPojaConfFormData} from ".";
+import {is_with_gen_api_client} from "@/operations/environments/poja-conf-form/common";
+import {transformFormValuesV3_6_2} from "@/operations/environments/poja-conf-form/v3_6_2/mapperV3_6_2";
+import {PojaConfEditComponent} from "@/operations/environments/poja-conf-form/types";
 import {ToRecord} from "@/providers";
 
-export interface PojaConfEditV1Props {
-  appId: string;
-  envId: string;
-  onSettled: () => void;
-}
-
-export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
+export const PojaConfEditV3_6_2: PojaConfEditComponent = ({
   appId,
   envId,
-  onSettled,
+  onSuccess,
 }) => {
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId,
@@ -57,7 +52,7 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
   return (
     <EditBase
       mutationMode="pessimistic"
-      transform={(data) => fromPojaConfFormData(data, app!)}
+      transform={(data) => transformFormValuesV3_6_2(data, app!)}
       resource="pojaConf"
       id={envId}
       queryOptions={{
@@ -71,7 +66,7 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
           appId,
           envId,
         },
-        onSuccess: onSettled,
+        onSuccess,
       }}
     >
       <WithRecord<PojaConf1>
@@ -80,13 +75,13 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
             validate={() => ({})}
             noValidate
             values={{
+              version: "3.6.2",
               __flags: {
-                with_gen_clients:
-                  checkPojaConf(pojaConf).is_with_gen_api_client,
+                with_gen_clients: is_with_gen_api_client(pojaConf),
               },
             }}
           >
-            <PojaConfFormFieldsV1 />
+            <PojaConfFFV3_6_2 />
             <Toolbar sx={{mt: 2}}>
               <Stack direction="row" spacing={2}>
                 <SaveButton />
@@ -99,7 +94,7 @@ export const PojaConfEditV1: React.FC<PojaConfEditV1Props> = ({
   );
 };
 
-export const PojaConfFormFieldsV1: React.FC = memo(() => (
+export const PojaConfFFV3_6_2: React.FC = memo(() => (
   <Stack gap={1.5}>
     <GeneralConf />
     <Divider />

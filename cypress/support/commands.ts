@@ -15,6 +15,7 @@ import {
   stacks,
 } from "../fixtures/stack.mock";
 import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
+import {pojaVersions} from "../fixtures/poja-version.mock";
 import {jcloudify} from "./util";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
@@ -169,6 +170,10 @@ Cypress.Commands.add("mockApiGet", () => {
       data: app1_prod_stack_outputs,
     }
   ).as("getEnvironmentStackOutputs");
+
+  cy.intercept("GET", jcloudify(`/poja-versions`), {
+    data: pojaVersions,
+  }).as("getPojaVersions");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

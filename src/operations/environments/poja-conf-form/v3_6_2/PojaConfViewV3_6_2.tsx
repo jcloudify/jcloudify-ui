@@ -2,6 +2,7 @@ import React from "react";
 import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
 import {
   Stack,
+  Chip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -23,7 +24,7 @@ import {
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
 
-export const PojaConfShowV1: React.FC<{envId: string; appId: string}> = ({
+export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
   envId,
   appId,
 }) => {
@@ -39,6 +40,9 @@ export const PojaConfShowV1: React.FC<{envId: string; appId: string}> = ({
     >
       <ShowLayout>
         <Stack gap={1.5}>
+          <PojaConfVersion />
+          <Divider />
+
           <GeneralConf />
           <Divider />
 
@@ -66,6 +70,26 @@ export const PojaConfShowV1: React.FC<{envId: string; appId: string}> = ({
     </ShowBase>
   );
 };
+
+const PojaConfVersion = () => (
+  <Stack>
+    <Heading size="sm" title="Version" mb={1} />
+    <Chip
+      size="small"
+      label={
+        <Typography variant="body2">
+          <TextField source="version" />
+        </Typography>
+      }
+      variant="filled"
+      sx={{
+        width: "fit-content",
+        bgcolor: "gray",
+        color: "#fff",
+      }}
+    />
+  </Stack>
+);
 
 const GeneralConf = () => (
   <Stack>

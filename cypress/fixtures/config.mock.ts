@@ -10,7 +10,7 @@ const createConf1 = (
   app: Application,
   env_vars: Record<string, string>
 ): PojaConf1 => ({
-  version: "string",
+  version: "3.6.2",
   general: {
     app_name: app.name,
     with_snapstart: true,
