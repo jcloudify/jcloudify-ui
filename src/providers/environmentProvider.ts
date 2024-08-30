@@ -48,6 +48,17 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
     });
     return created;
   },
+  async delete(environment, meta) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    const [deleted] = (
+      await unwrap(() =>
+        environmentApi().crupdateApplicationEnvironments(uid, meta.appId, {
+          data: [toArchived(environment)],
+        })
+      )
+    ).data as ToRecord<Environment>[];
+    return deleted;
+  },
   async deleteMany(environments, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     return (
@@ -57,9 +68,6 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
         })
       )
     ).data as ToRecord<Environment>[];
-  },
-  delete(): Promise<any> {
-    throw new Error("Function not implemented.");
   },
   saveAll(): Promise<any> {
     throw new Error("Function not implemented.");

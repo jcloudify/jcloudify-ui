@@ -18,7 +18,7 @@ export interface PojaDataProvider<R extends RaRecord<string>> {
   getOne: (id: string, meta?: Dict<any>) => Promise<R>;
   save: (resource: R, meta?: Dict<any>) => Promise<R>;
   saveAll: (resources: R[], meta?: Dict<any>) => Promise<R[]>;
-  delete: (id: string, meta?: Dict<any>) => Promise<R>;
+  delete: (resource: R, meta?: Dict<any>) => Promise<R>;
   deleteMany: (resources: R[], meta?: Dict<any>) => Promise<R[]>;
 }
 

@@ -84,26 +84,20 @@ export const dataProvider: DataProvider = {
     const result = await getProvider(resource).save(params.data, params.meta);
     return {data: result};
   },
-  async create(resource, params) {
-    const result = await getProvider(resource).save(params.data, params.meta);
-    return {data: result};
-  },
   async delete(resource, params) {
     const result = await getProvider(resource).delete(
-      params.id.toString(),
+      params.previousData,
       params.meta
     );
+    return {data: result};
+  },
+  async create(resource, params) {
+    const result = await getProvider(resource).save(params.data, params.meta);
     return {data: result};
   },
   async updateMany(resource, params) {
     const result = await getProvider(resource).saveAll(params.data as any[]);
     return {data: result};
-  },
-  getMany() {
-    throw new Error("Function not implemented.");
-  },
-  getManyReference() {
-    throw new Error("Function not implemented.");
   },
   async deleteMany(resource, params) {
     const result: RaRecord<string>[] = await getProvider(resource).deleteMany(
@@ -111,5 +105,11 @@ export const dataProvider: DataProvider = {
       params.meta
     );
     return {data: result.map((record) => record.id)};
+  },
+  getMany() {
+    throw new Error("Function not implemented.");
+  },
+  getManyReference() {
+    throw new Error("Function not implemented.");
   },
 };
