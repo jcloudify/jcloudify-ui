@@ -24,7 +24,7 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
-import {getPojaConfComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
+import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {usePojaVersionState} from "@/operations/environments/poja-conf-form/hooks";
 import {
   PojaConfFF,
@@ -62,14 +62,14 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
   const {creatable} = useEnvironmentCreation(appId);
 
-  const pojaConfComponent = useMemo(
-    () => getPojaConfComponent(pojaVersion),
+  const pojaComponents = useMemo(
+    () => getPojaVersionedComponent(pojaVersion),
     [pojaVersion]
   );
 
   const defaultValues = useMemo(() => {
     return {
-      ...(pojaConfComponent?.defaultValues || {}),
+      ...(pojaComponents?.formDefaultValues || {}),
       to_create: {id: newEnvironmentId},
       __flags: {
         with_gen_clients: !templateConf
@@ -78,16 +78,14 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
       },
       ...(templateConf || {}),
     };
-  }, [newEnvironmentId, templateConf, pojaConfComponent]);
-
-  if (!pojaVersion) return null;
+  }, [newEnvironmentId, templateConf, pojaComponents]);
 
   const isFromScratch = !templateConf;
 
   return (
     <CreateBase
       resource="environments"
-      transform={(data) => pojaConfComponent?.transformFormValues(data, app!)}
+      transform={(data) => pojaComponents.formTransformFormValues(data, app!)}
       mutationOptions={{
         meta: {
           appId: app?.id,
@@ -196,7 +194,11 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
           <Toolbar sx={{mt: 2}}>
             <Stack direction="row" spacing={2}>
-              <SaveButton label="Create" alwaysEnable />
+              <SaveButton
+                label="Create"
+                alwaysEnable={!!pojaComponents}
+                disabled={!pojaComponents}
+              />
             </Stack>
           </Toolbar>
         </Stack>

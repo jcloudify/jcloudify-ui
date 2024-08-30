@@ -19,7 +19,7 @@ import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
 import {EnvironmentType} from "@/operations/environments";
 import {
-  PojaConfComponent,
+  PojaConfComponentVersion,
   PojaConfEdit,
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
@@ -90,14 +90,14 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
       {!!pojaConf &&
         (isEditConf ? (
           <PojaConfEdit
-            version={pojaConf.version as PojaConfComponent["version"]}
+            version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
             envId={environment.id!}
             onSuccess={() => setIsEditConf(false)}
           />
         ) : (
           <PojaConfView
-            version={pojaConf.version as PojaConfComponent["version"]}
+            version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
             envId={environment.id!}
           />
