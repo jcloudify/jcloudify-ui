@@ -10,8 +10,10 @@ import {
   Filter,
   required,
   useGetList,
+  WithListContext,
 } from "react-admin";
 import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
+import {BulkDeleteButton} from "@/operations/components/list";
 import {EnvironmentType} from "@/operations/environments";
 import {StackType} from "@/operations/stacks";
 
@@ -61,7 +63,15 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
         rowClick={(_id, _resource, stack) =>
           `/applications/${appId}/show/environments/${stack.environment?.id}/stacks/${stack.id}/events`
         }
-        bulkActionButtons={false}
+        bulkActionButtons={
+          <WithListContext
+            render={({filterValues}) => (
+              <BulkDeleteButton
+                mutationOptions={{meta: {appId, envId: filterValues.env_id}}}
+              />
+            )}
+          />
+        }
       >
         <TextField label="Stack name" source="name" />
         <FunctionField<Stack>

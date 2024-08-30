@@ -10,12 +10,16 @@ import {
   IconButtonWithTooltip,
   useGetOne,
   Loading,
+  DeleteWithConfirmButton,
+  useRedirect,
 } from "react-admin";
-import {Stack, Typography} from "@mui/material";
+import {Box, Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
 import {useToggle} from "usehooks-ts";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
+import {GitBranch} from "@/components/source_control";
+import {typoSizes} from "@/components/typo";
 import {ShowLayout} from "@/operations/components/show";
 import {EnvironmentType} from "@/operations/environments";
 import {
@@ -23,10 +27,11 @@ import {
   PojaConfEdit,
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
-import {GitBranch} from "@/components/source_control";
 import {ToRecord} from "@/providers";
 
 const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
+  const redirect = useRedirect();
+
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId,
   });
@@ -35,7 +40,37 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
-      <ContainerWithHeading title="Environment" sx={{fontSize: "1.2rem"}}>
+      <ContainerWithHeading
+        title={
+          <Stack direction="row">
+            <Typography variant={typoSizes.sm.primary} flex={1}>
+              Environment
+            </Typography>
+            <Box>
+              <DeleteWithConfirmButton
+                confirmColor="warning"
+                confirmContent="Are you sure you want to delete this environment?"
+                confirmTitle={
+                  <span>
+                    Delete &nbsp;
+                    <EnvironmentType value={environment.environment_type!} />
+                    &nbsp; environment
+                  </span>
+                }
+                mutationOptions={{
+                  meta: {
+                    appId,
+                  },
+                  onSuccess: () => {
+                    redirect(`/applications/${appId}/show/environments`);
+                  },
+                }}
+              />
+            </Box>
+          </Stack>
+        }
+        sx={{fontSize: "1.2rem"}}
+      >
         <Stack gap={1.5}>
           <GridLayout xs={6} sm={4}>
             <Labeled label="Type">

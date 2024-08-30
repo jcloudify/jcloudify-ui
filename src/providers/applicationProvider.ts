@@ -6,6 +6,7 @@ import {
   authProvider,
 } from "@/providers";
 import {applicationApi, unwrap} from "@/services/poja-api";
+import {toArchived} from "@/providers/util";
 
 export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
   async getList(page, perPage) {
@@ -31,10 +32,21 @@ export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
     ).data!;
     return apps[0] as ToRecord<Application>;
   },
+  async delete(app) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    const [deleted] = (
+      await unwrap(() =>
+        applicationApi().crupdateApplications(uid, {
+          data: [toArchived({...app, user_id: uid})],
+        })
+      )
+    ).data! as ToRecord<Application>[];
+    return deleted;
+  },
   saveAll() {
     throw new Error("Function not implemented.");
   },
-  delete() {
+  deleteMany() {
     throw new Error("Function not implemented.");
   },
 };

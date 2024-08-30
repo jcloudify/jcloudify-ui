@@ -1,4 +1,4 @@
-import {DataProvider} from "react-admin";
+import {DataProvider, RaRecord} from "react-admin";
 import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
 import {
@@ -14,6 +14,12 @@ import {
   userProvider,
 } from "./";
 import {pojaVersionProvider} from "./pojaVersionProvider";
+
+/**
+ * default RA deleteMany only takes an array of ids,
+ * in our api, we need the records, so we'll pass the records under the 'meta' object with this unique symbol
+ */
+export const DELETE_RESOURCES = Symbol("resources.delete");
 
 const getProvider = (resource: string): PojaDataProvider<any> => {
   switch (resource) {
@@ -78,25 +84,32 @@ export const dataProvider: DataProvider = {
     const result = await getProvider(resource).save(params.data, params.meta);
     return {data: result};
   },
-  async create(resource, params) {
-    const result = await getProvider(resource).save(params.data, params.meta);
+  async delete(resource, params) {
+    const result = await getProvider(resource).delete(
+      params.previousData,
+      params.meta
+    );
     return {data: result};
   },
-  async delete(resource, params) {
-    const result = await getProvider(resource).delete(params.id.toString());
+  async create(resource, params) {
+    const result = await getProvider(resource).save(params.data, params.meta);
     return {data: result};
   },
   async updateMany(resource, params) {
     const result = await getProvider(resource).saveAll(params.data as any[]);
     return {data: result};
   },
+  async deleteMany(resource, params) {
+    const result: RaRecord<string>[] = await getProvider(resource).deleteMany(
+      params.meta[DELETE_RESOURCES],
+      params.meta
+    );
+    return {data: result.map((record) => record.id)};
+  },
   getMany() {
     throw new Error("Function not implemented.");
   },
   getManyReference() {
-    throw new Error("Function not implemented.");
-  },
-  deleteMany() {
     throw new Error("Function not implemented.");
   },
 };

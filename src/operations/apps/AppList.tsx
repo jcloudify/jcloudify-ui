@@ -6,18 +6,12 @@ import {
   TopToolbar,
   Button,
   WithListContext,
+  useDeleteWithConfirmController,
+  IconButtonWithTooltip,
+  Confirm,
 } from "react-admin";
-import {
-  Box,
-  Stack,
-  Paper,
-  Grid,
-  Avatar,
-  Typography,
-  IconButton,
-  Chip,
-} from "@mui/material";
-import {Apps, Settings, GitHub, Add} from "@mui/icons-material";
+import {Box, Stack, Paper, Grid, Avatar, Typography, Chip} from "@mui/material";
+import {Apps, Delete, GitHub, Add} from "@mui/icons-material";
 import {Empty, Pagination} from "@/operations/components/list";
 import {colors} from "@/themes";
 import {AppProps} from "@/operations/apps/types";
@@ -25,6 +19,13 @@ import {stripPrefix} from "@/utils/str";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 
 const AppGridTile: React.FC<AppProps> = ({app}) => {
+  const {open, isLoading, handleDialogOpen, handleDialogClose, handleDelete} =
+    useDeleteWithConfirmController({
+      record: app,
+      redirect: false,
+      mutationMode: "pessimistic",
+    });
+
   return (
     <Grid item xs={12} md={6}>
       <Stack
@@ -50,9 +51,23 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
             <Typography fontWeight="semibold">{app.name}</Typography>
           </Stack>
           <Box>
-            <IconButton sx={{zIndex: 2}}>
-              <Settings />
-            </IconButton>
+            <IconButtonWithTooltip
+              label="delete"
+              sx={{zIndex: 2}}
+              color="error"
+              onClick={handleDialogOpen}
+            >
+              <Delete />
+            </IconButtonWithTooltip>
+            <Confirm
+              isOpen={open}
+              loading={isLoading}
+              title={`Delete "${app.name}" app`}
+              content="Are you sure you want to delete this app?"
+              confirmColor="warning"
+              onConfirm={handleDelete}
+              onClose={handleDialogClose}
+            />
           </Box>
         </Stack>
 

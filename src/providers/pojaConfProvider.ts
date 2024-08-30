@@ -54,4 +54,7 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
   delete(): Promise<any> {
     throw new Error("Function not implemented.");
   },
+  deleteMany(): Promise<any> {
+    throw new Error("Function not implemented.");
+  },
 };
