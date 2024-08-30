@@ -15,3 +15,12 @@ export const normalizeParams = (resource: string, params: GetListParams) => {
   }
   return {...params, pagination};
 };
+
+export const toArchived = <T extends {id: string; archived?: boolean}>(
+  record: T
+) => {
+  return {
+    ...record,
+    archived: true,
+  };
+};
