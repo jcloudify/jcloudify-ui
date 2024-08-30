@@ -27,6 +27,18 @@ export const stackProvider: PojaDataProvider<ToRecord<Stack>> = {
       stackApi().getStackById(uid, meta.appId, meta.envId, id.toString())
     )) as ToRecord<Stack>;
   },
+  async deleteMany(stacks, meta = {}) {
+    const uid = authProvider.getCachedWhoami()?.user?.id!;
+    return (
+      await unwrap(() =>
+        stackApi().initiateStackDeletion(uid, meta.appId, meta.envId, {
+          data: stacks.map(({stack_type}) => ({
+            stack_type,
+          })),
+        })
+      )
+    ).data as ToRecord<Stack>[];
+  },
   save() {
     throw new Error("Function not implemented.");
   },
