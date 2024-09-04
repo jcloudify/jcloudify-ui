@@ -16,6 +16,7 @@ import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
 import {BulkDeleteButton} from "@/operations/components/list";
 import {EnvironmentType} from "@/operations/environments";
 import {StackType} from "@/operations/stacks";
+import {NO_OP} from "@/utils/no-op";
 
 export type StackListProps<Record extends RaRecord<string> = any> = Omit<
   ListProps<Record>,
@@ -32,6 +33,9 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
   return (
     <List
       resource="stacks"
+      queryOptions={{
+        onError: NO_OP,
+      }}
       empty={false}
       filter={{
         appId,
