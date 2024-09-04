@@ -30,6 +30,8 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
     filter: {appId},
   });
 
+  if (!environments.length) return null;
+
   return (
     <List
       resource="stacks"
