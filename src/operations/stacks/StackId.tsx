@@ -23,7 +23,7 @@ export const StackId: React.FC<StackIdProps> = ({appId, stackId, envId}) => {
 
   return (
     <Typography variant="h6" fontSize="1.02rem" fontWeight="400">
-      <StackType value={stack.stack_type!} /> Stack
+      <StackType value={stack.stack_type!} />
     </Typography>
   );
 };
