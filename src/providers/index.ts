@@ -13,5 +13,8 @@ export * from "./stackEventProvider";
 export * from "./stackOutputProvider";
 export * from "./pojaConfProvider";
 export * from "./githubAppInstallationProvider";
+export * from "./computeStackResourceProvider";
+export * from "./logGroupProvider";
+export * from "./logStreamProvider";
 
 export * from "./cache";
