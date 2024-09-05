@@ -16,6 +16,13 @@ import {
 } from "../fixtures/stack.mock";
 import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
 import {pojaVersions} from "../fixtures/poja-version.mock";
+import {app1_prod_env_compute_stack_resources} from "../fixtures/compute-stack-resource.mock";
+import {
+  app1_prod_env_frontal_function_log_groups,
+  app1_prod_env_worker1_function_log_groups,
+} from "../fixtures/log-group.mock";
+import {app1_prod_env_frontal_function_log_group1_streams} from "../fixtures/log-stream.mock";
+import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtures/log-stream-event.mock";
 import {jcloudify} from "./util";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
@@ -174,6 +181,55 @@ Cypress.Commands.add("mockApiGet", () => {
   cy.intercept("GET", jcloudify(`/poja-versions`), {
     data: pojaVersions,
   }).as("getPojaVersions");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/computeStackResources?page=*&page_size=*`
+    ),
+    {
+      data: app1_prod_env_compute_stack_resources,
+    }
+  ).as("getComputeStackResources");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/functions/${app1_prod_env_compute_stack_resources[0].frontal_function_name}/logGroups?page=*&page_size=*`
+    ),
+    {
+      data: app1_prod_env_frontal_function_log_groups,
+    }
+  ).as("getLogGroups");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/functions/${app1_prod_env_compute_stack_resources[0].worker_1_function_name}/logGroups?page=*&page_size=*`
+    ),
+    {
+      data: app1_prod_env_worker1_function_log_groups,
+    }
+  ).as("getLogGroups");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/functions/${app1_prod_env_compute_stack_resources[0].frontal_function_name}/logStreams?logGroupName=${encodeURIComponent(app1_prod_env_frontal_function_log_groups[0].name)}&page=*&page_size=*`
+    ),
+    {
+      data: app1_prod_env_frontal_function_log_group1_streams,
+    }
+  ).as("getLogStreams");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/environments/${prod_env.id}/functions/${app1_prod_env_compute_stack_resources[0].frontal_function_name}/logStreamEvents?logGroupName=${encodeURIComponent(app1_prod_env_frontal_function_log_groups[0].name)}&logStreamName=${encodeURIComponent(app1_prod_env_frontal_function_log_group1_streams[0].name)}&page=*&page_size=*`
+    ),
+    {
+      data: app1_prod_env_frontal_function_log_group1_stream1_events,
+    }
+  ).as("getLogStreamEvents");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {
