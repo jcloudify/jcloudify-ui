@@ -1,4 +1,5 @@
-import {LogGroup} from "@jcloudify-api/typescript-client";
+import {LogStreamEvent} from "@jcloudify-api/typescript-client";
+import {nanoid} from "nanoid";
 import {environmentApi, unwrap} from "@/services/poja-api";
 import {
   authProvider,
@@ -7,22 +8,26 @@ import {
   ToRecord,
 } from "@/providers";
 
-export const logGroupProvider: PojaDataProvider<ToRecord<LogGroup>> = {
+export const logStreamEventProvider: PojaDataProvider<
+  ToRecord<LogStreamEvent>
+> = {
   async getList(page, perPage, filter = {}, _meta) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    const logGroupsResponse = (await unwrap(() =>
-      environmentApi().getFunctionLogGroups(
+    const logStreamEventsResponse = (await unwrap(() =>
+      environmentApi().getFunctionLogStreamEvents(
         uid,
         filter.appId,
         filter.envId,
         filter.functionName,
+        filter.logGroupName,
+        filter.logStreamName,
         page,
         perPage
       )
-    )) as PagedResponse<ToRecord<LogGroup>>;
+    )) as PagedResponse<ToRecord<LogStreamEvent>>;
     return {
-      ...logGroupsResponse,
-      data: logGroupsResponse.data.map((lg) => ({...lg, id: lg.name!})),
+      ...logStreamEventsResponse,
+      data: logStreamEventsResponse.data.map((ls) => ({...ls, id: nanoid()})),
     };
   },
   getOne() {

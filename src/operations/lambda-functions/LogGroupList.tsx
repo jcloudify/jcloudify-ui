@@ -1,4 +1,4 @@
-import {Stack} from "@jcloudify-api/typescript-client";
+import {LogGroup} from "@jcloudify-api/typescript-client";
 import {
   List,
   Datagrid,
@@ -7,7 +7,6 @@ import {
   TextField,
   FunctionField,
 } from "react-admin";
-import {StackType} from "@/operations/stacks";
 import {NO_OP} from "@/utils/no-op";
 import {parseFunctionNameParams} from "@/operations/lambda-functions/util";
 
@@ -41,22 +40,15 @@ export const LogGroupList: React.FC<LogGroupListProps> = ({
       {...rest}
     >
       <Datagrid
+        bulkActionButtons={false}
         rowClick={(_id, _resource, logGroup) =>
-          `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups/${logGroup.name!}/streams`
+          `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups/${encodeURIComponent(logGroup.name!)}/streams`
         }
       >
-        <TextField label="Stack name" source="name" />
-        <FunctionField<Stack>
-          label="Stack type"
-          render={(stack) => <StackType value={stack.stack_type!} />}
-        />
-        <FunctionField<Stack>
+        <TextField source="name" />
+        <FunctionField<LogGroup>
           label="Creation datetime"
-          render={(stack) => stack.creation_datetime?.toLocaleString()}
-        />
-        <FunctionField<Stack>
-          label="Update datetime"
-          render={(stack) => stack.update_datetime?.toLocaleString()}
+          render={(logGroup) => logGroup.creation_datetime?.toLocaleString()}
         />
       </Datagrid>
     </List>

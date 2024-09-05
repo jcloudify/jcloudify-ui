@@ -15,6 +15,8 @@ import {
   userProvider,
   pojaVersionProvider,
   logGroupProvider,
+  logStreamProvider,
+  logStreamEventProvider,
 } from "./";
 
 /**
@@ -51,6 +53,10 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return computeStackResourceProvider;
     case "logGroups":
       return logGroupProvider;
+    case "logStreams":
+      return logStreamProvider;
+    case "logStreamEvents":
+      return logStreamEventProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

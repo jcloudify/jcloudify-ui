@@ -51,7 +51,7 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
 
       <Button
         to="functions"
-        startIcon={<SiAwslambda />}
+        startIcon={<SiAwslambda size={18} />}
         component={Link}
         variant="outlined"
         disabled={!data.length}

@@ -10,7 +10,7 @@ import {
 export const logStreamProvider: PojaDataProvider<ToRecord<LogStream>> = {
   async getList(page, perPage, filter = {}, _meta) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    return (await unwrap(() =>
+    const logStreamsResponse = (await unwrap(() =>
       environmentApi().getFunctionLogStreams(
         uid,
         filter.appId,
@@ -21,6 +21,10 @@ export const logStreamProvider: PojaDataProvider<ToRecord<LogStream>> = {
         perPage
       )
     )) as PagedResponse<ToRecord<LogStream>>;
+    return {
+      ...logStreamsResponse,
+      data: logStreamsResponse.data.map((ls) => ({...ls, id: ls.name!})),
+    };
   },
   getOne() {
     throw new Error("Function not implemented.");

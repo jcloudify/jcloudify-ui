@@ -44,7 +44,7 @@ const LambdaFunction: React.FC<{
   return (
     <Button
       to={`/applications/${appId}/show/environments/${envId}/functions/${component}:${name}`}
-      startIcon={<SiAwslambda color="red" />}
+      startIcon={<SiAwslambda color="red" size={18} />}
       component={Link}
       variant="outlined"
       label={component}

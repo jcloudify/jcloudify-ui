@@ -16,6 +16,7 @@ export * from "./githubAppInstallationProvider";
 export * from "./computeStackResourceProvider";
 export * from "./logGroupProvider";
 export * from "./logStreamProvider";
+export * from "./logStreamEventProvider";
 export * from "./pojaVersionProvider";
 
 export * from "./cache";
