@@ -5,6 +5,7 @@ import {
   ListProps,
   RaRecord,
   TextField,
+  DateField,
   FunctionField,
 } from "react-admin";
 import {NO_OP} from "@/utils/no-op";
@@ -44,12 +45,7 @@ export const LogStreamEventList: React.FC<LogStreamEventListProps> = ({
       {...rest}
     >
       <Datagrid bulkActionButtons={false} rowClick={false}>
-        <FunctionField<LogStreamEvent>
-          label="Timestamp"
-          render={(logStreamEvent) =>
-            logStreamEvent.timestamp?.toLocaleString()
-          }
-        />
+        <DateField source="timestamp" showTime />
         <TextField source="message" />
       </Datagrid>
     </List>
