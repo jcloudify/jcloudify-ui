@@ -1,4 +1,3 @@
-import {LogStreamEvent} from "@jcloudify-api/typescript-client";
 import {
   List,
   Datagrid,
@@ -6,7 +5,6 @@ import {
   RaRecord,
   TextField,
   DateField,
-  FunctionField,
 } from "react-admin";
 import {NO_OP} from "@/utils/no-op";
 import {parseFunctionNameParams} from "@/operations/lambda-functions/util";
