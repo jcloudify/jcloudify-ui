@@ -10,6 +10,7 @@ import {
   EnvironmentDiff,
 } from "@/operations/environments";
 import {StackList} from "@/operations/stacks";
+import {LambdaFunctionsList} from "@/operations/lambda-functions";
 import {WithTab} from "@/components/tab";
 import {Heading} from "@/components/head";
 import {Pagination} from "@/operations/components/list";
@@ -117,6 +118,50 @@ export const AppEnvironmentStackList: React.FC = () => {
         />
 
         <StackList
+          appId={appId}
+          exporter={false}
+          title=" "
+          pagination={<Pagination />}
+        />
+      </Box>
+    </WithTab>
+  );
+};
+
+export const AppLambdaFunctionsList: React.FC = () => {
+  const {appId} = useParams();
+  const to = useNavigate();
+  if (!appId) return;
+  return (
+    <WithTab tab="Environments">
+      <Box mt={3}>
+        <Heading
+          title={
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
+              <Typography variant="h6" fontWeight="450">
+                Lambda functions
+              </Typography>
+              <Box>
+                <Button
+                  variant="outlined"
+                  startIcon={<Settings />}
+                  label="Environments"
+                  onClick={() => to(`/applications/${appId}/show/environments`)}
+                />
+              </Box>
+            </Stack>
+          }
+          subtitle="List of compute stack resources per deployment"
+          size="sm"
+          p={1}
+        />
+
+        <LambdaFunctionsList
           appId={appId}
           exporter={false}
           title=" "

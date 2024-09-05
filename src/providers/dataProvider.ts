@@ -3,6 +3,7 @@ import {normalizeParams} from "./util";
 import {PojaDataProvider} from "./types";
 import {
   applicationProvider,
+  computeStackResourceProvider,
   deploymentProvider,
   environmentProvider,
   githubAppInstallationProvider,
@@ -12,8 +13,11 @@ import {
   stackOutputProvider,
   stackProvider,
   userProvider,
+  pojaVersionProvider,
+  logGroupProvider,
+  logStreamProvider,
+  logStreamEventProvider,
 } from "./";
-import {pojaVersionProvider} from "./pojaVersionProvider";
 
 /**
  * default RA deleteMany only takes an array of ids,
@@ -45,6 +49,14 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return pojaVersionProvider;
     case "githubAppInstallation":
       return githubAppInstallationProvider;
+    case "computeStackResources":
+      return computeStackResourceProvider;
+    case "logGroups":
+      return logGroupProvider;
+    case "logStreams":
+      return logStreamProvider;
+    case "logStreamEvents":
+      return logStreamEventProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

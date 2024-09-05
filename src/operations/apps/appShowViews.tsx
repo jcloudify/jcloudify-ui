@@ -5,12 +5,14 @@ import {
   AppEnvironmentList,
   AppEnvironmentShow,
   AppEnvironmentStackList,
+  AppLambdaFunctionsList,
 } from "./AppEnvironment";
 import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 import {AppLogList, AppLogShow} from "./AppLogs";
 import {AppMonitoring} from "./AppMonitoring";
 import {RouteMap} from "@/components/router";
 import {stackShowViews} from "@/operations/stacks";
+import {lambdaFnShowViews} from "@/operations/lambda-functions";
 
 export const appShowViews: RouteMap = {
   environments: {
@@ -21,6 +23,8 @@ export const appShowViews: RouteMap = {
     "diff": <AppEnvironmentDiff />,
     "stacks": <AppEnvironmentStackList />,
     ":envId/stacks/:stackId": stackShowViews,
+    "functions": <AppLambdaFunctionsList />,
+    ":envId/functions/:functionName": lambdaFnShowViews,
   },
   deployments: {
     "$$index": <AppDeploymentList />,
