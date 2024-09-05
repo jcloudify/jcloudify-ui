@@ -1,9 +1,8 @@
-import {nanoid} from "nanoid";
 import {prod_env} from "./environment.mock";
 
 export const app1_prod_env_compute_stack_resources = [
   {
-    id: nanoid(),
+    id: "csr-1",
     environment_id: prod_env.id,
     frontal_function_name:
       "prod-compute-jcloudify-void-FrontalFunction-JosBWwKstZzU",
