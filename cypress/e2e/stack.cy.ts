@@ -17,7 +17,7 @@ describe("Stack", () => {
     cy.wait("@getApplications");
     cy.wait("@getEnvironments");
 
-    cy.contains("Stacks").click();
+    cy.contains("Deployments").click();
   });
 
   context("Read", () => {

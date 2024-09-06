@@ -18,7 +18,7 @@ describe("Applicative logs", () => {
   // TODO: specific test for log_groups, log_streams, log_events if needed
 
   specify("(*) Read a function log stream events", () => {
-    cy.contains("Functions").click();
+    cy.contains("Logs").click();
     cy.wait("@getEnvironments");
     cy.muiSelect("#envId", "prod_env");
     cy.wait("@getComputeStackResources");
