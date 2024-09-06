@@ -38,9 +38,7 @@ const LogGroupListPage = () => {
                 variant="outlined"
                 startIcon={<SiAwslambda size={18} />}
                 label="Functions"
-                onClick={() =>
-                  to(`/applications/${appId}/show/logs/functions`)
-                }
+                onClick={() => to(`/applications/${appId}/show/logs/functions`)}
               />
             </Box>
           </Stack>
@@ -99,9 +97,7 @@ const LogStreamListPage = () => {
                   variant="outlined"
                   startIcon={<SiAwslambda size={18} />}
                   label="Functions"
-                  onClick={() =>
-                    to(`/applications/${appId}/show/logs`)
-                  }
+                  onClick={() => to(`/applications/${appId}/show/logs`)}
                 />
               </Box>
             </Stack>
@@ -173,9 +169,7 @@ const LogStreamEventListPage = () => {
                   variant="outlined"
                   startIcon={<SiAwslambda size={18} />}
                   label="Functions"
-                  onClick={() =>
-                    to(`/applications/${appId}/show/logs`)
-                  }
+                  onClick={() => to(`/applications/${appId}/show/logs`)}
                 />
               </Box>
             </Stack>
