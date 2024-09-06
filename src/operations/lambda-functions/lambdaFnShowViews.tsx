@@ -38,7 +38,7 @@ const LogGroupListPage = () => {
                 variant="outlined"
                 startIcon={<SiAwslambda size={18} />}
                 label="Functions"
-                onClick={() => to(`/applications/${appId}/show/logs/functions`)}
+                onClick={() => to(`/applications/${appId}/show/logs`)}
               />
             </Box>
           </Stack>

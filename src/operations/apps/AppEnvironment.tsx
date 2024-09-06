@@ -113,7 +113,7 @@ export const AppLambdaFunctionsList: React.FC = () => {
   const to = useNavigate();
   if (!appId) return;
   return (
-    <WithTab tab="Environments">
+    <WithTab tab="Logs">
       <Box mt={3}>
         <Heading
           title={
