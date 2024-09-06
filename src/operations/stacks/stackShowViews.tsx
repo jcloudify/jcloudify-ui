@@ -75,7 +75,7 @@ const StackEventListViews: React.FC = () => {
                   envId={envId}
                   onChange={(newStackId) => {
                     to(
-                      `/applications/${appId}/show/environments/${envId}/stacks/${newStackId}/events`
+                      `/applications/${appId}/show/deployments/environments/${envId}/stacks/${newStackId}/events`
                     );
                   }}
                 />
@@ -85,9 +85,7 @@ const StackEventListViews: React.FC = () => {
                   variant="outlined"
                   startIcon={<StackIcon />}
                   label="Stacks"
-                  onClick={() =>
-                    to(`/applications/${appId}/show/environments/stacks`)
-                  }
+                  onClick={() => to(`/applications/${appId}/show/deployments`)}
                 />
               </Box>
             </Stack>
@@ -133,7 +131,7 @@ export const StackOutputListViews: React.FC = () => {
                   envId={envId}
                   onChange={(newStackId) => {
                     to(
-                      `/applications/${appId}/show/environments/${envId}/stacks/${newStackId}/outputs`
+                      `/applications/${appId}/show/deployments/environments/${envId}/stacks/${newStackId}/outputs`
                     );
                   }}
                 />
@@ -143,9 +141,7 @@ export const StackOutputListViews: React.FC = () => {
                   variant="outlined"
                   startIcon={<StackIcon />}
                   label="Stacks"
-                  onClick={() =>
-                    to(`/applications/${appId}/show/environments/stacks`)
-                  }
+                  onClick={() => to(`/applications/${appId}/show/deployments`)}
                 />
               </Box>
             </Stack>

@@ -42,7 +42,7 @@ export const LogGroupList: React.FC<LogGroupListProps> = ({
       <Datagrid
         bulkActionButtons={false}
         rowClick={(_id, _resource, logGroup) =>
-          `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups/${encodeURIComponent(logGroup.name!)}/streams`
+          `/applications/${appId}/show/logs/environments/${envId}/functions/${functionName}/log-groups/${encodeURIComponent(logGroup.name!)}/streams`
         }
       >
         <TextField source="name" />

@@ -7,9 +7,6 @@ import {
   AppEnvironmentStackList,
   AppLambdaFunctionsList,
 } from "./AppEnvironment";
-import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
-import {AppLogList, AppLogShow} from "./AppLogs";
-import {AppMonitoring} from "./AppMonitoring";
 import {RouteMap} from "@/components/router";
 import {stackShowViews} from "@/operations/stacks";
 import {lambdaFnShowViews} from "@/operations/lambda-functions";
@@ -21,18 +18,13 @@ export const appShowViews: RouteMap = {
     "creation-template": <AppEnvironmentCreation />,
     "create": <AppEnvironmentCreate />,
     "diff": <AppEnvironmentDiff />,
-    "stacks": <AppEnvironmentStackList />,
-    ":envId/stacks/:stackId": stackShowViews,
-    "functions": <AppLambdaFunctionsList />,
-    ":envId/functions/:functionName": lambdaFnShowViews,
   },
   deployments: {
-    "$$index": <AppDeploymentList />,
-    ":deplId": <AppDeploymentShow />,
+    "$$index": <AppEnvironmentStackList />,
+    "environments/:envId/stacks/:stackId": stackShowViews,
   },
-  monitoring: <AppMonitoring />,
   logs: {
-    "$$index": <AppLogList />,
-    ":logId": <AppLogShow />,
+    "$$index": <AppLambdaFunctionsList />,
+    "environments/:envId/functions/:functionName": lambdaFnShowViews,
   },
 };
