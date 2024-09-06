@@ -1,7 +1,5 @@
-import {Button} from "react-admin";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {Box, Stack, Typography} from "@mui/material";
-import {Settings} from "@mui/icons-material";
+import {useLocation, useParams} from "react-router-dom";
+import {Box} from "@mui/material";
 import {
   EnvironmentCreate,
   EnvironmentCreation,
@@ -110,32 +108,12 @@ export const AppEnvironmentStackList: React.FC = () => {
 
 export const AppLambdaFunctionsList: React.FC = () => {
   const {appId} = useParams();
-  const to = useNavigate();
   if (!appId) return;
   return (
     <WithTab tab="Logs">
       <Box mt={3}>
         <Heading
-          title={
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Typography variant="h6" fontWeight="450">
-                Lambda functions
-              </Typography>
-              <Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Settings />}
-                  label="Environments"
-                  onClick={() => to(`/applications/${appId}/show/environments`)}
-                />
-              </Box>
-            </Stack>
-          }
+          title="Lambda functions"
           subtitle="List of compute stack resources per deployment"
           size="sm"
           p={1}
