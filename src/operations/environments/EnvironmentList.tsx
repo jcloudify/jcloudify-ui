@@ -1,8 +1,6 @@
 import {Environment} from "@jcloudify-api/typescript-client";
 import {Stack} from "@mui/material";
 import {Add, CompareArrows} from "@mui/icons-material";
-import {FaCubesStacked as StackIcon} from "react-icons/fa6";
-import {SiAwslambda} from "react-icons/si";
 import {
   Button,
   Datagrid,
@@ -38,24 +36,6 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
         variant="outlined"
         disabled={!data.length}
         label="Diff"
-      />
-
-      <Button
-        to="stacks"
-        startIcon={<StackIcon />}
-        component={Link}
-        variant="outlined"
-        disabled={!data.length}
-        label="Stacks"
-      />
-
-      <Button
-        to="functions"
-        startIcon={<SiAwslambda size={18} />}
-        component={Link}
-        variant="outlined"
-        disabled={!data.length}
-        label="Functions"
       />
 
       <Button

@@ -1,5 +1,5 @@
 import {Button} from "react-admin";
-import {Navigate, useNavigate, useParams} from "react-router-dom";
+import {Navigate, Outlet, useNavigate, useParams} from "react-router-dom";
 import {SiAwslambda} from "react-icons/si";
 import {Box, Stack, Typography} from "@mui/material";
 import {ChevronLeft} from "@mui/icons-material";
@@ -12,6 +12,7 @@ import {
 } from "@/operations/lambda-functions";
 import {parseFunctionNameParams} from "@/operations/lambda-functions/util";
 import {Pagination} from "@/operations/components/list";
+import {WithTab} from "@/components/tab";
 
 const LogGroupListPage = () => {
   const {appId, envId, functionName} = useParams();
@@ -38,7 +39,7 @@ const LogGroupListPage = () => {
                 startIcon={<SiAwslambda size={18} />}
                 label="Functions"
                 onClick={() =>
-                  to(`/applications/${appId}/show/environments/functions`)
+                  to(`/applications/${appId}/show/logs/functions`)
                 }
               />
             </Box>
@@ -81,7 +82,7 @@ const LogStreamListPage = () => {
                 label="Log groups"
                 onClick={() =>
                   to(
-                    `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups`
+                    `/applications/${appId}/show/logs/environments/${envId}/functions/${functionName}/log-groups`
                   )
                 }
               />
@@ -99,7 +100,7 @@ const LogStreamListPage = () => {
                   startIcon={<SiAwslambda size={18} />}
                   label="Functions"
                   onClick={() =>
-                    to(`/applications/${appId}/show/environments/functions`)
+                    to(`/applications/${appId}/show/logs`)
                   }
                 />
               </Box>
@@ -145,7 +146,7 @@ const LogStreamEventListPage = () => {
                 label="Log groups"
                 onClick={() =>
                   to(
-                    `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups`
+                    `/applications/${appId}/show/logs/environments/${envId}/functions/${functionName}/log-groups`
                   )
                 }
               />
@@ -155,7 +156,7 @@ const LogStreamEventListPage = () => {
                 label="Log streams"
                 onClick={() =>
                   to(
-                    `/applications/${appId}/show/environments/${envId}/functions/${functionName}/log-groups/${encodeURIComponent(logGroupName)}/streams`
+                    `/applications/${appId}/show/logs/environments/${envId}/functions/${functionName}/log-groups/${encodeURIComponent(logGroupName)}/streams`
                   )
                 }
               />
@@ -173,7 +174,7 @@ const LogStreamEventListPage = () => {
                   startIcon={<SiAwslambda size={18} />}
                   label="Functions"
                   onClick={() =>
-                    to(`/applications/${appId}/show/environments/functions`)
+                    to(`/applications/${appId}/show/logs`)
                   }
                 />
               </Box>
@@ -201,6 +202,11 @@ const LogStreamEventListPage = () => {
 };
 
 export const lambdaFnShowViews: RouteMap = {
+  "$$layout": (
+    <WithTab tab="Logs">
+      <Outlet />
+    </WithTab>
+  ),
   "$$index": <Navigate to="log-groups" />,
   "log-groups": <LogGroupListPage />,
   "log-groups/:logGroupName": <Navigate to="streams" />,

@@ -43,7 +43,7 @@ const LambdaFunction: React.FC<{
 }> = ({component, name, appId, envId}) => {
   return (
     <Button
-      to={`/applications/${appId}/show/environments/${envId}/functions/${component}:${name}`}
+      to={`/applications/${appId}/show/logs/environments/${envId}/functions/${component}:${name}`}
       startIcon={<SiAwslambda color="red" size={18} />}
       component={Link}
       variant="outlined"

@@ -86,32 +86,12 @@ export const AppEnvironmentDiff: React.FC = () => {
 
 export const AppEnvironmentStackList: React.FC = () => {
   const {appId} = useParams();
-  const to = useNavigate();
   if (!appId) return;
   return (
-    <WithTab tab="Environments">
+    <WithTab tab="Deployments">
       <Box mt={3}>
         <Heading
-          title={
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Typography variant="h6" fontWeight="450">
-                Stacks
-              </Typography>
-              <Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Settings />}
-                  label="Environments"
-                  onClick={() => to(`/applications/${appId}/show/environments`)}
-                />
-              </Box>
-            </Stack>
-          }
+          title="Deployment stacks"
           subtitle="List of environment components"
           size="sm"
           p={1}

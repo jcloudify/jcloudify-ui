@@ -14,6 +14,7 @@ export type TabValue = string;
 interface TabContextValue {
   value: string;
   setValue: (value: string) => void;
+  tabs: string[];
 }
 
 export const TabContext = createContext<TabContextValue>({} as any);
@@ -28,14 +29,17 @@ export type TabsProps = Omit<MUITabsProps, "onChange" | "value"> &
      */
     initialValue?: string;
     tabProps?: MUITabProps;
-    asLink?: boolean;
     solid?: boolean;
+
+    asLink?: boolean;
+    baseRouterLink?: string;
   }>;
 
 export const Tabs: React.FC<TabsProps> = ({
   tabs,
   children,
   asLink = false,
+  baseRouterLink,
   solid = false,
   tabProps = {},
   ...props
@@ -46,23 +50,17 @@ export const Tabs: React.FC<TabsProps> = ({
   const {pathname} = useLocation();
 
   useEffect(() => {
-    const syncTabWithCurrentPath = () => {
-      let synced = false;
-      if (asLink) {
-        for (let tab of tabs) {
-          if (pathname.endsWith(tab.toLowerCase())) {
-            synced = true;
-            setValue(tab);
-            break;
-          }
-        }
-      }
-      if (!synced) {
+    const setDefaultTab = () => {
+      /*
+       * auto tab syncing according to path is not extensible enough when path becomes more complicated,
+       * instead use **<WithTab />** component for your pages
+       */
+      if (!value) {
         setValue(tabs[0]);
       }
     };
-    syncTabWithCurrentPath();
-  }, [tabs, pathname, asLink]);
+    setDefaultTab();
+  }, [tabs, pathname, asLink, value]);
 
   if (!tabs.length) throw new Error("at least 1 tab is required");
 
@@ -72,8 +70,9 @@ export const Tabs: React.FC<TabsProps> = ({
         () => ({
           value: value || "",
           setValue,
+          tabs,
         }),
-        [value]
+        [value, tabs]
       )}
     >
       <MUITabs
@@ -91,7 +90,7 @@ export const Tabs: React.FC<TabsProps> = ({
             value={tab}
             label={tab}
             component={asLink ? Link : "div"}
-            to={`${tab.toLowerCase()}?${p}`}
+            to={`${baseRouterLink ? `${baseRouterLink}/` : ""}${tab.toLowerCase()}?${p}`}
             sx={{
               "textTransform": "none",
               "textDecoration": "none !important",
@@ -117,9 +116,10 @@ export const WithTab: React.FC<React.PropsWithChildren<{tab: string}>> = ({
   children,
 }) => {
   const {setValue} = useTabContext();
+  const location = useLocation();
   useEffect(() => {
     setValue(tab);
-  }, [tab]);
+  }, [tab, location]);
   return children;
 };
 

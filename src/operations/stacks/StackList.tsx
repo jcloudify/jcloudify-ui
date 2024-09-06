@@ -67,7 +67,7 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
     >
       <Datagrid
         rowClick={(_id, _resource, stack) =>
-          `/applications/${appId}/show/environments/${stack.environment?.id}/stacks/${stack.id}/events`
+          `/applications/${appId}/show/deployments/environments/${stack.environment?.id}/stacks/${stack.id}/events`
         }
         bulkActionButtons={
           <WithListContext
