@@ -47,8 +47,6 @@ export const Tabs: React.FC<TabsProps> = ({
   const [p] = useSearchParams();
   const [value, setValue] = useState(tabs[0]);
 
-  const {pathname} = useLocation();
-
   useEffect(() => {
     const setDefaultTab = () => {
       /*
@@ -60,7 +58,7 @@ export const Tabs: React.FC<TabsProps> = ({
       }
     };
     setDefaultTab();
-  }, [tabs, pathname, asLink, value]);
+  }, [tabs, value]);
 
   if (!tabs.length) throw new Error("at least 1 tab is required");
 
