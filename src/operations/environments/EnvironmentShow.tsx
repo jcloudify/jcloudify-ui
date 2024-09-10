@@ -1,7 +1,11 @@
+import {useMemo} from "react";
 import {
   Application,
   Environment,
   OneOfPojaConf,
+  StackOutput,
+  StackType,
+  Stack as TStack,
 } from "@jcloudify-api/typescript-client";
 import {
   ShowBase,
@@ -12,6 +16,7 @@ import {
   Loading,
   DeleteWithConfirmButton,
   useRedirect,
+  useGetList,
 } from "react-admin";
 import {Box, Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
@@ -28,15 +33,44 @@ import {
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
 import {ToRecord} from "@/providers";
+import {TypographyLink} from "@/components/link";
 
 const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
   const redirect = useRedirect();
+
+  const environment = useRecordContext<Environment>();
 
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId,
   });
 
-  const environment = useRecordContext<Environment>();
+  const {data: stacks = []} = useGetList<ToRecord<TStack>>("stacks", {
+    filter: {
+      appId,
+      env_id: environment.id,
+    },
+  });
+
+  const computeStack = useMemo(
+    () => stacks.find((stack) => stack.stack_type === StackType.COMPUTE),
+    [stacks]
+  );
+
+  const {data: outputs = []} = useGetList<ToRecord<StackOutput>>(
+    "stackOutputs",
+    {
+      filter: {
+        appId,
+        env_id: environment.id,
+        stack_id: computeStack?.id,
+      },
+    }
+  );
+
+  const apiUrl = useMemo(
+    () => outputs.find((output) => output.key === "ApiUrl"),
+    [outputs]
+  );
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
@@ -84,6 +118,22 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
                   environment.environment_type?.toLowerCase() ?? "preprod"
                 }
               />
+            </Labeled>
+
+            <Labeled label="Active Deployment URL">
+              {apiUrl ? (
+                <TypographyLink
+                  fontSize="small"
+                  disableOpenIcon
+                  copiable={false}
+                  target="_blank"
+                  to={apiUrl?.value!}
+                >
+                  {apiUrl?.value!}
+                </TypographyLink>
+              ) : (
+                <Typography>Deploying...</Typography>
+              )}
             </Labeled>
           </GridLayout>
         </Stack>

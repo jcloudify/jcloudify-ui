@@ -1,5 +1,6 @@
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
+import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
 
 describe("Environment", () => {
   beforeEach(() => {
@@ -34,6 +35,10 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentById");
 
       cy.contains("Prod");
+
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
+      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
 
       // env variables
       cy.getByTestid("custom_java_env_vars_accordion").click();
