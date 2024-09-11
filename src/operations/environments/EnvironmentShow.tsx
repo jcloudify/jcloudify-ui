@@ -47,7 +47,7 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
   const {data: stacks = []} = useGetList<ToRecord<TStack>>("stacks", {
     filter: {
       appId,
-      env_id: environment.id,
+      env_id: environment?.id,
     },
   });
 
@@ -61,7 +61,7 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
     {
       filter: {
         appId,
-        env_id: environment.id,
+        env_id: environment?.id,
         stack_id: computeStack?.id,
       },
     }
@@ -87,7 +87,7 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
                 confirmTitle={
                   <span>
                     Delete &nbsp;
-                    <EnvironmentType value={environment.environment_type!} />
+                    <EnvironmentType value={environment?.environment_type!} />
                     &nbsp; environment
                   </span>
                 }
@@ -108,14 +108,14 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
         <Stack gap={1.5}>
           <GridLayout xs={6} sm={4}>
             <Labeled label="Type">
-              <EnvironmentType value={environment.environment_type!} />
+              <EnvironmentType value={environment?.environment_type!} />
             </Labeled>
 
             <Labeled label="Source control">
               <GitBranch
                 githubRepoURL={app?.repositoryUrl!}
                 branchName={
-                  environment.environment_type?.toLowerCase() ?? "preprod"
+                  environment?.environment_type?.toLowerCase() ?? "preprod"
                 }
               />
             </Labeled>
@@ -177,14 +177,14 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
           <PojaConfEdit
             version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
-            envId={environment.id!}
+            envId={environment?.id!}
             onSuccess={() => setIsEditConf(false)}
           />
         ) : (
           <PojaConfView
             version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
-            envId={environment.id!}
+            envId={environment?.id!}
           />
         ))}
     </ContainerWithHeading>

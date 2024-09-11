@@ -33,7 +33,7 @@ const DeploymentShowView: React.FC = () => {
             </Labeled>
 
             <Labeled label="Type">
-              <EnvironmentType value={deployment.target_env_type!} />
+              <EnvironmentType value={deployment?.target_env_type!} />
             </Labeled>
           </GridLayout>
 

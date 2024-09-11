@@ -65,7 +65,7 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
 export const dataProvider: DataProvider = {
   async getList(resource, raParams) {
     const {
-      pagination: {page, perPage},
+      pagination: {page = 1, perPage = 10},
       filter,
       meta,
     } = normalizeParams(resource, raParams);
