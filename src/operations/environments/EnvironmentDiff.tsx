@@ -81,7 +81,7 @@ const SelectEnvironmentToCompare: React.FC<{
   <Select<string>
     onChange={(ev) => onSelect(ev.target.value)}
     size="small"
-    id={`select-env-${id}`}
+    data-testid={`select-env-${id}`}
   >
     {environments.map((environment) => (
       <MenuItem key={environment.id} value={environment.id}>

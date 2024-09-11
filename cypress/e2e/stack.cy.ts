@@ -22,14 +22,14 @@ describe("Stack", () => {
 
   context("Read", () => {
     specify("List stacks for an environment", () => {
-      cy.muiSelect2("#env_id", "Prod");
+      cy.muiSelect("[data-testid='filter-env']", "prod_env");
 
       cy.wait("@getEnvironmentStacks");
       cy.wrap(app1_prod_stacks).each((stack) => {
         cy.contains((stack as any).name);
       });
 
-      cy.muiSelect2("#env_id", "Preprod");
+      cy.muiSelect2("[data-testid='filter-env']", "Preprod");
 
       cy.wait("@getEnvironmentStacks");
       cy.wrap(app1_preprod_stacks).each((stack) => {
@@ -38,7 +38,7 @@ describe("Stack", () => {
     });
 
     specify("List events for a stack", () => {
-      cy.muiSelect("#env_id", "prod_env");
+      cy.muiSelect("[data-testid='filter-env']", "prod_env");
       cy.wait("@getEnvironmentStacks");
 
       cy.get(`.MuiTableBody-root > :nth-child(1)`).click(); // app1_prod_stacks[0]
@@ -65,7 +65,7 @@ describe("Stack", () => {
     });
 
     specify("List outputs for a stack", () => {
-      cy.muiSelect("#env_id", "prod_env");
+      cy.muiSelect("[data-testid='filter-env']", "prod_env");
       cy.wait("@getEnvironmentStacks");
 
       cy.get(`.MuiTableBody-root > :nth-child(1)`).click(); // app1_prod_stacks[0]

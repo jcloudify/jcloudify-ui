@@ -136,6 +136,7 @@ const GeneralConf = () => (
       <SelectInput
         label="Queues NB"
         source="general.with_queues_nb"
+        data-testid="general.with_queues_nb"
         choices={makeSelectChoices(Object.values(WithQueuesNbEnum))}
         variant="outlined"
         size="medium"
@@ -470,6 +471,7 @@ const DBConf = () => {
         <SelectInput
           label="Variant"
           source="database.with_database"
+          data-testid="database.with_database"
           choices={makeSelectChoices(
             Object.keys(DatabaseConf1WithDatabaseEnum)
           )}

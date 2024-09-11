@@ -51,6 +51,7 @@ export const StackList: React.FC<StackListProps> = ({appId, ...rest}) => {
             alwaysOn
             label="Environment"
             source="env_id"
+            data-testid="filter-env"
             validate={required()}
             choices={[...environments]}
             optionText={(environment) => (

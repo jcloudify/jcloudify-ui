@@ -70,7 +70,7 @@ export const EnvironmentCreation: React.FC<{appId: string}> = ({appId}) => {
             <Select
               size="small"
               variant="outlined"
-              id="select-creation-template"
+              data-testid="select-creation-template"
               onChange={(ev) => setTemplateId(ev.target.value as string)}
               disabled={!createdEnvironments.length || !canCreateMore}
             >

@@ -69,8 +69,8 @@ describe("Environment", () => {
       cy.contains("Environment Diff");
       cy.contains("Compare Environment Differences");
 
-      cy.muiSelect2("#select-env-0", "Prod");
-      cy.muiSelect2("#select-env-1", "Preprod");
+      cy.muiSelect2("[data-testid='select-env-0']", "Prod");
+      cy.muiSelect2("[data-testid='select-env-1']", "Preprod");
 
       cy.wait("@getEnvironments");
       cy.wait("@getEnvironmentConfig");
@@ -115,7 +115,7 @@ describe("Environment", () => {
       cy.wait("@getEnvironments");
 
       cy.contains("Create").click();
-      cy.muiSelect("#select-creation-template", "preprod_env2");
+      cy.muiSelect("[data-testid='select-creation-template']", "preprod_env2");
       cy.getByTestid("CreateFromExisting").click();
       cy.contains("From Preprod");
 
