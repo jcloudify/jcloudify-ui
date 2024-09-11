@@ -154,6 +154,7 @@ export const LambdaFunctionsList: React.FC<FunctionListProps> = ({
               alwaysOn
               label="Environment"
               source="envId"
+              data-testid="filter-env"
               validate={required()}
               choices={[...environments]}
               optionText={(environment) => (

@@ -45,7 +45,7 @@ describe("PojaConfV1", () => {
     cy.getByTestid("CreateFromScratch").click();
 
     cy.wait("@getPojaVersions");
-    cy.get("#general\\.package_full_name").clear().type("com.mock.app");
+    cy.getByName("general.package_full_name").clear().type("com.mock.app");
   });
 
   context("PojaConfFormat", () => {
@@ -95,12 +95,14 @@ describe("PojaConfV1", () => {
           }
         ).as("saveConfig");
 
-        cy.get("#__flags\\.with_gen_clients").click();
-        cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
+        cy.getByName("__flags.with_gen_clients").click();
+        cy.getByName(
+          "gen_api_client.ts_client_default_openapi_server_url"
+        ).type(
           with_gen_api_client_enabled.gen_api_client
             .ts_client_default_openapi_server_url!
         );
-        cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
+        cy.getByName("gen_api_client.ts_client_api_url_env_var_name").type(
           with_gen_api_client_enabled.gen_api_client
             .ts_client_api_url_env_var_name!
         );
@@ -125,24 +127,26 @@ describe("PojaConfV1", () => {
           }
         ).as("saveConfig");
 
-        cy.get("#__flags\\.with_gen_clients").click();
-        cy.get("#gen_api_client\\.with_publish_to_npm_registry").click();
-        cy.get("#gen_api_client\\.ts_client_default_openapi_server_url").type(
+        cy.getByName("__flags.with_gen_clients").click();
+        cy.getByName("gen_api_client.with_publish_to_npm_registry").click();
+        cy.getByName(
+          "gen_api_client.ts_client_default_openapi_server_url"
+        ).type(
           with_publish_to_npm_registry.gen_api_client
             .ts_client_default_openapi_server_url!
         );
-        cy.get("#gen_api_client\\.ts_client_api_url_env_var_name").type(
+        cy.getByName("gen_api_client.ts_client_api_url_env_var_name").type(
           with_publish_to_npm_registry.gen_api_client
             .ts_client_api_url_env_var_name!
         );
-        cy.get("#gen_api_client\\.codeartifact_repository_name").type(
+        cy.getByName("gen_api_client.codeartifact_repository_name").type(
           with_publish_to_npm_registry.gen_api_client
             .codeartifact_repository_name!
         );
-        cy.get("#gen_api_client\\.codeartifact_domain_name").type(
+        cy.getByName("gen_api_client.codeartifact_domain_name").type(
           with_publish_to_npm_registry.gen_api_client.codeartifact_domain_name!
         );
-        cy.get("#gen_api_client\\.aws_account_id").type(
+        cy.getByName("gen_api_client.aws_account_id").type(
           String(with_publish_to_npm_registry.gen_api_client.aws_account_id!)
         );
       });
@@ -169,7 +173,7 @@ describe("PojaConfV1", () => {
         ).as("saveConfig");
 
         cy.muiSelect(
-          "#database\\.with_database",
+          "[data-testid='database.with_database']",
           DatabaseConf1WithDatabaseEnum.NONE
         );
       });
@@ -194,7 +198,7 @@ describe("PojaConfV1", () => {
         ).as("saveConfig");
 
         cy.muiSelect(
-          "#database\\.with_database",
+          "[data-testid='database.with_database']",
           DatabaseConf1WithDatabaseEnum.NON_POJA_MANAGED_POSTGRES
         );
       });
@@ -219,7 +223,7 @@ describe("PojaConfV1", () => {
         ).as("saveConfig");
 
         cy.muiSelect(
-          "#database\\.with_database",
+          "[data-testid='database.with_database']",
           DatabaseConf1WithDatabaseEnum.AURORA_POSTGRES
         );
         (
@@ -233,12 +237,12 @@ describe("PojaConfV1", () => {
             "aurora_sleep",
           ] as const
         ).forEach((key) => {
-          cy.get(`#database\\.${key}`)
+          cy.getByName(`database.${key}`)
             .clear()
             .type(String(with_database_aurora_postgres.database[key]));
         });
         if (with_database_aurora_postgres.database.aurora_auto_pause) {
-          cy.get("#database\\.aurora_auto_pause").click();
+          cy.getByName("database.aurora_auto_pause").click();
         }
       });
 
@@ -261,7 +265,7 @@ describe("PojaConfV1", () => {
           }
         ).as("saveConfig");
         cy.muiSelect(
-          "#database\\.with_database",
+          "[data-testid='database.with_database']",
           DatabaseConf1WithDatabaseEnum.SQLITE
         );
       });
@@ -322,19 +326,15 @@ describe("PojaConfV1", () => {
           }
         ).as("saveConfig");
 
-        cy.get("#general\\.package_full_name").type("com.mock"); // 2 parts
-        cy.get("#emailing\\.ses_source").type("invalid_mail");
+        cy.getByName("general.package_full_name").type("com.mock"); // 2 parts
+        cy.getByName("emailing.ses_source").type("invalid_mail");
 
         cy.get("[aria-label='Create']").click();
         cy.wait("@createEnvironment");
         cy.wait("@saveConfig");
 
-        cy.get("#general\\.package_full_name-helper-text").contains(
-          "must be three parts separated by dot"
-        );
-        cy.get("#emailing\\.ses_source-helper-text").contains(
-          "must be valid mail"
-        );
+        cy.contains("must be three parts separated by dot");
+        cy.contains("must be valid mail");
       }
     );
   });

@@ -20,7 +20,7 @@ describe("Applicative logs", () => {
   specify("(*) Read a function log stream events", () => {
     cy.contains("Logs").click();
     cy.wait("@getEnvironments");
-    cy.muiSelect("#envId", "prod_env");
+    cy.muiSelect("[data-testid='filter-env']", "prod_env");
     cy.wait("@getComputeStackResources");
 
     cy.getByTestid(

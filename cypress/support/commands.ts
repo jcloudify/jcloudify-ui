@@ -46,12 +46,12 @@ Cypress.Commands.add("getByName", <Subject = any>(name: string) => {
 });
 
 Cypress.Commands.add("muiSelect", (selector, value) => {
-  cy.get(selector).click({force: true});
+  cy.get(selector + " [role='combobox']").click({force: true});
   cy.get(`[data-value="${value}"]`).click();
 });
 
 Cypress.Commands.add("muiSelect2", (formControl, optionText) => {
-  cy.get(formControl).click({force: true});
+  cy.get(formControl + " [role='combobox']").click({force: true});
   cy.contains(optionText).click({force: true});
 });
 
