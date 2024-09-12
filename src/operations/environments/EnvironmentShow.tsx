@@ -1,11 +1,7 @@
-import {useMemo} from "react";
 import {
   Application,
   Environment,
   OneOfPojaConf,
-  StackOutput,
-  StackType,
-  Stack as TStack,
 } from "@jcloudify-api/typescript-client";
 import {
   ShowBase,
@@ -16,9 +12,8 @@ import {
   Loading,
   DeleteWithConfirmButton,
   useRedirect,
-  useGetList,
 } from "react-admin";
-import {Box, Stack, Typography} from "@mui/material";
+import {Box, Stack, Typography, CircularProgress} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
 import {useToggle} from "usehooks-ts";
 import {GridLayout} from "@/components/grid";
@@ -26,7 +21,10 @@ import {ContainerWithHeading} from "@/components/container";
 import {GitBranch} from "@/components/source_control";
 import {typoSizes} from "@/components/typo";
 import {ShowLayout} from "@/operations/components/show";
-import {EnvironmentType} from "@/operations/environments";
+import {
+  EnvironmentType,
+  useGetEnvironmentApiURL,
+} from "@/operations/environments";
 import {
   PojaConfComponentVersion,
   PojaConfEdit,
@@ -44,33 +42,10 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
     id: appId,
   });
 
-  const {data: stacks = []} = useGetList<ToRecord<TStack>>("stacks", {
-    filter: {
-      appId,
-      env_id: environment?.id,
-    },
+  const {apiUrl, isUnavailable, isLoadingApiURL} = useGetEnvironmentApiURL({
+    appId,
+    envId: environment?.id!,
   });
-
-  const computeStack = useMemo(
-    () => stacks.find((stack) => stack.stack_type === StackType.COMPUTE),
-    [stacks]
-  );
-
-  const {data: outputs = []} = useGetList<ToRecord<StackOutput>>(
-    "stackOutputs",
-    {
-      filter: {
-        appId,
-        env_id: environment?.id,
-        stack_id: computeStack?.id,
-      },
-    }
-  );
-
-  const apiUrl = useMemo(
-    () => outputs.find((output) => output.key === "ApiUrl"),
-    [outputs]
-  );
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
@@ -121,19 +96,27 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
             </Labeled>
 
             <Labeled label="Active Deployment URL">
-              {apiUrl ? (
-                <TypographyLink
-                  fontSize="small"
-                  disableOpenIcon
-                  copiable={false}
-                  target="_blank"
-                  to={apiUrl?.value!}
-                >
-                  {apiUrl?.value!}
-                </TypographyLink>
-              ) : (
-                <Typography>Deploying...</Typography>
-              )}
+              <>
+                {isLoadingApiURL && (
+                  <Box display="flex" justifyContent="center" my={1}>
+                    <CircularProgress size={10} />
+                  </Box>
+                )}
+
+                {isUnavailable && <Typography>Not available</Typography>}
+
+                {apiUrl && (
+                  <TypographyLink
+                    fontSize="small"
+                    disableOpenIcon
+                    copiable={false}
+                    target="_blank"
+                    to={apiUrl?.value!}
+                  >
+                    {apiUrl?.value!}
+                  </TypographyLink>
+                )}
+              </>
             </Labeled>
           </GridLayout>
         </Stack>
