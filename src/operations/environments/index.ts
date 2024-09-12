@@ -10,3 +10,4 @@ export * from "./schema";
 export * from "./types";
 
 export * from "./useEnvironmentCreation";
+export * from "./useGetEnvironmentApiURL";

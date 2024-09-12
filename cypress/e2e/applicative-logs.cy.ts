@@ -4,7 +4,7 @@ import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtu
 import {app1} from "../fixtures/application.mock";
 import {user1} from "../fixtures/user.mock";
 
-describe("Applicative logs", () => {
+describe.skip("Applicative logs", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
     cy.mockApiGet();

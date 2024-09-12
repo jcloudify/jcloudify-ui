@@ -5,11 +5,9 @@ import {
   AppEnvironmentList,
   AppEnvironmentShow,
   AppEnvironmentStackList,
-  AppLambdaFunctionsList,
 } from "./AppEnvironment";
 import {RouteMap} from "@/components/router";
 import {stackShowViews} from "@/operations/stacks";
-import {lambdaFnShowViews} from "@/operations/lambda-functions";
 
 export const appShowViews: RouteMap = {
   environments: {
@@ -22,9 +20,5 @@ export const appShowViews: RouteMap = {
   deployments: {
     "$$index": <AppEnvironmentStackList />,
     "environments/:envId/stacks/:stackId": stackShowViews,
-  },
-  logs: {
-    "$$index": <AppLambdaFunctionsList />,
-    "environments/:envId/functions/:functionName": lambdaFnShowViews,
   },
 };
