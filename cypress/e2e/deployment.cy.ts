@@ -2,7 +2,7 @@ import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
 
-describe.skip("Deployment", () => {
+describe("Deployment", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
     cy.mockApiGet();
@@ -12,8 +12,9 @@ describe.skip("Deployment", () => {
   context("Filter", () => {
     beforeEach(() => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+      cy.contains("Deployments");
       cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
     });
 
     specify("Environment", () => {
@@ -28,28 +29,6 @@ describe.skip("Deployment", () => {
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
       cy.muiSelect("#env_type", "All Environments");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("exist");
-    });
-
-    specify("State", () => {
-      cy.muiSelect("#state", "READY");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
-
-      cy.muiSelect("#state", "IN_PROGRESS");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("exist");
-
-      cy.muiSelect("#state", "FAILED");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
-
-      cy.muiSelect("#state", "Any");
 
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
@@ -119,10 +98,10 @@ describe.skip("Deployment", () => {
       `https://github.com/${depl2.github_meta.org}/${depl2.github_meta.repo}/commit/${depl2.github_meta.commit_sha}`
     ).should("exist");
 
-    cy.getByHref(`https://github.com/${depl2.creator.username}`).should(
+    cy.getByHref(`https://github.com/${depl2.creator?.username}`).should(
       "exist"
     );
-    cy.getByHref(`https://github.com/${depl1.creator.username}`).should(
+    cy.getByHref(`https://github.com/${depl1.creator?.username}`).should(
       "exist"
     );
   });
@@ -132,7 +111,9 @@ describe.skip("Deployment", () => {
     cy.getByHref(`/applications/${app2.id}/show/deployments`).click();
 
     cy.getByTestid(`depl-${depl3.id}`).contains("prod");
-    cy.getByTestid(`depl-${depl3.id}`).contains(`by ${depl3.creator.username}`);
+    cy.getByTestid(`depl-${depl3.id}`).contains(
+      `by ${depl3.creator?.username}`
+    );
     cy.getByTestid(`depl-${depl3.id}`).contains("Failed");
   });
 

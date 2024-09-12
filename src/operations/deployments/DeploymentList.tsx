@@ -1,5 +1,9 @@
 import React from "react";
-import {Environment} from "@jcloudify-api/typescript-client";
+import {
+  AppEnvDeployment,
+  Environment,
+  EnvironmentType as EnvironmentTypeEnum,
+} from "@jcloudify-api/typescript-client";
 import {
   Link,
   ListBase,
@@ -25,17 +29,17 @@ import {TopLink} from "@/components/link";
 import {VCS} from "@/components/source_control";
 import {GridLayout} from "@/components/grid";
 import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
-import {DeploymentState} from "@/operations/deployments";
+import {SimpleListEmpty} from "@/operations/components/list/SimpleListEmpty";
 import {Pagination} from "@/operations/components/list";
 import {EnvironmentType} from "@/operations/environments";
-import {makeSelectChoices} from "@/operations/utils/ra-props";
-import {TODO_Deployment} from "@/services/poja-api";
-import {Dict} from "@/providers";
+import {Dict, ToRecord} from "@/providers";
 import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
 
-const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
+const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
+  depl,
+}) => {
   return (
     <Grid
       container
@@ -47,23 +51,21 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
       position="relative"
     >
       <Grid item xs>
-        <Stack spacing={0.5}>
-          <Typography fontWeight="520">{depl.id}</Typography>
-
-          <EnvironmentType value={depl.target_env_type} />
-        </Stack>
+        <Box>
+          <Typography color="text.secondary" variant="body2">
+            {fromToNow(depl.creation_datetime!)}
+          </Typography>
+        </Box>
       </Grid>
 
       <Grid item xs>
-        <Stack spacing={0.5} direction="row" alignItems="center">
-          <Typography fontWeight="510">
-            <DeploymentState value={depl.state} />
-          </Typography>
-
-          <Typography color="text.secondary" variant="body2">
-            {depl.state === "READY" && fromToNow(depl.createdAt)}
-          </Typography>
-        </Stack>
+        <Box>
+          <EnvironmentType
+            value={
+              depl.github_meta?.commit_branch?.toUpperCase()! as EnvironmentTypeEnum
+            }
+          />
+        </Box>
       </Grid>
 
       <Grid item xs>
@@ -74,7 +76,7 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 
       <Grid item xs>
         <Link
-          to={GITHUB_URL_PREFIX + depl.creator.username}
+          to={GITHUB_URL_PREFIX + depl.creator?.username}
           target="_blank"
           sx={{zIndex: 2, position: "relative"}}
         >
@@ -82,11 +84,11 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
             <div>
               by{" "}
               <Typography fontWeight="510" sx={{display: "inline"}}>
-                {depl.creator.username}
+                {depl.creator?.username}
               </Typography>
             </div>
             <Avatar
-              src={depl.creator.avatar}
+              src={depl.creator?.avatar_url}
               sx={{
                 height: 20,
                 width: 20,
@@ -107,6 +109,9 @@ const DeploymentListItem: React.FC<{depl: TODO_Deployment}> = ({depl}) => {
 
 const DeploymentListView: React.FC = () => {
   const {data = []} = useListContext();
+  if (!data.length) {
+    return <SimpleListEmpty />;
+  }
   return (
     <Stack spacing={1} direction="column">
       {data.map((depl) => (
@@ -139,31 +144,13 @@ const DeploymentListFilter: React.FC<{
     <GridLayout xs={6} md={4} lg={3} columnSpacing={2}>
       <SelectInput
         label="Environment"
-        source="env_type"
+        source="envType"
         validate={required()}
         choices={[{id: "_", environment_type: "All Environments"}, ...envs]}
         optionText={(deployment) => (
           <EnvironmentType value={deployment.environment_type!} />
         )}
         optionValue="environment_type"
-        variant="outlined"
-        fullWidth
-        sx={COMMON_RA_SELECT_INPUT_SX_PROPS}
-      />
-
-      <SelectInput
-        label="State"
-        source="state"
-        choices={makeSelectChoices(
-          ["Any", "READY", "IN_PROGRESS", "FAILED"],
-          "state"
-        )}
-        optionText={(deployment) => (
-          <DeploymentState value={deployment.state!} />
-        )}
-        validate={required()}
-        optionValue="state"
-        alwaysOn
         variant="outlined"
         fullWidth
         sx={COMMON_RA_SELECT_INPUT_SX_PROPS}
@@ -189,16 +176,16 @@ const ListToolbar = styled(RAListToolbar)({
 
 export const DeploymentList: React.FC<{appId: string}> = ({appId}) => {
   const {data: envs = []} = useGetList("environments", {
-    meta: {
-      application_id: appId,
+    filter: {
+      appId,
     },
   });
 
   return (
     <ListBase
       resource="deployments"
-      queryOptions={{meta: {application_id: appId}}}
-      filterDefaultValues={{env_type: "All Environments", state: "Any"}}
+      filter={{appId}}
+      filterDefaultValues={{envType: "All Environments"}}
     >
       <ListToolbar
         title=" "

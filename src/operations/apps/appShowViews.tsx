@@ -4,10 +4,9 @@ import {
   AppEnvironmentDiff,
   AppEnvironmentList,
   AppEnvironmentShow,
-  AppEnvironmentStackList,
 } from "./AppEnvironment";
 import {RouteMap} from "@/components/router";
-import {stackShowViews} from "@/operations/stacks";
+import {AppDeploymentList, AppDeploymentShow} from "./AppDeployment";
 
 export const appShowViews: RouteMap = {
   environments: {
@@ -18,7 +17,7 @@ export const appShowViews: RouteMap = {
     "diff": <AppEnvironmentDiff />,
   },
   deployments: {
-    "$$index": <AppEnvironmentStackList />,
-    "environments/:envId/stacks/:stackId": stackShowViews,
+    "$$index": <AppDeploymentList />,
+    ":deploymentId": <AppDeploymentShow />,
   },
 };

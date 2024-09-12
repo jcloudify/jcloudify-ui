@@ -5,13 +5,17 @@ import {DeploymentList, DeploymentShow} from "@/operations/deployments";
 export const AppDeploymentList: React.FC = () => {
   const {appId} = useParams();
   if (!appId) return;
-  return <DeploymentList appId={appId} />;
+  return (
+    <WithTab tab="Deployments">
+      <DeploymentList appId={appId} />
+    </WithTab>
+  );
 };
 
 export const AppDeploymentShow: React.FC = () => {
-  const {deplId} = useParams();
+  const {appId, deplId} = useParams();
 
-  if (!deplId) return;
+  if (!appId || !deplId) return;
 
   return (
     <WithTab tab="Deployments">

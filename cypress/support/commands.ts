@@ -23,7 +23,9 @@ import {
 } from "../fixtures/log-group.mock";
 import {app1_prod_env_frontal_function_log_group1_streams} from "../fixtures/log-stream.mock";
 import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtures/log-stream-event.mock";
+import {depls} from "../fixtures//deployment.mock";
 import {jcloudify} from "./util";
+import {isDateBetween} from "@/utils/date";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
@@ -230,6 +232,33 @@ Cypress.Commands.add("mockApiGet", () => {
       data: app1_prod_env_frontal_function_log_group1_stream1_events,
     }
   ).as("getLogStreamEvents");
+
+  cy.intercept(
+    jcloudify(`/users/${user1.id}/applications/${app1.id}/deployments*`),
+    (req) => {
+      const {query} = req;
+      const {environmentType, startDatetime, endDatetime} = query;
+      const data = depls.filter(
+        (depl) =>
+          depl.application_id === app1.id &&
+          (!environmentType ||
+            environmentType ===
+              depl.github_meta?.commit_branch?.toUpperCase()) &&
+          (!(startDatetime || endDatetime) ||
+            isDateBetween(
+              depl.creation_datetime!,
+              new Date(startDatetime),
+              new Date(endDatetime),
+              "incl"
+            ))
+      );
+      req.reply({
+        body: {
+          data,
+        },
+      });
+    }
+  ).as("getDeployments");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {
