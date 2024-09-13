@@ -43,7 +43,7 @@ export const depl2: ToRecord<AppEnvDeployment> = {
     commit_author_name: user1.username!,
     commit_message: "feat: deployment",
     commit_sha: "fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef",
-    commit_branch: "prod",
+    commit_branch: "preprod",
     org: user1.username!,
     repo_url: `https://github.com/${user1.username}/poja-app`,
     repo_name: "poja-app",

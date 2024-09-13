@@ -18,7 +18,6 @@ export const isDateBetween = (
   t: IsBetweenTerminal
 ) => {
   const d = dayjs(date);
-
   const incl = t === "incl";
 
   if (a && b) {

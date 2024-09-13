@@ -123,14 +123,16 @@ const DeploymentListView: React.FC = () => {
 
 // TODO: make util for date range inputs
 const from = (v: Date, filterValues: Dict<any>) => {
-  if (!v || !filterValues.to || v <= filterValues.to) {
+  return undefined;
+  if (!v || !filterValues.endDatetime || v <= filterValues.endDatetime) {
     return undefined;
   }
   return " ";
 };
 
 const to = (v: Date, filterValues: Dict<any>) => {
-  if (!v || !filterValues.from || v >= filterValues.from) {
+  return undefined;
+  if (!v || !filterValues.startDatetime || v >= filterValues.startDatetime) {
     return undefined;
   }
   return " ";
@@ -145,6 +147,7 @@ const DeploymentListFilter: React.FC<{
       <SelectInput
         label="Environment"
         source="envType"
+        data-testid="env-type"
         validate={required()}
         choices={[{id: "_", environment_type: "All Environments"}, ...envs]}
         optionText={(deployment) => (
@@ -157,12 +160,17 @@ const DeploymentListFilter: React.FC<{
       />
 
       <DateInput
-        source="from"
+        source="startDatetime"
         variant="outlined"
         validate={[from, maxValue(new Date())]}
         fullWidth
       />
-      <DateInput source="to" variant="outlined" validate={to} fullWidth />
+      <DateInput
+        source="endDatetime"
+        variant="outlined"
+        validate={to}
+        fullWidth
+      />
     </GridLayout>
   );
 };

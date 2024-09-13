@@ -247,8 +247,8 @@ Cypress.Commands.add("mockApiGet", () => {
           (!(startDatetime || endDatetime) ||
             isDateBetween(
               depl.creation_datetime!,
-              new Date(startDatetime),
-              new Date(endDatetime),
+              startDatetime ? new Date(startDatetime) : undefined,
+              endDatetime ? new Date(endDatetime) : new Date(),
               "incl"
             ))
       );
