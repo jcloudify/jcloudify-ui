@@ -123,7 +123,6 @@ const DeploymentListView: React.FC = () => {
 
 // TODO: make util for date range inputs
 const from = (v: Date, filterValues: Dict<any>) => {
-  return undefined;
   if (!v || !filterValues.endDatetime || v <= filterValues.endDatetime) {
     return undefined;
   }
@@ -131,7 +130,6 @@ const from = (v: Date, filterValues: Dict<any>) => {
 };
 
 const to = (v: Date, filterValues: Dict<any>) => {
-  return undefined;
   if (!v || !filterValues.startDatetime || v >= filterValues.startDatetime) {
     return undefined;
   }
