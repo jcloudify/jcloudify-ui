@@ -25,7 +25,7 @@ import {app1_prod_env_frontal_function_log_group1_streams} from "../fixtures/log
 import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtures/log-stream-event.mock";
 import {depls} from "../fixtures//deployment.mock";
 import {jcloudify} from "./util";
-import {isDateBetween} from "@/utils/date";
+import {isDateBetween} from "../../src/utils/date";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
