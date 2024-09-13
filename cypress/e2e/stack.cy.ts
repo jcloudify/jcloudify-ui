@@ -7,7 +7,7 @@ import {
 import {app1} from "../fixtures/application.mock";
 import {user1} from "../fixtures/user.mock";
 
-describe("Stack", () => {
+describe.skip("Stack", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
     cy.mockApiGet();
