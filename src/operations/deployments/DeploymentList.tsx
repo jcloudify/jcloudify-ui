@@ -51,11 +51,14 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
       position="relative"
     >
       <Grid item xs>
-        <Box>
-          <Typography color="text.secondary" variant="body2">
-            {fromToNow(depl.creation_datetime!)}
+        <Stack direction="row" spacing={0.5}>
+          <Typography variant="body2" fontSize="small">
+            {new Date(depl.creation_datetime!).toISOString()}
           </Typography>
-        </Box>
+          <Typography color="text.secondary" fontSize="small" variant="body2">
+            ({fromToNow(depl.creation_datetime!)})
+          </Typography>
+        </Stack>
       </Grid>
 
       <Grid item xs>
