@@ -87,9 +87,7 @@ const DeploymentShowView: React.FC = () => {
               <FunctionField<TODO_Deployment>
                 label="Source"
                 render={(depl) => (
-                  <Box mt={0.5}>
-                    <VCS {...depl.github_meta} />
-                  </Box>
+                  <Box mt={0.5}>{/* <VCS {...depl.github_meta} /> */}</Box>
                 )}
               />
             </Labeled>

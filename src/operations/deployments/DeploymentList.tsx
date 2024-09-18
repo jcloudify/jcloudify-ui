@@ -31,17 +31,22 @@ import {COMMON_RA_SELECT_INPUT_SX_PROPS} from "@/components/constants";
 import {SimpleListEmpty} from "@/operations/components/list/SimpleListEmpty";
 import {Pagination} from "@/operations/components/list";
 import {EnvironmentType} from "@/operations/environments";
+import {JCBot} from "@/operations/github";
 import {Dict, ToRecord} from "@/providers";
 import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
+import {useMediaQuery} from "usehooks-ts";
 
 const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
   depl,
 }) => {
+  const isLarge = useMediaQuery("(min-width:1200px)");
+
   const committerLogin =
     depl.github_meta?.commit?.committer?.login ||
     depl.github_meta?.commit?.committer?.name;
+  const is_jc_bot = !!depl.github_meta?.commit?.committer?.is_jc_bot;
   return (
     <Grid
       container
@@ -54,16 +59,18 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
     >
       <Grid item xs>
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2" fontSize="small">
-            {new Date(depl.creation_datetime!).toISOString()}
-          </Typography>
+          {isLarge && (
+            <Typography variant="body2" fontSize="small">
+              {new Date(depl.creation_datetime!).toISOString()}
+            </Typography>
+          )}
           <Typography color="text.secondary" fontSize="small" variant="body2">
             ({fromToNow(depl.creation_datetime!)})
           </Typography>
         </Stack>
       </Grid>
 
-      <Grid item xs>
+      <Grid item px={3}>
         <Box>
           <EnvironmentType
             value={
@@ -75,34 +82,39 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
 
       <Grid item xs>
         <Box zIndex={2} position="relative">
-          <VCS {...depl.github_meta} />
+          <VCS {...depl.github_meta} showCommitMsg={isLarge} />
         </Box>
       </Grid>
 
       <Grid item xs>
-        <Link
-          aria-disabled={!!depl.github_meta?.commit?.committer?.is_jc_bot}
-          to={GITHUB_URL_PREFIX + committerLogin}
-          target="_blank"
-          sx={{zIndex: 2, position: "relative"}}
-        >
-          <Stack direction="row" spacing={1} alignItems="center">
-            <div>
-              by{" "}
-              <Typography fontWeight="510" sx={{display: "inline"}}>
-                {committerLogin}
-              </Typography>
-            </div>
-            <Avatar
-              src={depl.github_meta?.commit?.committer?.avatar_url}
-              sx={{
-                height: 20,
-                width: 20,
-                border: `1px solid ${colors("gray-1")}`,
-              }}
-            />
-          </Stack>
-        </Link>
+        <Stack width="100%" direction="row" justifyContent="flex-start" px={3}>
+          <span>by&nbsp;</span>
+
+          {is_jc_bot ? (
+            <JCBot />
+          ) : (
+            <Link
+              aria-disabled={!!depl.github_meta?.commit?.committer?.is_jc_bot}
+              to={GITHUB_URL_PREFIX + committerLogin}
+              target="_blank"
+              sx={{zIndex: 2, position: "relative", textDecoration: "none"}}
+            >
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography fontWeight="510" sx={{display: "inline"}}>
+                  {committerLogin}
+                </Typography>
+                <Avatar
+                  src={depl.github_meta?.commit?.committer?.avatar_url}
+                  sx={{
+                    height: 20,
+                    width: 20,
+                    border: `1px solid ${colors("gray-1")}`,
+                  }}
+                />
+              </Stack>
+            </Link>
+          )}
+        </Stack>
       </Grid>
       <TopLink
         data-testid={`show-${depl.id}-depl`}
