@@ -43,7 +43,7 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
 }) => {
   const isLarge = useMediaQuery("(min-width:1200px)");
 
-  const committerLogin =
+  const committerName =
     depl.github_meta?.commit?.committer?.login ||
     depl.github_meta?.commit?.committer?.name;
   const is_jc_bot = !!depl.github_meta?.commit?.committer?.is_jc_bot;
@@ -94,14 +94,14 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
             <JCBot />
           ) : (
             <Link
-              aria-disabled={!!depl.github_meta?.commit?.committer?.is_jc_bot}
-              to={GITHUB_URL_PREFIX + committerLogin}
+              aria-disabled={is_jc_bot}
+              to={GITHUB_URL_PREFIX + committerName}
               target="_blank"
               sx={{zIndex: 2, position: "relative", textDecoration: "none"}}
             >
               <Stack direction="row" spacing={1} alignItems="center">
                 <Typography fontWeight="510" sx={{display: "inline"}}>
-                  {committerLogin}
+                  {committerName}
                 </Typography>
                 <Avatar
                   src={depl.github_meta?.commit?.committer?.avatar_url}

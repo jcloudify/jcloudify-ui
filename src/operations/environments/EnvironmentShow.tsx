@@ -133,7 +133,7 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
   const environment = useRecordContext<Environment>();
   const {data: pojaConf, isLoading} = useGetOne<ToRecord<OneOfPojaConf>>(
     "pojaConf",
-    {id: envId, meta: {appId}}
+    {id: envId, meta: {appId, owner: "environment"}}
   );
 
   return (
@@ -160,14 +160,16 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
           <PojaConfEdit
             version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
-            envId={environment?.id!}
+            ownerId={environment?.id!}
+            owner="environment"
             onSuccess={() => setIsEditConf(false)}
           />
         ) : (
           <PojaConfView
             version={pojaConf.version as PojaConfComponentVersion}
             appId={appId}
-            envId={environment?.id!}
+            ownerId={environment?.id!}
+            owner="environment"
           />
         ))}
     </ContainerWithHeading>

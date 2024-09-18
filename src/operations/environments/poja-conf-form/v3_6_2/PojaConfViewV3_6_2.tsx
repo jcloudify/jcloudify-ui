@@ -19,22 +19,25 @@ import {
   StringArrayField,
   renderWithLabel,
 } from "@/operations/components/field";
+import {PojaConfViewComponent} from "@/operations/environments/poja-conf-form";
 import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
 
-export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
-  envId,
+export const PojaConfViewV3_6_2: PojaConfViewComponent = ({
+  ownerId,
+  owner,
   appId,
 }) => {
   return (
     <ShowBase
       resource="pojaConf"
-      id={envId}
+      id={ownerId}
       queryOptions={{
         meta: {
           appId,
+          owner,
         },
       }}
     >

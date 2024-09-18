@@ -13,13 +13,13 @@ export const AppDeploymentList: React.FC = () => {
 };
 
 export const AppDeploymentShow: React.FC = () => {
-  const {appId, deplId} = useParams();
+  const {appId, deploymentId} = useParams();
 
-  if (!appId || !deplId) return;
+  if (!appId || !deploymentId) return;
 
   return (
     <WithTab tab="Deployments">
-      <DeploymentShow deplId={deplId} />
+      <DeploymentShow deploymentId={deploymentId} appId={appId} />
     </WithTab>
   );
 };
