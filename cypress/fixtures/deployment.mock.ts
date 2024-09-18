@@ -1,6 +1,5 @@
 import {user1} from "./user.mock";
-import {preprod_env, preprod_env2, prod_env} from "./environment.mock";
-import {nanoid} from "nanoid";
+import {preprod_env, prod_env} from "./environment.mock";
 import {app1, app2} from "./application.mock";
 import {AppEnvDeployment} from "@jcloudify-api/typescript-client";
 import {ToRecord} from "../../src/providers";
@@ -8,22 +7,23 @@ import {ToRecord} from "../../src/providers";
 export const depl1: ToRecord<AppEnvDeployment> = {
   id: "depl1",
   github_meta: {
-    commit_author_name: user1.username!,
-    commit_message: "poja: bootstrap",
-    commit_sha: "fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef",
-    commit_branch: "prod",
-    org: user1.username!,
-    repo_url: `https://github.com/${user1.username}/poja-app`,
-    repo_name: "poja-app",
-    repo_owner_type: "User",
-    repo_id: nanoid(),
-    is_repo_private: false,
-  },
-  creator: {
-    email: user1.email!,
-    username: user1.username!,
-    avatar_url: user1.avatar!,
-    github_id: user1.github_id!,
+    commit: {
+      committer: {
+        name: user1.username,
+        email: user1.email,
+        avatar_url: user1.avatar,
+        github_id: user1.github_id,
+        is_jc_bot: false,
+      },
+      message: "poja: gen",
+      sha: "fdf8268c7b3e2349ae7298ef4acaeca38cf9d2ef",
+      branch: "prod",
+      url: `https://github.com/jcloudify/jcloudify-ui/pull/57/commits/fdf8268c7b3e2349ae7298ef4acaeca38cf9d2ef`,
+    },
+    repo: {
+      name: app1.github_repository?.name,
+      owner_name: user1.username,
+    },
   },
   application_id: app1.id,
   environment_id: prod_env.id,
@@ -33,23 +33,24 @@ export const depl1: ToRecord<AppEnvDeployment> = {
 
 export const depl2: ToRecord<AppEnvDeployment> = {
   id: "depl2",
-  creator: {
-    email: user1.email!,
-    username: user1.username!,
-    avatar_url: user1.avatar!,
-    github_id: user1.github_id!,
-  },
   github_meta: {
-    commit_author_name: user1.username!,
-    commit_message: "feat: deployment",
-    commit_sha: "fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef",
-    commit_branch: "preprod",
-    org: user1.username!,
-    repo_url: `https://github.com/${user1.username}/poja-app`,
-    repo_name: "poja-app",
-    repo_owner_type: "User",
-    repo_id: nanoid(),
-    is_repo_private: false,
+    commit: {
+      committer: {
+        name: user1.username,
+        email: user1.email,
+        avatar_url: user1.avatar,
+        github_id: user1.github_id,
+        is_jc_bot: false,
+      },
+      message: "feat: deployment list",
+      sha: "fdf82639ajieuff9ae7298ef4acaeca38cf9d2ef",
+      branch: "preprod",
+      url: `https://github.com/jcloudify/jcloudify-ui/pull/57/commits/fdf82639ajieuff9ae7298ef4acaeca38cf9d2ef`,
+    },
+    repo: {
+      name: app1.github_repository?.name,
+      owner_name: user1.username,
+    },
   },
   application_id: app1.id,
   environment_id: preprod_env.id,
@@ -59,27 +60,29 @@ export const depl2: ToRecord<AppEnvDeployment> = {
 
 export const depl3: ToRecord<AppEnvDeployment> = {
   id: "depl3",
-  creator: {
-    email: user1.email!,
-    username: user1.username!,
-    avatar_url: user1.avatar!,
-    github_id: user1.github_id!,
-  },
   github_meta: {
-    commit_author_name: user1.username!,
-    commit_message: "feat: deployment",
-    commit_sha: "fdf8268c7b3ecef9ae7298ef4acaeca38cf9dkkd",
-    commit_branch: "preprod",
-    org: user1.username!,
-    repo_url: `https://github.com/${user1.username}/poja-app`,
-    repo_name: "poja-app",
-    repo_owner_type: "User",
-    repo_id: nanoid(),
-    is_repo_private: false,
+    commit: {
+      committer: {
+        name: user1.username,
+        email: user1.email,
+        avatar_url: user1.avatar,
+        github_id: user1.github_id,
+        is_jc_bot: false,
+      },
+      message: "feat: ",
+      sha: "gFf8268c7b3ecef9ae7298ef4acaeca38cfE8okef",
+      branch: "preprod",
+      url: `https://github.com/jcloudify/jcloudify-ui/pull/57/commits/gFf8268c7b3ecef9ae7298ef4acaeca38cfE8okef`,
+    },
+    repo: {
+      name: app2.name,
+      owner_name: user1.username,
+    },
   },
-  application_id: app2.id,
-  environment_id: preprod_env2.id,
-  deployed_url: "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod",
+  application_id: app1.id,
+  environment_id: preprod_env.id,
+  deployed_url:
+    "https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Preprod",
   creation_datetime: new Date(2024, 0, 10),
 };
 

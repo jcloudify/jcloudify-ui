@@ -83,35 +83,35 @@ describe("Deployment", () => {
     cy.getByTestid(`show-${app1.id}-app`).click({force: true});
     cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
 
-    cy.getByTestid(`depl-${depl1.id}`).contains("prod");
+    cy.getByTestid(`depl-${depl1.id}`).contains("Prod");
     cy.getByTestid(`depl-${depl1.id}`).contains(
-      `by ${depl1.creator?.username}`
+      `by ${depl1.github_meta?.commit?.committer?.name}`
     );
 
-    cy.getByTestid(`depl-${depl2.id}`).contains("preprod");
+    cy.getByTestid(`depl-${depl2.id}`).contains("Preprod");
     cy.getByTestid(`depl-${depl2.id}`).contains(
-      `by ${depl2.creator?.username}`
+      `by ${depl2.github_meta?.commit?.committer?.name}`
     );
 
     cy.getByHref(
-      `https://github.com/${depl1.github_meta?.org}/${depl1.github_meta?.repo_name}/tree/prod`
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/tree/prod`
     ).should("exist");
     cy.getByHref(
-      `https://github.com/${depl2.github_meta?.org}/${depl2.github_meta?.repo_name}/tree/preprod`
+      `https://github.com/${depl2.github_meta?.repo?.owner_name}/${depl2.github_meta?.repo?.name}/tree/preprod`
     ).should("exist");
 
     cy.getByHref(
-      `https://github.com/${depl1.github_meta?.org}/${depl1.github_meta?.repo_name}/commit/${depl1.github_meta?.commit_sha}`
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/commit/${depl1.github_meta?.commit?.sha}`
     ).should("exist");
     cy.getByHref(
-      `https://github.com/${depl2.github_meta?.org}/${depl2.github_meta?.repo_name}/commit/${depl2.github_meta?.commit_sha}`
+      `https://github.com/${depl2.github_meta?.repo?.owner_name}/${depl2.github_meta?.repo?.name}/commit/${depl2.github_meta?.commit?.sha}`
     ).should("exist");
 
-    cy.getByHref(`https://github.com/${depl2.creator?.username}`).should(
-      "exist"
-    );
-    cy.getByHref(`https://github.com/${depl1.creator?.username}`).should(
-      "exist"
-    );
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.commit?.committer?.name}`
+    ).should("exist");
+    cy.getByHref(
+      `https://github.com/${depl2.github_meta?.commit?.committer?.name}`
+    ).should("exist");
   });
 });

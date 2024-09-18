@@ -12,7 +12,7 @@ import {
   useGetList,
   useListContext,
   required,
-  DateInput,
+  DateTimeInput,
   Filter,
   maxValue,
 } from "react-admin";
@@ -36,10 +36,14 @@ import {Dict, ToRecord} from "@/providers";
 import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
+import dayjs from "dayjs";
 
 const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
   depl,
 }) => {
+  const committerLogin =
+    depl.github_meta?.commit?.committer?.login ||
+    depl.github_meta?.commit?.committer?.name;
   return (
     <Grid
       container
@@ -65,7 +69,7 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
         <Box>
           <EnvironmentType
             value={
-              depl.github_meta?.commit_branch?.toUpperCase()! as EnvironmentTypeEnum
+              depl.github_meta?.commit?.branch?.toUpperCase()! as EnvironmentTypeEnum
             }
           />
         </Box>
@@ -79,7 +83,8 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
 
       <Grid item xs>
         <Link
-          to={GITHUB_URL_PREFIX + depl.creator?.username}
+          aria-disabled={!!depl.github_meta?.commit?.committer?.is_jc_bot}
+          to={GITHUB_URL_PREFIX + committerLogin}
           target="_blank"
           sx={{zIndex: 2, position: "relative"}}
         >
@@ -87,11 +92,11 @@ const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
             <div>
               by{" "}
               <Typography fontWeight="510" sx={{display: "inline"}}>
-                {depl.creator?.username}
+                {committerLogin}
               </Typography>
             </div>
             <Avatar
-              src={depl.creator?.avatar_url}
+              src={depl.github_meta?.commit?.committer?.avatar_url}
               sx={{
                 height: 20,
                 width: 20,
@@ -125,15 +130,17 @@ const DeploymentListView: React.FC = () => {
 };
 
 // TODO: make util for date range inputs
-const from = (v: Date, filterValues: Dict<any>) => {
-  if (!v || !filterValues.endDatetime || v <= filterValues.endDatetime) {
+const from = (_date: Date, filters: Dict<any>) => {
+  const {endDatetime: end, startDatetime: start} = filters;
+  if (!start || !end || new Date(start) <= new Date(end)) {
     return undefined;
   }
   return " ";
 };
 
-const to = (v: Date, filterValues: Dict<any>) => {
-  if (!v || !filterValues.startDatetime || v >= filterValues.startDatetime) {
+const to = (_date: Date, filters: Dict<any>) => {
+  const {endDatetime: end, startDatetime: start} = filters;
+  if (!end || !start || new Date(end) >= new Date(start)) {
     return undefined;
   }
   return " ";
@@ -160,15 +167,17 @@ const DeploymentListFilter: React.FC<{
         sx={COMMON_RA_SELECT_INPUT_SX_PROPS}
       />
 
-      <DateInput
+      <DateTimeInput
         source="startDatetime"
         variant="outlined"
-        validate={[from, maxValue(new Date())]}
+        label="From"
+        validate={from}
         fullWidth
       />
-      <DateInput
+      <DateTimeInput
         source="endDatetime"
         variant="outlined"
+        label="To"
         validate={to}
         fullWidth
       />

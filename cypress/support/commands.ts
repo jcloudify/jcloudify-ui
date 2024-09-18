@@ -243,7 +243,7 @@ Cypress.Commands.add("mockApiGet", () => {
           depl.application_id === app1.id &&
           (!environmentType ||
             environmentType ===
-              depl.github_meta?.commit_branch?.toUpperCase()) &&
+              depl.github_meta?.commit?.branch?.toUpperCase()) &&
           (!(startDatetime || endDatetime) ||
             isDateBetween(
               depl.creation_datetime!,
