@@ -14,7 +14,6 @@ import {
   required,
   DateTimeInput,
   Filter,
-  maxValue,
 } from "react-admin";
 import {
   Box,
@@ -36,7 +35,6 @@ import {Dict, ToRecord} from "@/providers";
 import {colors} from "@/themes";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {fromToNow} from "@/utils/date";
-import dayjs from "dayjs";
 
 const DeploymentListItem: React.FC<{depl: ToRecord<AppEnvDeployment>}> = ({
   depl,
