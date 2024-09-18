@@ -35,43 +35,43 @@ describe("Deployment", () => {
     });
 
     specify("Date Range", () => {
-      cy.getByName("startDatetime").type("2024-01-01");
-      cy.getByName("endDatetime").type("2024-01-05");
+      cy.getByName("startDatetime").type("2024-01-01T00:00");
+      cy.getByName("endDatetime").type("2024-01-05T00:00");
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.getByName("startDatetime").type("2024-01-01");
-      cy.getByName("endDatetime").type("2024-01-03");
+      cy.getByName("startDatetime").type("2024-01-01T00:00");
+      cy.getByName("endDatetime").type("2024-01-03T00:00");
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-      cy.getByName("startDatetime").type("2024-01-04");
-      cy.getByName("endDatetime").type("2024-01-10");
+      cy.getByName("startDatetime").type("2024-01-04T00:00");
+      cy.getByName("endDatetime").type("2024-01-10T00:00");
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
       cy.getByName("startDatetime").clear();
-      cy.getByName("endDatetime").type("2024-01-04");
+      cy.getByName("endDatetime").type("2024-01-04T00:00");
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
       cy.getByName("startDatetime").clear().blur();
-      cy.getByName("endDatetime").type("2024-01-02");
+      cy.getByName("endDatetime").type("2024-01-02T00:00");
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-      cy.getByName("startDatetime").type("2024-01-02");
+      cy.getByName("startDatetime").type("2024-01-02T00:00");
       cy.getByName("endDatetime").clear().blur();
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.getByName("startDatetime").type("2024-01-04");
+      cy.getByName("startDatetime").type("2024-01-04T00:00");
       cy.getByName("endDatetime").clear().blur();
       cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
