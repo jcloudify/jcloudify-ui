@@ -1,6 +1,5 @@
 import {
   AppEnvDeployment,
-  Environment,
   EnvironmentType as EnvironmentTypeEnum,
   OneOfPojaConf,
 } from "@jcloudify-api/typescript-client";

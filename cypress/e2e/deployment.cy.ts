@@ -114,4 +114,28 @@ describe("Deployment", () => {
       `https://github.com/${depl2.github_meta?.commit?.committer?.name}`
     ).should("exist");
   });
+
+  specify("clicked deployment details", () => {
+    cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+    cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+
+    cy.getByTestid(`depl-${depl1.id}`).click();
+    cy.wait("@getDeploymentById");
+
+    cy.contains("Prod");
+    cy.contains(depl1.github_meta?.commit?.message!);
+    cy.contains(depl1.github_meta?.commit?.sha?.slice(0, 7)!);
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/commit/${depl1.github_meta?.commit?.sha}`
+    ).should("exist");
+
+    // env variables
+    cy.getByTestid("custom_java_env_vars_accordion").click();
+    cy.get("#custom_java_env_vars-0-key").contains("region");
+    cy.get("#custom_java_env_vars-0-value").contains("eu-west-2");
+    cy.get("#custom_java_env_vars-1-key").contains("bucket-name");
+    cy.get("#custom_java_env_vars-1-value").contains("dray-bucket");
+    cy.get("#custom_java_env_vars-2-key").contains("awsAccessKey");
+    cy.get("#custom_java_env_vars-2-value").contains("access_key");
+  });
 });
