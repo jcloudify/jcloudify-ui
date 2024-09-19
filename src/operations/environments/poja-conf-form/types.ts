@@ -2,12 +2,14 @@ import {PojaConfRecord} from "@/operations/environments/poja-conf-form/poja-conf
 import {Application, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 
 export type PojaConfViewComponent = React.ComponentType<{
-  envId: string;
+  targetId: string;
+  targetResource: "environment" | "deployment";
   appId: string;
 }>;
 export type PojaConfFFComponent = React.ComponentType<{}>;
 export type PojaConfEditComponent = React.ComponentType<{
-  envId: string;
+  targetId: string;
+  targetResource: "environment" | "deployment";
   appId: string;
   onSuccess: () => void;
 }>;

@@ -75,3 +75,9 @@ export const prod_env_conf1 = createConf1(app1, {
 export const preprod_env_conf1 = createConf1(app1, {
   "sentry-domain": "sentry.domain",
 });
+
+export const depl1_prod_env_conf1 = createConf1(app1, {
+  "region": "eu-west-2",
+  "bucket-name": "dray-bucket",
+  "awsAccessKey": "access_key",
+});

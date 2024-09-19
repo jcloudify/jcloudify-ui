@@ -1,8 +1,8 @@
 import {user1} from "../fixtures/user.mock";
-import {app1, app2} from "../fixtures/application.mock";
-import {depl1, depl2, depl3} from "../fixtures/deployment.mock";
+import {app1} from "../fixtures/application.mock";
+import {depl1, depl2} from "../fixtures/deployment.mock";
 
-describe.skip("Deployment", () => {
+describe("Deployment", () => {
   beforeEach(() => {
     cy.fakeLogin(user1);
     cy.mockApiGet();
@@ -12,165 +12,131 @@ describe.skip("Deployment", () => {
   context("Filter", () => {
     beforeEach(() => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+      cy.contains("Deployments").click();
       cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
     });
 
     specify("Environment", () => {
-      cy.muiSelect("#env_type", "PROD");
+      cy.muiSelect("[data-testid='env-type']", "PROD");
 
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-      cy.muiSelect("#env_type", "PREPROD");
+      cy.muiSelect("[data-testid='env-type']", "PREPROD");
 
       cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.muiSelect("#env_type", "All Environments");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("exist");
-    });
-
-    specify("State", () => {
-      cy.muiSelect("#state", "READY");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
-
-      cy.muiSelect("#state", "IN_PROGRESS");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("exist");
-
-      cy.muiSelect("#state", "FAILED");
-
-      cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
-      cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
-
-      cy.muiSelect("#state", "Any");
+      cy.muiSelect("[data-testid='env-type']", "All Environments");
 
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
     });
 
     specify("Date Range", () => {
-      cy.get("#from").type("2024-01-01");
-      cy.get("#to").type("2024-01-05");
+      cy.getByName("startDatetime").type("2024-01-01T00:00");
+      cy.getByName("endDatetime").type("2024-01-05T00:00");
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.get("#from").type("2024-01-01");
-      cy.get("#to").type("2024-01-03");
+      cy.getByName("startDatetime").type("2024-01-01T00:00");
+      cy.getByName("endDatetime").type("2024-01-03T00:00");
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-      cy.get("#from").type("2024-01-04");
-      cy.get("#to").type("2024-01-10");
+      cy.getByName("startDatetime").type("2024-01-04T00:00");
+      cy.getByName("endDatetime").type("2024-01-10T00:00");
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.get("#from").clear();
-      cy.get("#to").type("2024-01-04");
+      cy.getByName("startDatetime").clear();
+      cy.getByName("endDatetime").type("2024-01-04T00:00");
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.get("#from").clear();
-      cy.get("#to").type("2024-01-02");
+      cy.getByName("startDatetime").clear().blur();
+      cy.getByName("endDatetime").type("2024-01-02T00:00");
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("not.exist");
 
-      cy.get("#from").type("2024-01-02");
-      cy.get("#to").clear();
+      cy.getByName("startDatetime").type("2024-01-02T00:00");
+      cy.getByName("endDatetime").clear().blur();
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
 
-      cy.get("#from").type("2024-01-04");
-      cy.get("#to").clear();
+      cy.getByName("startDatetime").type("2024-01-04T00:00");
+      cy.getByName("endDatetime").clear().blur();
+      cy.wait("@getDeployments");
       cy.getByTestid(`depl-${depl1.id}`).should("not.exist");
       cy.getByTestid(`depl-${depl2.id}`).should("exist");
     });
   });
 
-  specify("depl metadata (warning, success)", () => {
+  specify("deployment github metadata", () => {
     cy.getByTestid(`show-${app1.id}-app`).click({force: true});
     cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
 
-    cy.getByTestid(`depl-${depl1.id}`).contains("prod");
-    cy.getByTestid(`depl-${depl1.id}`).contains(`by ${depl1.creator.username}`);
-    cy.getByTestid(`depl-${depl1.id}`).contains("Ready");
-
-    cy.getByTestid(`depl-${depl2.id}`).contains("preprod");
-    cy.getByTestid(`depl-${depl2.id}`).contains(`by ${depl2.creator.username}`);
-    cy.getByTestid(`depl-${depl2.id}`).contains("In Progress");
-
-    cy.getByHref(
-      `https://github.com/${depl1.github_meta.org}/${depl1.github_meta.repo}/tree/prod`
-    ).should("exist");
-    cy.getByHref(
-      `https://github.com/${depl2.github_meta.org}/${depl2.github_meta.repo}/tree/preprod`
-    ).should("exist");
-
-    cy.getByHref(
-      `https://github.com/${depl1.github_meta.org}/${depl1.github_meta.repo}/commit/${depl1.github_meta.commit_sha}`
-    ).should("exist");
-    cy.getByHref(
-      `https://github.com/${depl2.github_meta.org}/${depl2.github_meta.repo}/commit/${depl2.github_meta.commit_sha}`
-    ).should("exist");
-
-    cy.getByHref(`https://github.com/${depl2.creator.username}`).should(
-      "exist"
+    cy.getByTestid(`depl-${depl1.id}`).contains("Prod");
+    cy.getByTestid(`depl-${depl1.id}`).contains(
+      `by ${depl1.github_meta?.commit?.committer?.name}`
     );
-    cy.getByHref(`https://github.com/${depl1.creator.username}`).should(
-      "exist"
+
+    cy.getByTestid(`depl-${depl2.id}`).contains("Preprod");
+    cy.getByTestid(`depl-${depl2.id}`).contains(
+      `by ${depl2.github_meta?.commit?.committer?.name}`
     );
+
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/tree/prod`
+    ).should("exist");
+    cy.getByHref(
+      `https://github.com/${depl2.github_meta?.repo?.owner_name}/${depl2.github_meta?.repo?.name}/tree/preprod`
+    ).should("exist");
+
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/commit/${depl1.github_meta?.commit?.sha}`
+    ).should("exist");
+    cy.getByHref(
+      `https://github.com/${depl2.github_meta?.repo?.owner_name}/${depl2.github_meta?.repo?.name}/commit/${depl2.github_meta?.commit?.sha}`
+    ).should("exist");
+
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.commit?.committer?.name}`
+    ).should("exist");
+    cy.getByHref(
+      `https://github.com/${depl2.github_meta?.commit?.committer?.name}`
+    ).should("exist");
   });
 
-  specify("depl metadata (failed)", () => {
-    cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-    cy.getByHref(`/applications/${app2.id}/show/deployments`).click();
-
-    cy.getByTestid(`depl-${depl3.id}`).contains("prod");
-    cy.getByTestid(`depl-${depl3.id}`).contains(`by ${depl3.creator.username}`);
-    cy.getByTestid(`depl-${depl3.id}`).contains("Failed");
-  });
-
-  specify("depl details are shown when an entry is clicked [READY]", () => {
+  specify("clicked deployment details", () => {
     cy.getByTestid(`show-${app1.id}-app`).click({force: true});
     cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+
     cy.getByTestid(`show-${depl1.id}-depl`).click({force: true});
+    cy.wait("@getDeploymentById");
+    cy.wait("@getDeploymentConfig");
 
-    cy.contains(depl1.id);
-    cy.contains("Ready");
     cy.contains("Prod");
-    cy.contains("prod");
-    cy.contains("fdf8268c7b3ecef9ae7298ef4acaeca38cf9d2ef".slice(0, 7));
-    cy.contains("poja: bootstrap");
-    cy.contains("https://eckdial6c4.execute-api.eu-west-3.amazonaws.com/Prod");
-    cy.contains("by user1");
+    cy.contains(depl1.github_meta?.commit?.message!);
+    cy.contains(depl1.github_meta?.commit?.sha?.slice(0, 7)!);
+    cy.getByHref(
+      `https://github.com/${depl1.github_meta?.repo?.owner_name}/${depl1.github_meta?.repo?.name}/commit/${depl1.github_meta?.commit?.sha}`
+    ).should("exist");
 
-    // TODO: depl logs
+    // env variables
+    cy.getByTestid("custom_java_env_vars_accordion").click();
+    cy.get("#custom_java_env_vars-0-key").contains("region");
+    cy.get("#custom_java_env_vars-0-value").contains("eu-west-2");
+    cy.get("#custom_java_env_vars-1-key").contains("bucket-name");
+    cy.get("#custom_java_env_vars-1-value").contains("dray-bucket");
+    cy.get("#custom_java_env_vars-2-key").contains("awsAccessKey");
+    cy.get("#custom_java_env_vars-2-value").contains("access_key");
   });
-
-  specify(
-    "depl details are shown when an entry is clicked [IN_PROGRESS]",
-    () => {
-      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
-      cy.getByTestid(`show-${depl2.id}-depl`).click({force: true});
-
-      cy.contains(depl2.id);
-      cy.contains("In Progress");
-      cy.contains("Preprod");
-      cy.contains("preprod");
-      cy.contains("eccf28034eafdb9774e721d122cbdf2c2bbfaed2".slice(0, 7));
-      cy.contains("style: reformat");
-      // url
-      cy.contains("not available");
-      cy.contains("by user1");
-
-      // TODO: depl logs
-    }
-  );
 });

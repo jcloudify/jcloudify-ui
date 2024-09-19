@@ -14,7 +14,11 @@ import {
   app1_prod_stacks,
   stacks,
 } from "../fixtures/stack.mock";
-import {preprod_env_conf1, prod_env_conf1} from "../fixtures/config.mock";
+import {
+  depl1_prod_env_conf1,
+  preprod_env_conf1,
+  prod_env_conf1,
+} from "../fixtures/config.mock";
 import {pojaVersions} from "../fixtures/poja-version.mock";
 import {app1_prod_env_compute_stack_resources} from "../fixtures/compute-stack-resource.mock";
 import {
@@ -23,7 +27,9 @@ import {
 } from "../fixtures/log-group.mock";
 import {app1_prod_env_frontal_function_log_group1_streams} from "../fixtures/log-stream.mock";
 import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtures/log-stream-event.mock";
+import {depl1, depls} from "../fixtures//deployment.mock";
 import {jcloudify} from "./util";
+import {isDateBetween} from "../../src/utils/date";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
@@ -230,6 +236,47 @@ Cypress.Commands.add("mockApiGet", () => {
       data: app1_prod_env_frontal_function_log_group1_stream1_events,
     }
   ).as("getLogStreamEvents");
+
+  cy.intercept(
+    jcloudify(`/users/${user1.id}/applications/${app1.id}/deployments*`),
+    (req) => {
+      const {query} = req;
+      const {environmentType, startDatetime, endDatetime} = query;
+      const data = depls.filter(
+        (depl) =>
+          depl.application_id === app1.id &&
+          (!environmentType ||
+            environmentType ===
+              depl.github_meta?.commit?.branch?.toUpperCase()) &&
+          (!(startDatetime || endDatetime) ||
+            isDateBetween(
+              depl.creation_datetime!,
+              startDatetime ? new Date(startDatetime) : undefined,
+              endDatetime ? new Date(endDatetime) : new Date(),
+              "incl"
+            ))
+      );
+      req.reply({
+        body: {
+          data,
+        },
+      });
+    }
+  ).as("getDeployments");
+
+  cy.intercept(
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}`
+    ),
+    depl1
+  ).as("getDeploymentById");
+
+  cy.intercept(
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/config`
+    ),
+    depl1_prod_env_conf1
+  ).as("getDeploymentConfig");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {

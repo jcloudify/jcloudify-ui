@@ -4,6 +4,8 @@ import {defineConfig} from "cypress";
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
+  viewportWidth: 1366,
+  viewportHeight: 768,
   projectId: "q7vvqw",
   env: {
     codeCoverage: {

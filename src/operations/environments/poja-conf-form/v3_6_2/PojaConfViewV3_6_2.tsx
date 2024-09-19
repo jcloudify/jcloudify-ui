@@ -1,4 +1,3 @@
-import React from "react";
 import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
 import {
   Stack,
@@ -19,22 +18,25 @@ import {
   StringArrayField,
   renderWithLabel,
 } from "@/operations/components/field";
+import {PojaConfViewComponent} from "@/operations/environments/poja-conf-form";
 import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
 } from "@jcloudify-api/typescript-client";
 
-export const PojaConfViewV3_6_2: React.FC<{envId: string; appId: string}> = ({
-  envId,
+export const PojaConfViewV3_6_2: PojaConfViewComponent = ({
+  targetId,
+  targetResource,
   appId,
 }) => {
   return (
     <ShowBase
       resource="pojaConf"
-      id={envId}
+      id={targetId}
       queryOptions={{
         meta: {
           appId,
+          targetResource,
         },
       }}
     >

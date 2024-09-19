@@ -43,7 +43,8 @@ import {ToRecord} from "@/providers";
 
 export const PojaConfEditV3_6_2: PojaConfEditComponent = ({
   appId,
-  envId,
+  targetResource,
+  targetId,
   onSuccess,
 }) => {
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
@@ -54,17 +55,18 @@ export const PojaConfEditV3_6_2: PojaConfEditComponent = ({
       mutationMode="pessimistic"
       transform={(data) => transformFormValuesV3_6_2(data, app!)}
       resource="pojaConf"
-      id={envId}
+      id={targetId}
       queryOptions={{
         meta: {
           appId,
+          targetResource,
         },
       }}
       redirect={false}
       mutationOptions={{
         meta: {
           appId,
-          envId,
+          targetId,
         },
         onSuccess,
       }}
