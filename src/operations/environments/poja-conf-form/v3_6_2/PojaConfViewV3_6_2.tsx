@@ -1,4 +1,3 @@
-import React from "react";
 import {ShowBase, TextField, BooleanField, useRecordContext} from "react-admin";
 import {
   Stack,

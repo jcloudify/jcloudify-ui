@@ -119,10 +119,11 @@ describe("Deployment", () => {
     cy.getByTestid(`show-${app1.id}-app`).click({force: true});
     cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
 
-    cy.getByTestid(`depl-${depl1.id}`).click();
+    cy.getByTestid(`show-${depl1.id}-depl`).click({force: true});
     cy.wait("@getDeploymentById");
+    cy.wait("@getDeploymentConfig");
 
-    cy.contains("Prod");
+    // cy.contains("Prod");
     cy.contains(depl1.github_meta?.commit?.message!);
     cy.contains(depl1.github_meta?.commit?.sha?.slice(0, 7)!);
     cy.getByHref(

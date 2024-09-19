@@ -268,8 +268,15 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(
       `/users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}`
     ),
-    depl1_prod_env_conf1
+    depl1
   ).as("getDeploymentById");
+
+  cy.intercept(
+    jcloudify(
+      `/users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/config`
+    ),
+    depl1_prod_env_conf1
+  ).as("getDeploymentConfig");
 });
 
 Cypress.Commands.add("fakeLogin", (user) => {
