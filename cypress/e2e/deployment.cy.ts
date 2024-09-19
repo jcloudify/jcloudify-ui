@@ -123,7 +123,7 @@ describe("Deployment", () => {
     cy.wait("@getDeploymentById");
     cy.wait("@getDeploymentConfig");
 
-    // cy.contains("Prod");
+    cy.contains("Prod");
     cy.contains(depl1.github_meta?.commit?.message!);
     cy.contains(depl1.github_meta?.commit?.sha?.slice(0, 7)!);
     cy.getByHref(

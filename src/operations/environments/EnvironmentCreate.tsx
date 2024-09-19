@@ -53,6 +53,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
     id: template?.id?.toString()!,
     meta: {
       appId,
+      owner: "environment",
     },
   });
 
@@ -89,6 +90,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
       mutationOptions={{
         meta: {
           appId: app?.id,
+          ownerId: newEnvironmentId,
         },
         onSuccess: (environment) => {
           redirect(
