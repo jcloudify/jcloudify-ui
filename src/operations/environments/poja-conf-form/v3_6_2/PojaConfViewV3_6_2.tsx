@@ -25,18 +25,18 @@ import {
 } from "@jcloudify-api/typescript-client";
 
 export const PojaConfViewV3_6_2: PojaConfViewComponent = ({
-  ownerId,
-  owner,
+  targetId,
+  targetResource,
   appId,
 }) => {
   return (
     <ShowBase
       resource="pojaConf"
-      id={ownerId}
+      id={targetId}
       queryOptions={{
         meta: {
           appId,
-          owner,
+          targetResource,
         },
       }}
     >

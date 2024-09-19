@@ -9,21 +9,21 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
   async getList(_page, _perPage, _filter = {}) {
     throw new Error("Function not implemented.");
   },
-  async getOne(ownerId, meta = {}) {
+  async getOne(targetId, meta = {}) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     const getConfig =
-      meta.owner === "environment"
+      meta.targetResource === "environment"
         ? environmentApi().getApplicationEnvironmentConfig.bind(
             environmentApi()
           )
         : applicationApi().getApplicationDeploymentConfig.bind(
-            environmentApi()
+            applicationApi()
           );
     const conf = (await unwrap(() =>
-      getConfig(uid, meta.appId, ownerId.toString())
+      getConfig(uid, meta.appId, targetId.toString())
     )) as ToRecord<OneOfPojaConf>;
 
-    conf.id = ownerId;
+    conf.id = targetId;
     return conf;
   },
   async save(conf, meta = {}) {
@@ -34,7 +34,7 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
           uid,
           meta.appId,
           // no depl config mutation
-          meta.ownerId,
+          meta.targetId,
           conf
         )
       )) as ToRecord<OneOfPojaConf>;

@@ -24,7 +24,7 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
     id: toCompare[0],
     meta: {
       appId,
-      owner: "environment",
+      targetResource: "environment",
     },
   });
 
@@ -32,7 +32,7 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
     id: toCompare[1],
     meta: {
       appId,
-      owner: "environment",
+      targetResource: "environment",
     },
   });
 

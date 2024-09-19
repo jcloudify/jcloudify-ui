@@ -115,7 +115,7 @@ const PojaConf: React.FC<{deploymentId: string; appId: string}> = ({
 }) => {
   const {data: pojaConf, isLoading} = useGetOne<ToRecord<OneOfPojaConf>>(
     "pojaConf",
-    {id: deploymentId, meta: {appId, owner: "deployment"}}
+    {id: deploymentId, meta: {appId, targetResource: "deployment"}}
   );
 
   return (
@@ -126,8 +126,8 @@ const PojaConf: React.FC<{deploymentId: string; appId: string}> = ({
         <PojaConfView
           version={pojaConf.version as PojaConfComponentVersion}
           appId={appId}
-          ownerId={deploymentId}
-          owner="deployment"
+          targetId={deploymentId}
+          targetResource="deployment"
         />
       )}
     </ContainerWithHeading>

@@ -44,7 +44,7 @@ export const environmentProvider: PojaDataProvider<ToRecord<Environment>> = {
 
     await pojaConfProvider.save(pojaConf as ToRecord<PojaConf1>, {
       appId: meta.appId,
-      ownerId: createdEnv.id,
+      targetId: createdEnv.id,
     });
     return createdEnv;
   },
