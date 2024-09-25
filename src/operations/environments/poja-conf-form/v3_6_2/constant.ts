@@ -42,8 +42,8 @@ export const POJA_CONF_V3_6_2_DEFAULT_VALUES: PojaConf1 = {
   general: {
     app_name: "",
     package_full_name: "com.example.app",
-    with_queues_nb: WithQueuesNbEnum.NUMBER_2,
-    with_snapstart: false,
+    with_queues_nb: WithQueuesNbEnum.NUMBER_0,
+    with_snapstart: true,
     custom_java_env_vars: {},
     custom_java_deps: [],
     custom_java_repositories: [],
