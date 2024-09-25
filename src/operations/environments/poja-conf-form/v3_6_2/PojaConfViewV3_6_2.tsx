@@ -193,6 +193,10 @@ const IntegrationConf = () => (
       <BooleanField label="Sonar" source="integration.with_sonar" />
       <BooleanField label="Sentry" source="integration.with_sentry" />
       <BooleanField label="Swagger UI" source="integration.with_swagger_ui" />
+      <BooleanField
+        label="File Storage"
+        source="integration.with_file_storage"
+      />
     </GridLayout>
   </Stack>
 );
