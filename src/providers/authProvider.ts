@@ -21,9 +21,10 @@ export const authProvider: PojaAuthProvider = {
     // sign out
     clearCaches();
   },
-  checkAuth: () => {
+  checkAuth: async () => {
     if (whoamiCache.isPresent()) return Promise.resolve();
-    return Promise.reject();
+    await authProvider.whoami();
+    return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
   getIdentity: () => Promise.resolve({id: "dummy"}),
