@@ -83,6 +83,8 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
   const isFromScratch = !templateConf;
 
+  console.log("poja_version", pojaVersion, pojaVersions);
+
   return (
     <CreateBase
       resource="environments"
@@ -122,6 +124,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
               <SelectInput
                 label="Type"
                 source="to_create.environment_type"
+                data-testid="environment_type"
                 choices={makeSelectChoices(creatable)}
                 variant="outlined"
                 defaultValue={creatable[0]}
@@ -143,13 +146,13 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
                 {isFromScratch ? (
                   <GridLayout xs={12} md={6} lg={4} spacing={2}>
                     <Select
+                      disabled={!!templateConf || !pojaVersions.length}
                       fullWidth
-                      value={pojaVersion}
                       size="medium"
+                      value={pojaVersion || ""}
                       onChange={(ev) =>
                         setPojaVersion(ev.target.value as string)
                       }
-                      disabled={!!templateConf}
                     >
                       {pojaVersions.map((version) => (
                         <MenuItem
