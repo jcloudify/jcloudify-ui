@@ -1,7 +1,6 @@
-import {createRequire} from "module";
 import {defineConfig} from "cypress";
 
-const require = createRequire(import.meta.url);
+import "dotenv/config";
 
 export default defineConfig({
   viewportWidth: 1366,
@@ -11,10 +10,12 @@ export default defineConfig({
     codeCoverage: {
       exclude: ["cypress/**/*"],
     },
+    CYPRESS_JCLOUDIFY_TEST_USER_TOKEN:
+      process.env.CYPRESS_JCLOUDIFY_TEST_USER_TOKEN,
   },
   e2e: {
-    setupNodeEvents(on, config) {
-      require("@cypress/code-coverage/task")(on, config);
+    setupNodeEvents(_on, config) {
+      // require("@cypress/code-coverage/task")(on, config);
       return config;
     },
     baseUrl: "http://localhost:5173/",
@@ -25,8 +26,8 @@ export default defineConfig({
       bundler: "vite",
     },
     specPattern: "src/**/*.cy.{ts,tsx,js,jsx}",
-    setupNodeEvents(on, config) {
-      require("@cypress/code-coverage/task")(on, config);
+    setupNodeEvents(_on, config) {
+      // require("@cypress/code-coverage/task")(on, config);
       return config;
     },
   },

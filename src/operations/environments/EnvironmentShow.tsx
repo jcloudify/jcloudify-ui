@@ -112,6 +112,7 @@ const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
                     copiable={false}
                     target="_blank"
                     to={apiUrl?.value!}
+                    data-testid="api-url"
                   >
                     {apiUrl?.value!}
                   </TypographyLink>
