@@ -1,0 +1,55 @@
+name: Test create deployment
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: eu-west-3
+  REACT_APP_JCLOUDIFY_API_URL: ${{ vars.REACT_APP_JCLOUDIFY_API_URL }}
+
+jobs:
+  create-deployment:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.19.0
+
+      ## Connect to Poja Private Codeartifact Repository ##
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - run: sh ./initNpmrc.sh jcloudify-store npm-jcloudify-app 057045785189
+
+      - name: Run create deployment test
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          spec: cypress/e2e/app_deployment_it/create_deployment.it.cy.ts
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_JCLOUDIFY_TEST_USER_TOKEN: ${{ secrets.CYPRESS_JCLOUDIFY_TEST_USER_TOKEN }}
+
+      - name: Log target app
+        run: |
+          echo "Target app id: $(cat target-app-id.txt)"
+
+      - name: Generate timestamp for cache key
+        id: timestamp
+        run: echo "CACHE_TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+      - name: Store target app
+        uses: actions/cache@v4
+        with:
+          key: target-app-id-${{ github.ref_name }}-${{ env.CACHE_TIMESTAMP }}
+          path: target-app-id.txt

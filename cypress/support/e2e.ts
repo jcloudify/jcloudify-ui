@@ -16,7 +16,7 @@
 import {Token, User} from "@jcloudify-api/typescript-client";
 import "./commands";
 
-import "@cypress/code-coverage/support";
+// import "@cypress/code-coverage/support";
 
 declare global {
   namespace Cypress {
@@ -36,6 +36,8 @@ declare global {
       mockToken: (token: Token) => Chainable;
       mockApiGet: () => Chainable;
       fakeLogin: (user: User & {token: string}) => Chainable;
+
+      withToken: (token: Token) => Chainable;
     }
   }
 }

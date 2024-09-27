@@ -57,8 +57,9 @@ Cypress.Commands.add("muiSelect", (selector, value) => {
 });
 
 Cypress.Commands.add("muiSelect2", (formControl, optionText) => {
-  cy.get(formControl + " [role='combobox']").click({force: true});
-  cy.contains(optionText).click({force: true});
+  const selector = formControl + " [role='combobox']";
+  cy.get(selector).click({force: true});
+  cy.get(formControl).contains(optionText).click({force: true});
 });
 
 Cypress.Commands.add("muiClear", (selector) => {
@@ -293,4 +294,8 @@ Cypress.Commands.add("fakeLogin", (user) => {
   });
 
   cy.visit("/auth/callback?code=fakecode");
+});
+
+Cypress.Commands.add("withToken", (token) => {
+  localStorage.setItem("auth_tokens", JSON.stringify(token));
 });

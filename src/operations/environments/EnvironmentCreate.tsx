@@ -83,8 +83,6 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
   const isFromScratch = !templateConf;
 
-  console.log("poja_version", pojaVersion, pojaVersions);
-
   return (
     <CreateBase
       resource="environments"
@@ -150,6 +148,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
                       fullWidth
                       size="medium"
                       value={pojaVersion || ""}
+                      data-testid="poja-version"
                       onChange={(ev) =>
                         setPojaVersion(ev.target.value as string)
                       }
