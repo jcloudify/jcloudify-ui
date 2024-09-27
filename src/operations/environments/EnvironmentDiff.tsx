@@ -1,7 +1,11 @@
-import {Environment, OneOfPojaConf} from "@jcloudify-api/typescript-client";
-import {useState} from "react";
+import {
+  Environment,
+  OneOfPojaConf,
+  EnvironmentType as EnvironmentTypeEnum,
+} from "@jcloudify-api/typescript-client";
+import {useMemo} from "react";
 import {useGetList, useGetOne} from "react-admin";
-import {Box, Paper, Stack, Select, MenuItem} from "@mui/material";
+import {Box, Paper, Stack} from "@mui/material";
 
 import {DiffViewer} from "@/components/diff";
 import {Heading} from "@/components/head";
@@ -13,15 +17,24 @@ import {prettyJSON} from "@/utils/format";
 import {omit} from "@/utils/object";
 
 export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
-  const [toCompare, setToCompare] = useState<string[]>([]);
-
   const {data: environments = []} = useGetList<ToRecord<Environment>>(
     "environments",
     {filter: {appId}}
   );
 
+  const environmentMap = useMemo(() => {
+    return {
+      prod: environments.find(
+        (env) => env.environment_type! === EnvironmentTypeEnum.PROD
+      ),
+      preprod: environments.find(
+        (env) => env.environment_type! === EnvironmentTypeEnum.PREPROD
+      ),
+    };
+  }, [environments]);
+
   const {data: c1} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
-    id: toCompare[0],
+    id: environmentMap.prod?.id!,
     meta: {
       appId,
       targetResource: "environment",
@@ -29,17 +42,12 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
   });
 
   const {data: c2} = useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
-    id: toCompare[1],
+    id: environmentMap.preprod?.id!,
     meta: {
       appId,
       targetResource: "environment",
     },
   });
-
-  const setDiffEnvironment = (selectedId: string, idx: number) => {
-    toCompare[idx] = selectedId;
-    setToCompare(toCompare.slice());
-  };
 
   return (
     <Stack mt={4} mb={3} spacing={3}>
@@ -53,18 +61,14 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
       <Box component={Paper} bgcolor="#fff">
         <DiffViewer
           leftTitle={
-            <SelectEnvironmentToCompare
-              id="0"
-              environments={environments}
-              onSelect={(id) => setDiffEnvironment(id, 0)}
-            />
+            environmentMap.prod ? (
+              <EnvironmentType value={EnvironmentTypeEnum.PROD} />
+            ) : undefined
           }
           rightTitle={
-            <SelectEnvironmentToCompare
-              id="1"
-              environments={environments}
-              onSelect={(id) => setDiffEnvironment(id, 1)}
-            />
+            environmentMap.preprod ? (
+              <EnvironmentType value={EnvironmentTypeEnum.PREPROD} />
+            ) : undefined
           }
           oldValue={c1 ? prettyJSON(omit(c1, "id" as any)) : ""}
           newValue={c2 ? prettyJSON(omit(c2, "id" as any)) : ""}
@@ -74,21 +78,3 @@ export const EnvironmentDiff: React.FC<{appId: string}> = ({appId}) => {
     </Stack>
   );
 };
-
-const SelectEnvironmentToCompare: React.FC<{
-  id: string;
-  environments: Environment[];
-  onSelect: (id: string) => void;
-}> = ({environments, onSelect, id}) => (
-  <Select<string>
-    onChange={(ev) => onSelect(ev.target.value)}
-    size="small"
-    data-testid={`select-env-${id}`}
-  >
-    {environments.map((environment) => (
-      <MenuItem key={environment.id} value={environment.id}>
-        <EnvironmentType value={environment.environment_type!} />
-      </MenuItem>
-    ))}
-  </Select>
-);

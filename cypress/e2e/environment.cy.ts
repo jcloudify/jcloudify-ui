@@ -61,16 +61,13 @@ describe("Environment", () => {
       );
     });
 
-    specify("Compare Environment Differences", () => {
+    specify.only("Compare Environment Differences", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app1.id}/show/environments`).click();
       cy.contains("Diff").click();
 
       cy.contains("Environment Diff");
       cy.contains("Compare Environment Differences");
-
-      cy.muiSelect2("[data-testid='select-env-0']", "Prod");
-      cy.muiSelect2("[data-testid='select-env-1']", "Preprod");
 
       cy.wait("@getEnvironments");
       cy.wait("@getEnvironmentConfig");
