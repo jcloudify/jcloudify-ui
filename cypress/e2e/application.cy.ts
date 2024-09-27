@@ -60,7 +60,10 @@ describe("Application", () => {
 
       cy.getByName("name").type(app1.name!);
 
-      cy.muiSelect2("[data-testid='select-installation-id']", "user1");
+      cy.muiSelect(
+        "[data-testid='select-installation-id']",
+        "user1_installation_1"
+      );
 
       cy.get("[name='github_repository.name']").type(app1.name!);
       cy.get("[name='github_repository.description']").type(app1.name!);
