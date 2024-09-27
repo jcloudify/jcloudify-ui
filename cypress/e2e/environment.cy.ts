@@ -61,7 +61,7 @@ describe("Environment", () => {
       );
     });
 
-    specify.only("Compare Environment Differences", () => {
+    specify("Compare Environment Differences", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app1.id}/show/environments`).click();
       cy.contains("Diff").click();
