@@ -16,6 +16,7 @@ import {
   logGroupProvider,
   logStreamProvider,
   logStreamEventProvider,
+  deploymentStateProvider,
 } from "./";
 
 /**
@@ -30,6 +31,8 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return applicationProvider;
     case "deployments":
       return deploymentProvider;
+    case "deploymentStates":
+      return deploymentStateProvider;
     case "environments":
       return environmentProvider;
     case "users":
