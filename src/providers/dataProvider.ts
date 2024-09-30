@@ -7,7 +7,6 @@ import {
   deploymentProvider,
   environmentProvider,
   githubAppInstallationProvider,
-  logsProvider,
   pojaConfProvider,
   stackEventProvider,
   stackOutputProvider,
@@ -33,8 +32,6 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return deploymentProvider;
     case "environments":
       return environmentProvider;
-    case "logs":
-      return logsProvider;
     case "users":
       return userProvider;
     case "stacks":
