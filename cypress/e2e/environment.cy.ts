@@ -61,17 +61,33 @@ describe("Environment", () => {
       );
     });
 
-    specify("Compare Environment Differences", () => {
-      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app1.id}/show/environments`).click();
-      cy.contains("Diff").click();
+    context("Diff", () => {
+      specify(
+        "can only see diff when the 2 available environment are created",
+        () => {
+          cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+          cy.contains("Diff").should("not.have.attr", "aria-disabled");
 
-      cy.contains("Environment Diff");
-      cy.contains("Compare Environment Differences");
+          cy.getByHref(`/applications`).click();
+          cy.getByTestid(`show-${app2.id}-app`).click({force: true});
+          cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+          cy.contains("Diff").should("have.attr", "aria-disabled", "true");
+        }
+      );
 
-      cy.wait("@getEnvironments");
-      cy.wait("@getEnvironmentConfig");
-      // TODO: a way to test this in a better way
+      specify("Compare Environment Differences", () => {
+        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+        cy.contains("Diff").click();
+
+        cy.contains("Environment Diff");
+        cy.contains("Compare Environment Differences");
+
+        cy.wait("@getEnvironments");
+        cy.wait("@getEnvironmentConfig");
+        // TODO: a way to test this in a better way
+      });
     });
   });
 

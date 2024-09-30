@@ -11,7 +11,6 @@ import {
   ListProps,
   RaRecord,
   TextField,
-  useListContext,
 } from "react-admin";
 import {
   EnvironmentType,
@@ -25,8 +24,7 @@ export type EnvironmentListProps<Record extends RaRecord<Identifier> = any> =
   };
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
-  const {canCreateMore} = useEnvironmentCreation(appId);
-  const {data = []} = useListContext();
+  const {canCreateMore, created} = useEnvironmentCreation(appId);
   return (
     <Stack py={1} direction="row" alignItems="center" spacing={2}>
       <Button
@@ -34,7 +32,7 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
         startIcon={<CompareArrows />}
         component={Link}
         variant="outlined"
-        disabled={!data.length}
+        disabled={created.length !== 2}
         label="Diff"
       />
 

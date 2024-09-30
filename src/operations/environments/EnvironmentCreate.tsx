@@ -53,7 +53,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
     id: template?.id?.toString()!,
     meta: {
       appId,
-      owner: "environment",
+      targetResource: "environment",
     },
   });
 
@@ -144,7 +144,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
                 {isFromScratch ? (
                   <GridLayout xs={12} md={6} lg={4} spacing={2}>
                     <Select
-                      disabled={!!templateConf || !pojaVersions.length}
+                      disabled={!pojaVersions.length}
                       fullWidth
                       size="medium"
                       value={pojaVersion || ""}
