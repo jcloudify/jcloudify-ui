@@ -5,5 +5,8 @@ import {
 import {colors} from "@/themes";
 
 export const Divider: React.FC<MUIDividerProps> = ({sx, ...rest}) => (
-  <MUIDivider sx={{...sx, borderColor: colors("gray-1")}} {...rest} />
+  <MUIDivider
+    sx={{...sx, borderColor: (sx as any)?.borderColor || colors("gray-1")}}
+    {...rest}
+  />
 );
