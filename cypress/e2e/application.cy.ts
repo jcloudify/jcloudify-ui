@@ -73,5 +73,40 @@ describe("Application", () => {
 
       cy.pathnameEq("/applications");
     });
+
+    specify("Displays server side 400 error on incorrect payload", () => {
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications`),
+        (req) => {
+          return req.reply({
+            body: {
+              message: `Application with name=${app1.name} already exists`,
+              type: "400 BAD_REQUEST",
+            },
+            statusCode: 400,
+          });
+        }
+      ).as("createNewApp");
+
+      cy.get('[href="/applications/create/new"]').click();
+
+      cy.wait("@getUserInstallations");
+
+      cy.getByName("name").type(app1.name!);
+
+      cy.muiSelect(
+        "[data-testid='select-installation-id']",
+        "user1_installation_1"
+      );
+
+      cy.get("[name='github_repository.name']").type(app1.name!);
+      cy.get("[name='github_repository.description']").type(app1.name!);
+
+      cy.get("[aria-label='Save']").click();
+      cy.wait("@createNewApp");
+
+      cy.contains(`Application with name=${app1.name} already exists`);
+    });
   });
 });
