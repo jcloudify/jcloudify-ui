@@ -14,18 +14,19 @@ import {
 import {Avatar, Stack, Box, Typography} from "@mui/material";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
+import {VCS} from "@/components/source_control";
 import {ShowLayout} from "@/operations/components/show";
 import {EnvironmentType} from "@/operations/environments";
 import {
   PojaConfComponentVersion,
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
+import {DeploymentProcess} from "@/operations/deployments";
+import {JCBot} from "@/operations/github";
 import {colors} from "@/themes";
 import {fromToNow} from "@/utils/date";
 import {GITHUB_URL_PREFIX} from "@/utils/constant";
 import {ToRecord} from "@/providers";
-import {JCBot} from "../github";
-import {VCS} from "@/components/source_control";
 
 const DeploymentShowView: React.FC = () => {
   const deployment = useRecordContext<ToRecord<AppEnvDeployment>>();
@@ -98,6 +99,14 @@ const DeploymentShowView: React.FC = () => {
               </Box>
             </Labeled>
           </GridLayout>
+
+          <Box mt={3}>
+            <DeploymentProcess
+              deploymentId={deployment?.id!}
+              appId={deployment?.application_id!}
+              envId={deployment?.environment_id!}
+            />
+          </Box>
         </Stack>
       </ContainerWithHeading>
 
