@@ -25,7 +25,7 @@ export const it_pat: Token = {
 };
 
 export const it_app = (timestamp: number) => ({
-  name: "jcloudify-e2e-ops",
+  name: `jcloudify-e2e-ops-${timestamp}`,
   repo: {
     name: `jcloudify-e2e-ops-${timestamp}`,
     description: "jcloudify-e2e-ops operationalization",
