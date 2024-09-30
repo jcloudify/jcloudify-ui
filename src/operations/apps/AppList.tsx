@@ -141,13 +141,6 @@ export const AppList: React.FC = () => (
                 to="create/new"
                 component={Link}
               />
-              <Button
-                label="Import"
-                startIcon={<GitHub />}
-                variant="contained"
-                to="create/import-git-repo"
-                component={Link}
-              />
             </TopToolbar>
           </>
         )
