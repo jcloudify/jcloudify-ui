@@ -7,6 +7,7 @@ import {
 } from "@/providers";
 import {applicationApi, unwrap} from "@/services/poja-api";
 import {toArchived} from "@/providers/util";
+import {ra_handle_400_bad_request} from "@/operations/utils/errors";
 
 export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
   async getList(page, perPage) {
@@ -23,14 +24,18 @@ export const applicationProvider: PojaDataProvider<ToRecord<Application>> = {
   },
   async save(app) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
-    const apps = (
-      await unwrap(() =>
-        applicationApi().crupdateApplications(uid, {
-          data: [{...app, user_id: uid}],
-        })
-      )
-    ).data!;
-    return apps[0] as ToRecord<Application>;
+    try {
+      const apps = (
+        await unwrap(() =>
+          applicationApi().crupdateApplications(uid, {
+            data: [{...app, user_id: uid}],
+          })
+        )
+      ).data!;
+      return apps[0] as ToRecord<Application>;
+    } catch (e) {
+      return ra_handle_400_bad_request(e);
+    }
   },
   async delete(app) {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
