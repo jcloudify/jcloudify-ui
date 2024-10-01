@@ -3,12 +3,12 @@ import {useMemo} from "react";
 import {useGetOne} from "react-admin";
 import {Stack, Typography, Alert, AlertTitle} from "@mui/material";
 import {
-  STATUS_COLORS,
-  DeploymentCheckpoint,
+  CheckpointProgress,
   flattenDeploymentState,
   mapStateToCheckpoint,
-  STATUS_ICON_COMPONENTS,
-  Status,
+  STATUS,
+  STATUS_ICONS,
+  STATUS_COLORS,
 } from "@/operations/deployments/state";
 import {ToRecord} from "@/providers";
 import {Divider} from "@/components/divider";
@@ -16,9 +16,9 @@ import {COMMON_PAPER_BOX_SX} from "@/components/constants";
 import {useGetEnvironmentApiURL} from "../environments";
 import {TypographyLink} from "@/components/link";
 
-const Checkpoint: React.FC<DeploymentCheckpoint> = ({label, status}) => {
+const Checkpoint: React.FC<CheckpointProgress> = ({label, status}) => {
   const statusColor = STATUS_COLORS[status];
-  const StatusIcon = STATUS_ICON_COMPONENTS[status];
+  const StatusIcon = STATUS_ICONS[status];
   return (
     <Stack
       justifyContent="flex-start"
@@ -54,18 +54,17 @@ export const DeploymentProcess: React.FC<{
     }
   );
 
-  const states = useMemo(() => {
+  const checkpoints = useMemo(() => {
     if (!deploymentState) return [];
-    return flattenDeploymentState(deploymentState).map(
+    const states = flattenDeploymentState(deploymentState).map(
       (state) => state.progressionStatus!
     );
+    return mapStateToCheckpoint(states);
   }, [deploymentState]);
-
-  const checkpoints = useMemo(() => mapStateToCheckpoint(states), [states]);
 
   const [initialize, prepare, deploy] = checkpoints;
 
-  const isDeploymentComplete = deploy.status === Status.COMPLETED;
+  const isDeploymentComplete = deploy.status === STATUS.COMPLETED;
 
   if (isDeploymentComplete)
     return (
@@ -97,8 +96,8 @@ export const DeploymentProcess: React.FC<{
           mt: -3,
           flex: 1,
           borderColor:
-            initialize.status === Status.COMPLETED
-              ? STATUS_COLORS[Status.COMPLETED]
+            initialize.status === STATUS.COMPLETED
+              ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
         orientation="vertical"
@@ -110,8 +109,8 @@ export const DeploymentProcess: React.FC<{
           mt: -3,
           flex: 1,
           borderColor:
-            prepare.status === Status.COMPLETED
-              ? STATUS_COLORS[Status.COMPLETED]
+            prepare.status === STATUS.COMPLETED
+              ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
         orientation="vertical"

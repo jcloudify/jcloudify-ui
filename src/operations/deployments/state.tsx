@@ -6,6 +6,11 @@ import {
 } from "react-icons/md";
 import {DeploymentState} from "@jcloudify-api/typescript-client";
 
+export interface CheckpointProgress {
+  label: string;
+  status: keyof typeof STATUS;
+}
+
 // The last state serves as a transition between two checkpoint
 const STATE_CHECKPOINTS = [
   {
@@ -31,14 +36,9 @@ const STATE_CHECKPOINTS = [
     states: ["COMPUTE_STACK_DEPLOYMENT_IN_PROGRESS", "COMPUTE_STACK_DEPLOYED"],
     failedState: "COMPUTE_STACK_DEPLOYMENT_FAILED",
   },
-];
+] as const;
 
-export interface DeploymentCheckpoint {
-  label: string;
-  status: keyof typeof Status;
-}
-
-export const Status = {
+export const STATUS = {
   COMPLETED: "COMPLETED",
   IN_PROGRESS: "IN_PROGRESS",
   FAILED: "FAILED",
@@ -46,23 +46,23 @@ export const Status = {
 } as const;
 
 export const STATUS_COLORS = {
-  [Status.COMPLETED]: "green",
-  [Status.IN_PROGRESS]: "orange",
-  [Status.FAILED]: "red",
-  [Status.PENDING]: "gray",
+  [STATUS.COMPLETED]: "green",
+  [STATUS.IN_PROGRESS]: "orange",
+  [STATUS.FAILED]: "red",
+  [STATUS.PENDING]: "gray",
 } as const;
 
-export const STATUS_ICON_COMPONENTS = {
-  [Status.COMPLETED]: MdCheckCircleOutline,
-  [Status.IN_PROGRESS]: MdOutlinePending,
-  [Status.FAILED]: MdOutlineHighlightOff,
-  [Status.PENDING]: MdOutlineAccessTime,
+export const STATUS_ICONS = {
+  [STATUS.COMPLETED]: MdCheckCircleOutline,
+  [STATUS.IN_PROGRESS]: MdOutlinePending,
+  [STATUS.FAILED]: MdOutlineHighlightOff,
+  [STATUS.PENDING]: MdOutlineAccessTime,
 };
 
 export const mapStateToCheckpoint = (states: string[]) => {
   return STATE_CHECKPOINTS.map((checkpoint) => {
     if (states.includes(checkpoint.failedState)) {
-      return {label: checkpoint.label, status: Status.FAILED};
+      return {label: checkpoint.label, status: STATUS.FAILED};
     } else if (
       checkpoint.states.some((checkpointState) =>
         states.includes(checkpointState)
@@ -73,10 +73,10 @@ export const mapStateToCheckpoint = (states: string[]) => {
       );
       return {
         label: checkpoint.label,
-        status: isInProgress ? Status.IN_PROGRESS : Status.COMPLETED,
+        status: isInProgress ? STATUS.IN_PROGRESS : STATUS.COMPLETED,
       };
     }
-    return {label: checkpoint.label, status: Status.PENDING};
+    return {label: checkpoint.label, status: STATUS.PENDING};
   });
 };
 
