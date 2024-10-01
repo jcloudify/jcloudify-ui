@@ -25,6 +25,8 @@ const Checkpoint: React.FC<CheckpointProgress> = ({label, status}) => {
       alignItems="center"
       direction="column"
       spacing={1}
+      data-checkpoint={label}
+      data-status={status}
     >
       <StatusIcon color={statusColor} size="25px" />
       <Typography
@@ -61,7 +63,7 @@ export const DeploymentProcess: React.FC<{
     return mapStateToCheckpoint(states);
   }, [deploymentState]);
 
-  const [initialize, prepare, deploy] = checkpoints;
+  const [templateCheck, provision, deploy] = checkpoints;
 
   const isDeploymentComplete = deploy.status === STATUS.COMPLETED;
 
@@ -88,27 +90,27 @@ export const DeploymentProcess: React.FC<{
       width="100%"
       sx={COMMON_PAPER_BOX_SX}
     >
-      <Checkpoint label={initialize.label} status={initialize.status} />
+      <Checkpoint label={templateCheck.label} status={templateCheck.status} />
       <Divider
         sx={{
           borderWidth: "2px",
           mt: -3,
           flex: 1,
           borderColor:
-            initialize.status === STATUS.COMPLETED
+            templateCheck.status === STATUS.COMPLETED
               ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
         orientation="vertical"
       />
-      <Checkpoint label={prepare.label} status={prepare.status} />
+      <Checkpoint label={provision.label} status={provision.status} />
       <Divider
         sx={{
           borderWidth: "2px",
           mt: -3,
           flex: 1,
           borderColor:
-            prepare.status === STATUS.COMPLETED
+            provision.status === STATUS.COMPLETED
               ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
