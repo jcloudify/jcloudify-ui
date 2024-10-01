@@ -1,7 +1,7 @@
-import {user1} from "./user.mock";
-import {preprod_env, prod_env} from "./environment.mock";
-import {app1, app2} from "./application.mock";
 import {AppEnvDeployment} from "@jcloudify-api/typescript-client";
+import {user1} from "./user.mock";
+import {app1, app2} from "./application.mock";
+import {preprod_env, prod_env} from "./environment.mock";
 import {ToRecord} from "../../src/providers";
 
 export const depl1: ToRecord<AppEnvDeployment> = {

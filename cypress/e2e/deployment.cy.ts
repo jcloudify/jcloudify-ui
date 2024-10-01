@@ -1,6 +1,17 @@
 import {user1} from "../fixtures/user.mock";
 import {app1} from "../fixtures/application.mock";
 import {depl1, depl2} from "../fixtures/deployment.mock";
+import {
+  deploy_complete,
+  deploy_failed,
+  deploy_inProgress,
+  templateCheck_failed,
+  templateCheck_inProgress,
+  provision_failed,
+  provision_inProgress,
+} from "../fixtures/deployment-state.mock";
+import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
+import {STATUS} from "../../src/operations/deployments/state";
 
 describe("Deployment", () => {
   beforeEach(() => {
@@ -138,5 +149,168 @@ describe("Deployment", () => {
     cy.get("#custom_java_env_vars-1-value").contains("dray-bucket");
     cy.get("#custom_java_env_vars-2-key").contains("awsAccessKey");
     cy.get("#custom_java_env_vars-2-value").contains("access_key");
+  });
+
+  context("Deployment state", () => {
+    beforeEach(() => {
+      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+      cy.getByHref(`/applications/${app1.id}/show/deployments`).click();
+
+      cy.getByTestid(`show-${depl1.id}-depl`).click({force: true});
+      cy.wait("@getDeploymentById");
+      cy.wait("@getDeploymentConfig");
+    });
+
+    specify("Template check IN_PROGRESS", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        templateCheck_inProgress
+      ); // 1
+
+      // 1
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.IN_PROGRESS
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+    });
+
+    specify("Provision IN_PROGRESS", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        provision_inProgress
+      ); // 2
+
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.IN_PROGRESS
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+    });
+
+    specify("Deploy IN_PROGRESS", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        deploy_inProgress
+      ); // 3
+
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.IN_PROGRESS
+      );
+    });
+
+    specify("Template check FAILED", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        templateCheck_failed
+      ); // 4
+
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.FAILED
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+    });
+
+    specify("Provision FAILED", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        provision_failed
+      ); // 5
+
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.FAILED
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.PENDING
+      );
+    });
+
+    specify("Deploy FAILED", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        deploy_failed
+      ); // 6
+
+      cy.get("[data-checkpoint='Template check']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Provision']").should(
+        "have.attr",
+        "data-status",
+        STATUS.COMPLETED
+      );
+      cy.get("[data-checkpoint='Deploy']").should(
+        "have.attr",
+        "data-status",
+        STATUS.FAILED
+      );
+    });
+
+    specify("Deploy COMPLETED", () => {
+      cy.intercept(
+        `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
+        deploy_complete
+      ); // 7
+
+      cy.contains("Deployment Completed Successfully");
+
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
+      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
+    });
   });
 });

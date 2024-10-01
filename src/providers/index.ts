@@ -6,6 +6,7 @@ export * from "./applicationProvider";
 export * from "./environmentProvider";
 export * from "./userProvider";
 export * from "./deploymentProvider";
+export * from "./deploymentStateProvider";
 export * from "./tokenProvider";
 export * from "./stackProvider";
 export * from "./stackEventProvider";
