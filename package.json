@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.0",
-    "@jcloudify-api/typescript-client": "^3.3.0",
+    "@jcloudify-api/typescript-client": "^4.0.0",
     "@mui/x-charts": "^7.7.0",
     "axios": "^1.6.5",
     "dayjs": "^1.11.11",
