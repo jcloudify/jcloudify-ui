@@ -55,10 +55,9 @@ export const DeploymentProcess: React.FC<{
   );
 
   const checkpoints = useMemo(() => {
-    if (!deploymentState) return [];
-    const states = flattenDeploymentState(deploymentState).map(
-      (state) => state.progressionStatus!
-    );
+    const states = (
+      deploymentState ? flattenDeploymentState(deploymentState) : []
+    ).map((state) => state.progressionStatus!);
     return mapStateToCheckpoint(states);
   }, [deploymentState]);
 
