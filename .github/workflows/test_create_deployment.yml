@@ -60,7 +60,7 @@ jobs:
 
           # workflow_run trigger (last branch commit SHA)
           if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
-            app_id=$(git rev-parse HEAD)
+            app_id=${GITHUB_SHA::7}
           fi
 
           echo "app_id=$app_id"

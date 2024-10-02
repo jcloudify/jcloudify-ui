@@ -28,10 +28,10 @@ export const TARGET_APP_ID = Cypress.env("JCLOUDIFY_TEST_TARGET_APP_ID");
 
 export const it_app = {
   id: TARGET_APP_ID,
-  name: `jcloudify-e2e-ops-${TARGET_APP_ID}`,
+  name: `jcloudify-${TARGET_APP_ID}`,
   repo: {
-    name: `jcloudify-e2e-ops-${TARGET_APP_ID}`,
-    description: "jcloudify-e2e-ops operationalization",
+    name: `jcloudify-${TARGET_APP_ID}`,
+    description: "jc-ops operationalization",
     installation_id: it_installation.id,
     is_private: false,
   },
