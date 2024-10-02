@@ -44,6 +44,7 @@ describe("Check deployment", () => {
       .invoke("text")
       .then((text) => {
         expect(isValidURL(text)).to.be.true;
+        cy.writeFile("deployment-url.txt", text);
       });
   });
 });
