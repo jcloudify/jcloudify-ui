@@ -24,7 +24,9 @@ const Checkpoint: React.FC<CheckpointProgress> = ({label, status}) => {
       justifyContent="flex-start"
       alignItems="center"
       direction="column"
-      spacing={1}
+      spacing={0.5}
+      p={1}
+      borderRadius="4px"
       data-checkpoint={label}
       data-status={status}
     >
@@ -63,9 +65,10 @@ export const DeploymentProcess: React.FC<{
     return mapStateToCheckpoint(states);
   }, [deploymentState]);
 
-  const [templateCheck, provision, deploy] = checkpoints;
+  const [securityAndSanityCheck, provisionInfra, deployApplication] =
+    checkpoints;
 
-  const isDeploymentComplete = deploy.status === STATUS.COMPLETED;
+  const isDeploymentComplete = deployApplication.status === STATUS.COMPLETED;
 
   if (isDeploymentComplete)
     return (
@@ -90,33 +93,37 @@ export const DeploymentProcess: React.FC<{
       width="100%"
       sx={COMMON_PAPER_BOX_SX}
     >
-      <Checkpoint label={templateCheck.label} status={templateCheck.status} />
+      <Checkpoint
+        label={securityAndSanityCheck.label}
+        status={securityAndSanityCheck.status}
+      />
       <Divider
         sx={{
           borderWidth: "2px",
-          mt: -3,
           flex: 1,
           borderColor:
-            templateCheck.status === STATUS.COMPLETED
+            securityAndSanityCheck.status === STATUS.COMPLETED
               ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
         orientation="vertical"
       />
-      <Checkpoint label={provision.label} status={provision.status} />
+      <Checkpoint label={provisionInfra.label} status={provisionInfra.status} />
       <Divider
         sx={{
           borderWidth: "2px",
-          mt: -3,
           flex: 1,
           borderColor:
-            provision.status === STATUS.COMPLETED
+            provisionInfra.status === STATUS.COMPLETED
               ? STATUS_COLORS[STATUS.COMPLETED]
               : "gray",
         }}
         orientation="vertical"
       />
-      <Checkpoint label={deploy.label} status={deploy.status} />
+      <Checkpoint
+        label={deployApplication.label}
+        status={deployApplication.status}
+      />
     </Stack>
   );
 };
