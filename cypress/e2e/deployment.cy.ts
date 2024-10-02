@@ -161,150 +161,149 @@ describe("Deployment", () => {
       cy.wait("@getDeploymentConfig");
     });
 
-    specify("Template check IN_PROGRESS", () => {
+    specify("Security & sanity check IN_PROGRESS", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         templateCheck_inProgress
-      ); // 1
+      );
 
-      // 1
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.IN_PROGRESS
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
     });
 
-    specify("Provision IN_PROGRESS", () => {
+    specify("Provision infrastructure IN_PROGRESS", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         provision_inProgress
-      ); // 2
+      );
 
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.IN_PROGRESS
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
     });
 
-    specify("Deploy IN_PROGRESS", () => {
+    specify("Deploy application IN_PROGRESS", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         deploy_inProgress
-      ); // 3
+      );
 
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.IN_PROGRESS
       );
     });
 
-    specify("Template check FAILED", () => {
+    specify("Security & sanity check FAILED", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         templateCheck_failed
-      ); // 4
+      );
 
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.FAILED
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
     });
 
-    specify("Provision FAILED", () => {
+    specify("Provision infrastructure FAILED", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         provision_failed
-      ); // 5
+      );
 
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.FAILED
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.PENDING
       );
     });
 
-    specify("Deploy FAILED", () => {
+    specify("Deploy application FAILED", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         deploy_failed
-      ); // 6
+      );
 
-      cy.get("[data-checkpoint='Template check']").should(
+      cy.get("[data-checkpoint='Security & sanity check']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Provision']").should(
+      cy.get("[data-checkpoint='Provision infrastructure']").should(
         "have.attr",
         "data-status",
         STATUS.COMPLETED
       );
-      cy.get("[data-checkpoint='Deploy']").should(
+      cy.get("[data-checkpoint='Deploy application']").should(
         "have.attr",
         "data-status",
         STATUS.FAILED
       );
     });
 
-    specify("Deploy COMPLETED", () => {
+    specify("Deploy application COMPLETED", () => {
       cy.intercept(
         `users/${user1.id}/applications/${app1.id}/deployments/${depl1.id}/states`,
         deploy_complete
-      ); // 7
+      );
 
       cy.contains("Deployment Completed Successfully");
 
