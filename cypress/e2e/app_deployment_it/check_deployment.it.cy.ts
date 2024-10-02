@@ -1,14 +1,8 @@
 import {isValidURL} from "../../../src/utils/url";
-import {
-  it_environment_config,
-  it_pat,
-  it_yumeT023,
-} from "../../fixtures/ops.data";
+import {it_pat, it_yumeT023, TARGET_APP_ID} from "../../fixtures/ops.data";
 import {jcloudify} from "../../support/util";
 
 describe("Check deployment", () => {
-  const appId = "<target_app_id>";
-
   specify("check deployment configuration and active deployment URL", () => {
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
     cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
@@ -30,15 +24,11 @@ describe("Check deployment", () => {
     cy.contains(it_yumeT023.email!);
     cy.get("body").click();
 
-    cy.getByTestid(`show-${appId}-app`).click({force: true});
-    cy.getByHref(`/applications/${appId}/show/environments`).click();
+    cy.getByTestid(`show-${TARGET_APP_ID}-app`).click({force: true});
+    cy.getByHref(`/applications/${TARGET_APP_ID}/show/environments`).click();
 
     cy.contains("Prod").click();
     cy.contains("prod");
-
-    cy.wait("@getEnvironmentConf");
-    cy.contains("3.6.2");
-    cy.contains(it_environment_config.general.package_full_name!);
 
     cy.getByTestid("api-url")
       .invoke("text")

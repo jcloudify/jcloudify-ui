@@ -4,18 +4,21 @@ import {
   it_pat,
   it_yumeT023,
   it_environment_config,
+  TARGET_APP_ID,
 } from "../../fixtures/ops.data.ts";
 import {jcloudify} from "../../support/util";
 
 describe("Create deployment", () => {
-  const app = it_app(Date.now() /* timestamp */);
-
   specify("create app and [PROD] environment", () => {
-    cy.intercept("PUT", jcloudify(`/users/*/applications`)).as("createApp");
+    cy.intercept("PUT", jcloudify(`/users/*/applications`), (req) => {
+      req.body.data[0].id = TARGET_APP_ID;
+    }).as("createApp");
+
     cy.intercept(
       "PUT",
       jcloudify(`/users/*/applications/*/environments/*/config`)
     ).as("createEnv");
+
     cy.intercept("GET", jcloudify(`/poja-versions`)).as("getPojaVersions");
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
     cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
@@ -35,47 +38,40 @@ describe("Create deployment", () => {
 
     cy.get('[href="/applications/create/new"]').click();
 
-    cy.getByName("name").type(app.name);
+    cy.getByName("name").type(it_app.name);
 
     cy.muiSelect("[data-testid='select-installation-id']", it_installation.id);
 
-    cy.get("[name='github_repository.name']").type(app.repo.name);
-    cy.get("[name='github_repository.description']").type(app.repo.description);
+    cy.get("[name='github_repository.name']").type(it_app.repo.name);
+    cy.get("[name='github_repository.description']").type(
+      it_app.repo.description
+    );
 
     cy.get("[aria-label='Save']").click();
-    cy.wait("@createApp")
-      .its("response")
-      .then(({body}) => {
-        const {
-          data: [created],
-        } = body;
-        const appId = created.id;
+    cy.wait("@createApp");
 
-        cy.writeFile("target-app-id.txt", appId);
+    cy.getByTestid(`show-${it_app.id}-app`).click({force: true});
+    cy.getByHref(`/applications/${it_app.id}/show/environments`).click();
 
-        cy.getByTestid(`show-${appId}-app`).click({force: true});
-        cy.getByHref(`/applications/${appId}/show/environments`).click();
+    cy.contains("Create").click();
+    cy.getByTestid("CreateFromScratch").click();
 
-        cy.contains("Create").click();
-        cy.getByTestid("CreateFromScratch").click();
+    cy.wait("@getEnvironments");
+    cy.wait("@getPojaVersions");
 
-        cy.wait("@getEnvironments");
-        cy.wait("@getPojaVersions");
+    cy.muiSelect("[data-testid='environment_type']", "PROD");
 
-        cy.muiSelect("[data-testid='environment_type']", "PROD");
+    cy.muiSelect("[data-testid='poja-version']", "3.6.2");
+    cy.getByName("general.package_full_name")
+      .clear()
+      .type(it_environment_config.general.package_full_name!);
 
-        cy.muiSelect("[data-testid='poja-version']", "3.6.2");
-        cy.getByName("general.package_full_name")
-          .clear()
-          .type(it_environment_config.general.package_full_name!);
+    cy.get("[aria-label='Create']").click();
 
-        cy.get("[aria-label='Create']").click();
+    cy.wait("@createEnv");
 
-        cy.wait("@createEnv");
-
-        // redirected to environment details
-        cy.contains("Prod");
-        cy.contains(it_environment_config.general.package_full_name!);
-      });
+    // redirected to environment details
+    cy.contains("Prod");
+    cy.contains(it_environment_config.general.package_full_name!);
   });
 });

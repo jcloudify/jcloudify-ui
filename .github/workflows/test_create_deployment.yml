@@ -2,10 +2,23 @@ name: Test create deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      new_app_id:
+        description: "new app id (unique)"
+        required: true
+
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [prod]
+
+  schedule:
+    - cron: "0 * * * *"
 
 env:
   AWS_REGION: eu-west-3
   REACT_APP_JCLOUDIFY_API_URL: ${{ vars.REACT_APP_JCLOUDIFY_API_URL }}
+  CYPRESS_JCLOUDIFY_TEST_USER_TOKEN: ${{ secrets.CYPRESS_JCLOUDIFY_TEST_USER_TOKEN }}
 
 jobs:
   create-deployment:
@@ -30,6 +43,29 @@ jobs:
 
       - run: sh ./initNpmrc.sh jcloudify-store npm-jcloudify-app 057045785189
 
+      - name: Get/Generate new app ID
+        run: |
+          app_id=""
+
+          # schedule trigger (timestamp limited to the hour)
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            app_id=$(date +"%Y-%m-%d_%H")
+          fi
+
+
+          # workflow_dispatch trigger (manual app id)
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            app_id=${{ github.event.inputs.new_app_id }}
+          fi
+
+          # workflow_run trigger (last branch commit SHA)
+          if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            app_id=$(git rev-parse HEAD)
+          fi
+
+          echo "app_id=$app_id"
+          echo "CYPRESS_JCLOUDIFY_TEST_TARGET_APP_ID=$app_id" >> $GITHUB_ENV
+
       - name: Run create deployment test
         uses: cypress-io/github-action@v6
         with:
@@ -38,18 +74,3 @@ jobs:
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_JCLOUDIFY_TEST_USER_TOKEN: ${{ secrets.CYPRESS_JCLOUDIFY_TEST_USER_TOKEN }}
-
-      - name: Log target app
-        run: |
-          echo "Target app id: $(cat target-app-id.txt)"
-
-      - name: Generate timestamp for cache key
-        id: timestamp
-        run: echo "CACHE_TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-
-      - name: Store target app
-        uses: actions/cache@v4
-        with:
-          key: target-app-id-${{ github.ref_name }}-${{ env.CACHE_TIMESTAMP }}
-          path: target-app-id.txt

@@ -19,20 +19,23 @@ export const it_installation = {
 };
 
 export const it_pat: Token = {
-  access_token: Cypress.env("CYPRESS_JCLOUDIFY_TEST_USER_TOKEN"),
+  access_token: Cypress.env("JCLOUDIFY_TEST_USER_TOKEN"),
   refresh_token: "refresh_token",
   token_type: "bearer",
 };
 
-export const it_app = (timestamp: number) => ({
-  name: `jcloudify-e2e-ops-${timestamp}`,
+export const TARGET_APP_ID = Cypress.env("JCLOUDIFY_TEST_TARGET_APP_ID");
+
+export const it_app = {
+  id: TARGET_APP_ID,
+  name: `jcloudify-e2e-ops-${TARGET_APP_ID}`,
   repo: {
-    name: `jcloudify-e2e-ops-${timestamp}`,
+    name: `jcloudify-e2e-ops-${TARGET_APP_ID}`,
     description: "jcloudify-e2e-ops operationalization",
     installation_id: it_installation.id,
     is_private: false,
   },
-});
+};
 
 export const it_environment_config = {
   ...POJA_CONF_V3_6_2_DEFAULT_VALUES,
