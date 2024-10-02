@@ -14,7 +14,7 @@ export interface CheckpointProgress {
 // The last state serves as a transition between two checkpoint
 const STATE_CHECKPOINTS = [
   {
-    label: "Template check",
+    label: "Security & sanity check",
     states: [
       "TEMPLATE_FILE_CHECK_IN_PROGRESS",
       "INDEPENDENT_STACKS_DEPLOYMENT_INITIATED",
@@ -22,7 +22,7 @@ const STATE_CHECKPOINTS = [
     failedState: "TEMPLATE_FILE_CHECK_FAILED",
   },
   {
-    label: "Provision",
+    label: "Provision infrastructure",
     states: [
       "INDEPENDENT_STACKS_DEPLOYMENT_INITIATED",
       "INDEPENDENT_STACKS_DEPLOYMENT_IN_PROGRESS",
@@ -32,7 +32,7 @@ const STATE_CHECKPOINTS = [
     failedState: "INDEPENDENT_STACKS_DEPLOYMENT_FAILED",
   },
   {
-    label: "Deploy",
+    label: "Deploy application",
     states: ["COMPUTE_STACK_DEPLOYMENT_IN_PROGRESS", "COMPUTE_STACK_DEPLOYED"],
     failedState: "COMPUTE_STACK_DEPLOYMENT_FAILED",
   },
