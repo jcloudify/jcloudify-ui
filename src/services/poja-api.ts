@@ -9,6 +9,7 @@ import {
   EnvironmentApi,
   GithubAppInstallationApi,
   PojaVersionsApi,
+  BillingApi,
 } from "@jcloudify-api/typescript-client";
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
@@ -29,6 +30,8 @@ export const githubAppInstallationApi = () =>
   new GithubAppInstallationApi(authProvider.getCachedAuthConf());
 export const pojaVersionApi = () =>
   new PojaVersionsApi(authProvider.getCachedAuthConf());
+export const billingApi = () =>
+  new BillingApi(authProvider.getCachedAuthConf());
 
 export interface TODO_Deployment {
   id: string;
