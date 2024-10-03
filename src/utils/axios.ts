@@ -16,3 +16,14 @@ export const getErrorMessage = <T extends {}>(
 
   return message || fallback;
 };
+
+export const extractApiError = (error: any) => {
+  if (isAxiosError(error)) {
+    const {response} = error;
+    return {
+      ...response?.data,
+      status: response?.status,
+    };
+  }
+  return error;
+};
