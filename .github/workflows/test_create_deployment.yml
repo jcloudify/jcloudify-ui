@@ -15,14 +15,6 @@ on:
   schedule:
     - cron: "0 * * * *"
 
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [prod]
-
-  schedule:
-    - cron: "0 * * * *"
-
 env:
   AWS_REGION: eu-west-3
   REACT_APP_JCLOUDIFY_API_URL: ${{ vars.REACT_APP_JCLOUDIFY_API_URL }}
@@ -31,7 +23,6 @@ env:
 jobs:
   create-deployment:
     timeout-minutes: 15
-    if: github.ref_name == 'prod'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
