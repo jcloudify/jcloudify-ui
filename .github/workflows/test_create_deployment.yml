@@ -49,7 +49,7 @@ jobs:
 
           # schedule trigger (timestamp limited to the hour)
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            app_id=$(date +"%Y-%m-%d_%H")
+            app_id=$(TZ="Etc/GMT-3" date +%Y-%m-%d-%H)
           fi
 
 
