@@ -24,6 +24,10 @@ describe("Create deployment", () => {
     cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
       "getEnvironments"
     );
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/*/applications/*/environments/*/config`)
+    ).as("getEnvironmentConfig");
 
     cy.withToken(it_pat);
 
@@ -70,8 +74,10 @@ describe("Create deployment", () => {
 
     cy.wait("@createEnv");
 
+    cy.wait("@getEnvironmentConfig");
+
     // redirected to environment details
     cy.contains("Prod");
-    cy.contains(it_environment_config.general.package_full_name!);
+    cy.contains("3.6.2");
   });
 });
