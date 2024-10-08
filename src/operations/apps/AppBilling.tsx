@@ -1,9 +1,16 @@
 import {FC} from "react";
-import {Box, Typography} from "@mui/material";
+import {Box, Card, CardContent, Stack, Typography} from "@mui/material";
 import {WithTab} from "@/components/tab";
-import {FunctionField, Labeled, Show, SimpleShowLayout} from "react-admin";
+import {
+  FunctionField,
+  Labeled,
+  ListBase,
+  Show,
+  SimpleShowLayout,
+  useListContext,
+} from "react-admin";
 import {useParams} from "react-router-dom";
-import {BillingInfo} from "@jcloudify-api/typescript-client";
+import {BillingInfo, Environment} from "@jcloudify-api/typescript-client";
 
 export const AppBilling: FC = () => {
   return (
@@ -19,15 +26,63 @@ const BillingShow = () => {
   if (!appId) return null;
 
   return (
-    <Box>
+    <Stack direction="column" spacing={2}>
       <ShowAppBillingInfo appId={appId} />
-    </Box>
+      <ListBase resource="environments" filter={{appId}}>
+        <AppBillingDetails appId={appId} />
+      </ListBase>
+    </Stack>
+  );
+};
+
+const AppBillingDetails: FC<{appId: string}> = ({appId}) => {
+  const {data: environments} = useListContext();
+  return (
+    <Card>
+      <CardContent>
+        <Typography variant="caption">Details</Typography>
+        <Stack direction="column" spacing={1}>
+          {environments?.length ? (
+            environments?.map((env: Environment) => (
+              <BillingInfoDetails env={env} appId={appId} />
+            ))
+          ) : (
+            <Typography variant="body2">No environment found</Typography>
+          )}
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
+
+const BillingInfoDetails: FC<{env: Environment; appId: string}> = ({
+  env,
+  appId,
+}) => {
+  return (
+    <Show
+      title=" "
+      resource="billingInfo"
+      id={env.id}
+      queryOptions={{meta: {appId, targetResource: "environment"}}}
+    >
+      <SimpleShowLayout>
+        <FunctionField
+          render={(resource: BillingInfo) => (
+            <Typography variant="body2">
+              {env.environment_type} - $ {resource.computed_price}
+            </Typography>
+          )}
+        />
+      </SimpleShowLayout>
+    </Show>
   );
 };
 
 const ShowAppBillingInfo: FC<{appId: string}> = ({appId}) => {
   return (
     <Show
+      title=" "
       emptyWhileLoading
       resource="billingInfo"
       id={appId}

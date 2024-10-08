@@ -25,7 +25,7 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
         );
         return mapToBillingInfo(res, targetId, startDate, currentDate);
       case "environment":
-        return (await unwrap(() =>
+        const envBillingInfo = (await unwrap(() =>
           billingApi().getUserAppEnvironmentBillingInfo(
             uid,
             meta.appId,
@@ -34,6 +34,7 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
             currentDate
           )
         )) as ToRecord<BillingInfo>;
+        return {...envBillingInfo, id: targetId};
       default:
         return (await unwrap(() =>
           billingApi().getUserBillingInfo(uid, startDate, currentDate)
