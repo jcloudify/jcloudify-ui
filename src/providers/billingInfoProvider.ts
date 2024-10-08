@@ -23,7 +23,7 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
             currentDate
           )
         );
-        return mapToBillingInfo(res, startDate, currentDate);
+        return mapToBillingInfo(res, targetId, startDate, currentDate);
       case "environment":
         return (await unwrap(() =>
           billingApi().getUserAppEnvironmentBillingInfo(
@@ -57,8 +57,9 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
   },
 };
 
-const mapToBillingInfo = async (
+const mapToBillingInfo = (
   data: BillingInfo[],
+  appId: string,
   startDate: Date,
   currentDate: Date
 ) => {
@@ -69,5 +70,6 @@ const mapToBillingInfo = async (
       (sum, billingInfo) => sum + billingInfo.computed_price!,
       0
     ),
+    id: appId,
   } as ToRecord<BillingInfo>;
 };
