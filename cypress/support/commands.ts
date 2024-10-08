@@ -30,7 +30,11 @@ import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtu
 import {depl1, depls} from "../fixtures//deployment.mock";
 import {jcloudify} from "./util";
 import {isDateBetween} from "../../src/utils/date";
-import {app1_billing_info} from "../fixtures/billing-info.mock";
+import {
+  app1_billing_info,
+  app1_preprod_billing_info,
+  app1_prod_billing_info,
+} from "../fixtures/billing-info.mock";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
@@ -83,6 +87,14 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(`/users/*/applications/${app3.id}/billing?startTime=*&endTime=*`),
     []
   ).as("getAppBillingInfo");
+  cy.intercept(
+    `https://api.preprod.jcloudify.com/users/*/applications/${app1.id}/environments/${prod_env.id}/billing?startTime=*&endTime=*`,
+    app1_prod_billing_info
+  ).as("getEnvBillingInfo");
+  cy.intercept(
+    `https://api.preprod.jcloudify.com/users/*/applications/${app1.id}/environments/${preprod_env.id}/billing?startTime=*&endTime=*`,
+    app1_preprod_billing_info
+  ).as("getEnvBillingInfo");
 
   cy.intercept("GET", jcloudify(`/users/*/applications?page=*&page_size=*`), {
     data: apps,
@@ -92,6 +104,9 @@ Cypress.Commands.add("mockApiGet", () => {
     "getApplication"
   );
   cy.intercept("GET", jcloudify(`/users/*/applications/${app2.id}`), app2).as(
+    "getApplication"
+  );
+  cy.intercept("GET", jcloudify(`/users/*/applications/${app3.id}`), app3).as(
     "getApplication"
   );
 

@@ -13,7 +13,7 @@ export const app1_prod_billing_info: BillingInfo = {
   end_time: currentDate,
 };
 
-const app1_preprod_billing_info: BillingInfo = {
+export const app1_preprod_billing_info: BillingInfo = {
   computed_price: 1.63,
   start_time: startDate,
   end_time: currentDate,

@@ -1,5 +1,8 @@
 import {app1, app3} from "../fixtures/application.mock";
-import {app1_prod_billing_info} from "../fixtures/billing-info.mock";
+import {
+  app1_preprod_billing_info,
+  app1_prod_billing_info,
+} from "../fixtures/billing-info.mock";
 import {user1} from "../fixtures/user.mock";
 
 describe("Application Billing Info", () => {
@@ -16,12 +19,17 @@ describe("Application Billing Info", () => {
 
     cy.get('[href="/applications/app1/show/billing"]').click();
     cy.wait("@getAppBillingInfo");
+    cy.wait("@getEnvironments");
+    cy.wait("@getEnvBillingInfo");
     cy.contains("Amount to due");
     cy.contains("$ 8.88");
     cy.contains("Start date");
     cy.contains(`${app1_prod_billing_info.start_time?.toDateString()}`);
     cy.contains("End date");
     cy.contains(`${app1_prod_billing_info.end_time?.toDateString()}`);
+    cy.contains("Details");
+    cy.contains(`PROD - $ ${app1_prod_billing_info.computed_price}`);
+    cy.contains(`PREPROD - $ ${app1_preprod_billing_info.computed_price}`);
   });
 
   specify("Show no env app billing info", () => {
@@ -31,11 +39,14 @@ describe("Application Billing Info", () => {
 
     cy.get('[href="/applications/app3/show/billing"]').click();
     cy.wait("@getAppBillingInfo");
+    cy.wait("@getEnvironments");
     cy.contains("Amount to due");
     cy.contains("$ 0.00");
     cy.contains("Start date");
     cy.contains(`${app1_prod_billing_info.start_time?.toDateString()}`);
     cy.contains("End date");
     cy.contains(`${app1_prod_billing_info.end_time?.toDateString()}`);
+    cy.contains("Details");
+    cy.contains("No environment found");
   });
 });
