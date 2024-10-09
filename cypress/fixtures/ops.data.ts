@@ -24,7 +24,9 @@ export const it_pat: Token = {
   token_type: "bearer",
 };
 
-export const TARGET_APP_ID = Cypress.env("JCLOUDIFY_TEST_TARGET_APP_ID");
+export const TARGET_APP_ID = (
+  Cypress.env("JCLOUDIFY_TEST_TARGET_APP_ID") || ""
+).replaceAll("_", "");
 
 export const it_app = {
   id: TARGET_APP_ID,
