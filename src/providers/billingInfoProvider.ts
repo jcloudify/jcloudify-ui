@@ -36,9 +36,10 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
         )) as ToRecord<BillingInfo>;
         return {...envBillingInfo, id: targetId};
       default:
-        return (await unwrap(() =>
+        const billingInfo = (await unwrap(() =>
           billingApi().getUserBillingInfo(uid, startDate, currentDate)
         )) as ToRecord<BillingInfo>;
+        return {...billingInfo, id: targetId};
     }
   },
   getList: function (): Promise<PagedResponse<ToRecord<BillingInfo>>> {

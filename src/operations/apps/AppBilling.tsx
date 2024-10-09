@@ -1,16 +1,16 @@
 import {FC} from "react";
-import {Box, Card, CardContent, Stack, Typography} from "@mui/material";
-import {WithTab} from "@/components/tab";
 import {
   FunctionField,
-  Labeled,
   ListBase,
   Show,
   SimpleShowLayout,
   useListContext,
 } from "react-admin";
 import {useParams} from "react-router-dom";
+import {Card, CardContent, Stack, Typography} from "@mui/material";
 import {BillingInfo, Environment} from "@jcloudify-api/typescript-client";
+import {WithTab} from "@/components/tab";
+import {ShowBillingInfo} from "@/operations/billing";
 
 export const AppBilling: FC = () => {
   return (
@@ -27,7 +27,7 @@ const BillingShow = () => {
 
   return (
     <Stack direction="column" spacing={2}>
-      <ShowAppBillingInfo appId={appId} />
+      <ShowBillingInfo targetId={appId} targetResource="application" />
       <ListBase resource="environments" filter={{appId}}>
         <AppBillingDetails appId={appId} />
       </ListBase>
@@ -74,53 +74,6 @@ const BillingInfoDetails: FC<{env: Environment; appId: string}> = ({
             </Typography>
           )}
         />
-      </SimpleShowLayout>
-    </Show>
-  );
-};
-
-const ShowAppBillingInfo: FC<{appId: string}> = ({appId}) => {
-  return (
-    <Show
-      title=" "
-      emptyWhileLoading
-      resource="billingInfo"
-      id={appId}
-      queryOptions={{meta: {targetResource: "application"}}}
-    >
-      <SimpleShowLayout>
-        <Labeled>
-          <FunctionField
-            label="Amount to due"
-            render={(resource: BillingInfo) => (
-              <Typography variant={"h4"}>
-                $ {resource.computed_price?.toFixed(2)}
-              </Typography>
-            )}
-          />
-        </Labeled>
-        <Labeled>
-          <FunctionField
-            label="Start date"
-            source="start_time"
-            render={(resource: BillingInfo) => (
-              <Typography variant="body2">
-                {resource.start_time?.toDateString()}
-              </Typography>
-            )}
-          />
-        </Labeled>
-        <Labeled>
-          <FunctionField
-            label="End date"
-            source="start_time"
-            render={(resource: BillingInfo) => (
-              <Typography variant="body2">
-                {resource.end_time?.toDateString()}
-              </Typography>
-            )}
-          />
-        </Labeled>
       </SimpleShowLayout>
     </Show>
   );

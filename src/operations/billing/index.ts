@@ -10,3 +10,6 @@ export const billing: Operation = {
 };
 
 export * from "./Payments";
+
+export * from "./Billing";
+export * from "./ShowBillingInfo";
