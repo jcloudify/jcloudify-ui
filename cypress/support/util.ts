@@ -1,5 +1,7 @@
 export const jcloudify = (tail: string) =>
-  "https://api.preprod.jcloudify.com".concat(tail);
+  (
+    Cypress.env("JCLOUDIFY_API_URL") || "https://api.preprod.jcloudify.com"
+  ).concat(tail);
 
 export const putRecordOnEditor = (
   name: string,
