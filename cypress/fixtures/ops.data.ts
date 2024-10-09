@@ -2,20 +2,20 @@ import {POJA_CONF_V3_6_2_DEFAULT_VALUES} from "../../src/operations/environments
 import {Token, User} from "@jcloudify-api/typescript-client";
 
 export const it_yumeT023: User = {
-  first_name: "Saiko",
-  github_id: "96466759",
-  id: "2bbbb136-be9a-4f01-b920-9b4fb3428f75",
-  last_name: "Yume",
-  plan_name: undefined,
-  role: "USER",
-  stripe_id: "cus_Qv2bxfgNKaq3UL",
+  id: "43273876-21ee-409b-b342-3b8d0b5b5b54",
   username: "YumeT023",
-  email: "hei.hajatiana@gmail.com",
+  email: "yumii.saiko@gmail.com",
+  role: "USER",
+  github_id: "96466759",
+  avatar: "https://avatars.githubusercontent.com/u/96466759?v=4",
+  first_name: "Saiko",
+  last_name: "Yume",
+  stripe_id: "cus_QzgUdoC3r49cga",
 };
 
 export const it_installation = {
   name: "jcloudify-ops-ci",
-  id: "EqrA6SnWE-bwt1JZ77_nS",
+  id: "nWa4GHZU3SDVJ-GuDcuEK",
 };
 
 export const it_pat: Token = {
