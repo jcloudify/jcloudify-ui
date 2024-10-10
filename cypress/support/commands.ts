@@ -291,7 +291,7 @@ Cypress.Commands.add("fakeLogin", (user) => {
 
   cy.intercept("GET", jcloudify("/whoami"), {
     user,
-  });
+  }).as("whoami");
 
   cy.visit("/auth/callback?code=fakecode");
 });

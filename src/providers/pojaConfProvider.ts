@@ -40,15 +40,12 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
       )) as ToRecord<OneOfPojaConf>;
       saved.id = conf.id;
       return saved;
-    } catch (e) {
-      if (isAxiosError(e)) {
-        if (e.response?.status === 400) {
-          throw new HttpError("", 400, {
-            errors: make_error_map_from_400_bad_request(
-              e.response?.data.message
-            ),
-          });
-        }
+    } catch (e: any) {
+      const {message, status} = e;
+      if (status === 400) {
+        throw new HttpError("", 400, {
+          errors: make_error_map_from_400_bad_request(message),
+        });
       }
       throw e;
     }

@@ -9,7 +9,6 @@ import {Heading} from "@/components/head";
 import {InferSubmitHandlerFromUseForm} from "@/types/react-hook-form";
 import {CreateUser} from "@jcloudify-api/typescript-client";
 import {authTokenCache, userProvider} from "@/providers";
-import {getErrorMessage} from "@/utils/axios";
 
 export const AuthRegistration: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -37,7 +36,7 @@ export const AuthRegistration: React.FC = () => {
       await userProvider.save(user);
       navigate("/");
     } catch (e: any) {
-      setErrorMessage(getErrorMessage(e));
+      setErrorMessage(e.message);
     } finally {
       setIsRegistering(false);
     }
