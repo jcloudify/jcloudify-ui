@@ -13,6 +13,7 @@ import {
 import {AxiosResponse} from "axios";
 import {authProvider} from "@/providers";
 import {getEnumValues} from "@/utils/enum";
+import {extractApiError} from "@/utils/axios";
 
 // TODO: impl auth configurations
 export const healthApi = () => new HealthApi(authProvider.getCachedAuthConf());
@@ -71,8 +72,11 @@ export type UnwrapResult<TReturn extends () => Promise<AxiosResponse<any>>> =
 export const unwrap = async <Fn extends () => Promise<AxiosResponse<any>>>(
   execute: Fn
 ): Promise<UnwrapResult<Fn>> => {
-  const _ = await execute();
-  return _.data;
+  try {
+    return (await execute()).data;
+  } catch (e) {
+    throw extractApiError(e);
+  }
 };
 
 // TODO: naming
