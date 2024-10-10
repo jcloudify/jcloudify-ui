@@ -37,7 +37,7 @@ describe("Auth", () => {
         statusCode: 201,
         body: req.body,
       });
-    });
+    }).as("register");
 
     // cy.getByTestid("auth:register").click();
     localStorage.setItem("auth_process", "signup");
@@ -56,6 +56,12 @@ describe("Auth", () => {
     cy.getByName("last_name").type(user1.last_name!);
     cy.getByName("email").type(user1.email!);
     cy.getByTestid("complete-registration").click();
+
+    cy.wait("@register");
+
+    cy.intercept("GET", jcloudify("/whoami"), {
+      user: user1,
+    }).as("whoami");
 
     // TODO: userMenu
     cy.contains("Applications");
