@@ -13,3 +13,4 @@ export * from "./Payments";
 
 export * from "./Billing";
 export * from "./ShowBillingInfo";
+export * from "./BillingInformation";
