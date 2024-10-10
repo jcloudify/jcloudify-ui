@@ -23,3 +23,9 @@ export const app1_billing_info = [
   app1_prod_billing_info,
   app1_preprod_billing_info,
 ];
+
+export const billingInfo: BillingInfo = {
+  computed_price: app1_billing_info.reduce((s, b) => s + b.computed_price!, 0),
+  start_time: startDate,
+  end_time: currentDate,
+};

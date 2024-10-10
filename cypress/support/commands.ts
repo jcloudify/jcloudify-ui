@@ -34,7 +34,9 @@ import {
   app1_billing_info,
   app1_preprod_billing_info,
   app1_prod_billing_info,
+  billingInfo,
 } from "../fixtures/billing-info.mock";
+import {paymentDetails} from "../fixtures/billing.mock";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
@@ -88,13 +90,27 @@ Cypress.Commands.add("mockApiGet", () => {
     []
   ).as("getAppBillingInfo");
   cy.intercept(
-    `https://api.preprod.jcloudify.com/users/*/applications/${app1.id}/environments/${prod_env.id}/billing?startTime=*&endTime=*`,
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app1.id}/environments/${prod_env.id}/billing?startTime=*&endTime=*`
+    ),
     app1_prod_billing_info
   ).as("getEnvBillingInfo");
   cy.intercept(
-    `https://api.preprod.jcloudify.com/users/*/applications/${app1.id}/environments/${preprod_env.id}/billing?startTime=*&endTime=*`,
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app1.id}/environments/${preprod_env.id}/billing?startTime=*&endTime=*`
+    ),
     app1_preprod_billing_info
   ).as("getEnvBillingInfo");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/billing?startTime=*&endTime=*`),
+    billingInfo
+  ).as("getBillingInfo");
+  cy.intercept("GET", jcloudify(`/users/*/payment-details`), paymentDetails).as(
+    "getPaymentDetails"
+  );
 
   cy.intercept("GET", jcloudify(`/users/*/applications?page=*&page_size=*`), {
     data: apps,
