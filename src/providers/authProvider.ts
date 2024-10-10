@@ -4,7 +4,14 @@ import {tokenProvider} from "@/providers";
 import {PojaAuthProvider} from "@/providers/types";
 import {securityApi, unwrap} from "@/services/poja-api";
 
-export const whoami = async () => {};
+const refreshToken = async () => {
+  const token = await unwrap(() =>
+    securityApi().refreshToken({
+      refresh_token: authTokenCache.get()?.refresh_token,
+    })
+  );
+  authTokenCache.replace(token);
+};
 
 export const authProvider: PojaAuthProvider = {
   login: () => Promise.resolve(),
@@ -22,8 +29,16 @@ export const authProvider: PojaAuthProvider = {
     clearCaches();
   },
   checkAuth: async () => {
-    if (whoamiCache.isPresent()) return Promise.resolve();
-    await authProvider.whoami();
+    try {
+      await authProvider.whoami();
+    } catch (e: any) {
+      if (e.status === 403) {
+        await refreshToken();
+        await authProvider.whoami();
+        return Promise.resolve();
+      }
+      return Promise.reject();
+    }
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
