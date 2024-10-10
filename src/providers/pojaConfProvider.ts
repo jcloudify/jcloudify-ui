@@ -1,6 +1,5 @@
 import {OneOfPojaConf} from "@jcloudify-api/typescript-client";
 import {HttpError} from "react-admin";
-import {isAxiosError} from "axios";
 import {PojaDataProvider, ToRecord, authProvider} from "@/providers";
 import {applicationApi, environmentApi, unwrap} from "@/services/poja-api";
 import {make_error_map_from_400_bad_request} from "@/operations/utils/errors";
@@ -40,15 +39,12 @@ export const pojaConfProvider: PojaDataProvider<ToRecord<OneOfPojaConf>> = {
       )) as ToRecord<OneOfPojaConf>;
       saved.id = conf.id;
       return saved;
-    } catch (e) {
-      if (isAxiosError(e)) {
-        if (e.response?.status === 400) {
-          throw new HttpError("", 400, {
-            errors: make_error_map_from_400_bad_request(
-              e.response?.data.message
-            ),
-          });
-        }
+    } catch (e: any) {
+      const {message, status} = e;
+      if (status === 400) {
+        throw new HttpError("", 400, {
+          errors: make_error_map_from_400_bad_request(message),
+        });
       }
       throw e;
     }
