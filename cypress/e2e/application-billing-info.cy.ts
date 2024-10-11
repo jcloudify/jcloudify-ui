@@ -28,8 +28,10 @@ describe("Application Billing Info", () => {
     cy.contains("End date");
     cy.contains(`${app1_prod_billing_info.end_time?.toLocaleDateString()}`);
     cy.contains("Details");
-    cy.contains(`PROD - $ ${app1_prod_billing_info.computed_price}`);
-    cy.contains(`PREPROD - $ ${app1_preprod_billing_info.computed_price}`);
+    cy.contains("Prod");
+    cy.contains(`$ ${app1_prod_billing_info.computed_price}`);
+    cy.contains("Preprod");
+    cy.contains(`$ ${app1_preprod_billing_info.computed_price}`);
   });
 
   specify("Show no env app billing info", () => {

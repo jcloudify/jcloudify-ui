@@ -1,24 +1,24 @@
-import {FC} from "react";
+import {BillingInfo, Environment} from "@jcloudify-api/typescript-client";
 import {
   FunctionField,
+  Labeled,
   ListBase,
   Show,
-  SimpleShowLayout,
   useListContext,
 } from "react-admin";
 import {useParams} from "react-router-dom";
 import {Card, CardContent, Stack, Typography} from "@mui/material";
-import {BillingInfo, Environment} from "@jcloudify-api/typescript-client";
-import {WithTab} from "@/components/tab";
+import {ToRecord} from "@/providers";
 import {ShowBillingInfo} from "@/operations/billing";
+import {EnvironmentType} from "@/operations/environments";
+import {ShowLayout} from "@/operations/components/show";
+import {WithTab} from "@/components/tab";
 
-export const AppBilling: FC = () => {
-  return (
-    <WithTab tab="Billing">
-      <BillingShow />
-    </WithTab>
-  );
-};
+export const AppBilling: React.FC = () => (
+  <WithTab tab="Billing">
+    <BillingShow />
+  </WithTab>
+);
 
 const BillingShow = () => {
   const {appId} = useParams();
@@ -35,15 +35,15 @@ const BillingShow = () => {
   );
 };
 
-const AppBillingDetails: FC<{appId: string}> = ({appId}) => {
-  const {data: environments} = useListContext();
+const AppBillingDetails: React.FC<{appId: string}> = ({appId}) => {
+  const {data: environments = []} = useListContext<ToRecord<Environment>>();
   return (
     <Card>
       <CardContent>
         <Typography variant="caption">Details</Typography>
         <Stack direction="column" spacing={1}>
-          {environments?.length ? (
-            environments?.map((env: Environment) => (
+          {environments.length ? (
+            environments.map((env) => (
               <BillingInfoDetails env={env} appId={appId} />
             ))
           ) : (
@@ -55,7 +55,7 @@ const AppBillingDetails: FC<{appId: string}> = ({appId}) => {
   );
 };
 
-const BillingInfoDetails: FC<{env: Environment; appId: string}> = ({
+const BillingInfoDetails: React.FC<{env: Environment; appId: string}> = ({
   env,
   appId,
 }) => {
@@ -66,15 +66,21 @@ const BillingInfoDetails: FC<{env: Environment; appId: string}> = ({
       id={env.id}
       queryOptions={{meta: {appId, targetResource: "environment"}}}
     >
-      <SimpleShowLayout>
-        <FunctionField
-          render={(resource: BillingInfo) => (
-            <Typography variant="body2">
-              {env.environment_type} - $ {resource.computed_price}
-            </Typography>
-          )}
-        />
-      </SimpleShowLayout>
+      <ShowLayout>
+        <Stack direction="column" spacing={1} sx={{m: 1}}>
+          <EnvironmentType value={env.environment_type!} />
+          <Labeled>
+            <FunctionField
+              label="Computed price"
+              render={(resource: BillingInfo) => (
+                <Typography variant="body2">
+                  $ {resource.computed_price}
+                </Typography>
+              )}
+            />
+          </Labeled>
+        </Stack>
+      </ShowLayout>
     </Show>
   );
 };

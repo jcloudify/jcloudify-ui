@@ -22,7 +22,6 @@ export const appShowViews: RouteMap = {
     ":deploymentId": <AppDeploymentShow />,
   },
   billing: {
-    "$$index": <AppBilling />,
-    ":billingId": <></>,
+    $$index: <AppBilling />,
   },
 };
