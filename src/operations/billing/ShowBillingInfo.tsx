@@ -20,7 +20,7 @@ export const ShowBillingInfo: React.FC<{
             <FunctionField<ToRecord<BillingInfo>>
               label="Current month"
               render={(record) => (
-                <Typography variant={"h4"}>
+                <Typography variant="h4">
                   $ {record.computed_price?.toFixed(2)}
                 </Typography>
               )}

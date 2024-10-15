@@ -1,7 +1,7 @@
 import {BillingInfo} from "@jcloudify-api/typescript-client";
 import {billingApi, unwrap} from "@/services/poja-api";
-import {authProvider} from "./authProvider";
-import {PojaDataProvider, ToRecord} from "./types";
+import {authProvider} from "@/providers";
+import {PojaDataProvider, ToRecord} from "@/providers/types";
 
 export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
   getOne: async (targetId, meta = {}) => {

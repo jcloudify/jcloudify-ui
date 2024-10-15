@@ -1,7 +1,7 @@
 import {Box, Stack} from "@mui/material";
 import {ContainerWithHeading} from "@/components/container";
-import {PaymentDeatilsShow} from "@/operations/payments";
-import {ShowBillingInfo} from "./";
+import {PaymentDetailsShow} from "@/operations/payments";
+import {ShowBillingInfo} from "@/operations/billing";
 
 export const Billing: React.FC = () => (
   <Stack direction="column" spacing={1}>
@@ -9,7 +9,7 @@ export const Billing: React.FC = () => (
   </Stack>
 );
 
-export const BillingSummary: React.FC = () => (
+const BillingSummary: React.FC = () => (
   <ContainerWithHeading title="Payment Details Summary">
     <Stack
       direction={{sm: "column", md: "row"}}
@@ -20,7 +20,7 @@ export const BillingSummary: React.FC = () => (
         <ShowBillingInfo />
       </Box>
       <Box sx={{width: "100%"}}>
-        <PaymentDeatilsShow />
+        <PaymentDetailsShow />
       </Box>
     </Stack>
   </ContainerWithHeading>
