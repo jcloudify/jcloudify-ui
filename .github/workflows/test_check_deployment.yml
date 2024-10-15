@@ -66,6 +66,3 @@ jobs:
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-
-      - name: Check deployment URL
-        run: curl --fail -X GET "$(cat deployment-url.txt)/ping"

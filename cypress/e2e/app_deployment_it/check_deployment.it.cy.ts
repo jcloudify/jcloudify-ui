@@ -5,6 +5,10 @@ import {jcloudify} from "../../support/util";
 describe("Check deployment", () => {
   specify("check deployment configuration and active deployment URL", () => {
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/*/applications?page=*&page_size=*`)
+    ).as("getApplications");
     cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
       "getEnvironments"
     );
@@ -18,6 +22,8 @@ describe("Check deployment", () => {
     cy.visit("/");
 
     cy.wait("@whoami");
+    cy.wait("@getApplications");
+
     cy.get("[aria-label='Profile']").click();
 
     cy.contains(it_yumeT023.username!);
@@ -32,9 +38,17 @@ describe("Check deployment", () => {
 
     cy.getByTestid("api-url")
       .invoke("text")
-      .then((text) => {
-        expect(isValidURL(text)).to.be.true;
-        cy.writeFile("deployment-url.txt", text);
+      .then((apiUrl) => {
+        expect(isValidURL(apiUrl)).to.be.true;
+
+        cy.request("GET", `${apiUrl}/ping`).then((response) => {
+          expect(response.status).to.eq(200);
+        });
       });
+
+    cy.getByTestid(`show-${TARGET_APP_ID}-app`)
+      .find("[aria-label='delete']")
+      .click();
+    cy.contains("Confirm").click();
   });
 });
