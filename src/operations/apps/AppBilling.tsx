@@ -3,16 +3,17 @@ import {
   FunctionField,
   Labeled,
   ListBase,
-  Show,
+  ShowBase,
   useListContext,
 } from "react-admin";
 import {useParams} from "react-router-dom";
-import {Card, CardContent, Stack, Typography} from "@mui/material";
+import {Box, Stack, Typography} from "@mui/material";
 import {ToRecord} from "@/providers";
 import {ShowBillingInfo} from "@/operations/billing";
 import {EnvironmentType} from "@/operations/environments";
 import {ShowLayout} from "@/operations/components/show";
 import {WithTab} from "@/components/tab";
+import {ContainerWithHeading} from "@/components/container";
 
 export const AppBilling: React.FC = () => (
   <WithTab tab="Billing">
@@ -27,7 +28,9 @@ const BillingShow = () => {
 
   return (
     <Stack direction="column" spacing={2}>
-      <ShowBillingInfo targetId={appId} targetResource="application" />
+      <Box sx={{m: 2, p: 2}}>
+        <ShowBillingInfo targetId={appId} targetResource="application" />
+      </Box>
       <ListBase resource="environments" filter={{appId}}>
         <AppBillingDetails appId={appId} />
       </ListBase>
@@ -38,20 +41,15 @@ const BillingShow = () => {
 const AppBillingDetails: React.FC<{appId: string}> = ({appId}) => {
   const {data: environments = []} = useListContext<ToRecord<Environment>>();
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="caption">Details</Typography>
-        <Stack direction="column" spacing={1}>
-          {environments.length ? (
-            environments.map((env) => (
-              <BillingInfoDetails env={env} appId={appId} />
-            ))
-          ) : (
-            <Typography variant="body2">No environment found</Typography>
-          )}
-        </Stack>
-      </CardContent>
-    </Card>
+    <ContainerWithHeading title="Details">
+      {environments.length ? (
+        environments.map((env) => (
+          <BillingInfoDetails env={env} appId={appId} />
+        ))
+      ) : (
+        <Typography variant="body2">No results found</Typography>
+      )}
+    </ContainerWithHeading>
   );
 };
 
@@ -60,8 +58,7 @@ const BillingInfoDetails: React.FC<{env: Environment; appId: string}> = ({
   appId,
 }) => {
   return (
-    <Show
-      title=" "
+    <ShowBase
       resource="billingInfo"
       id={env.id}
       queryOptions={{meta: {appId, targetResource: "environment"}}}
@@ -81,6 +78,6 @@ const BillingInfoDetails: React.FC<{env: Environment; appId: string}> = ({
           </Labeled>
         </Stack>
       </ShowLayout>
-    </Show>
+    </ShowBase>
   );
 };

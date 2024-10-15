@@ -1,16 +1,15 @@
 import {Payment as PaymentIcon} from "@mui/icons-material";
 import {Operation} from "@/operations/types";
-import {Payments} from "./Payments";
+import {Billing} from "./Billing";
 
 export const billing: Operation = {
   name: "billing",
-  list: Payments,
+  list: Billing,
   icon: PaymentIcon,
   options: {label: "Billing"},
 };
 
-export * from "./Payments";
+export * from "../payments/Payments";
 
 export * from "./Billing";
 export * from "./ShowBillingInfo";
-export * from "./BillingInformation";

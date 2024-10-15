@@ -1,10 +1,10 @@
 import {BillingInfo} from "@jcloudify-api/typescript-client";
-import {PagedResponse, PojaDataProvider, ToRecord} from "./types";
 import {billingApi, unwrap} from "@/services/poja-api";
 import {authProvider} from "./authProvider";
+import {PojaDataProvider, ToRecord} from "./types";
 
 export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
-  async getOne(targetId, meta = {}): Promise<ToRecord<BillingInfo>> {
+  getOne: async (targetId, meta = {}) => {
     const uid = authProvider.getCachedWhoami()?.user?.id!;
     const currentDate = new Date();
     const startDate = new Date(
@@ -15,7 +15,7 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
 
     switch (meta.targetResource) {
       case "application":
-        const res = await unwrap(() =>
+        const userAppBillingInfo = await unwrap(() =>
           billingApi().getUserApplicationBillingInfo(
             uid,
             targetId,
@@ -23,7 +23,12 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
             currentDate
           )
         );
-        return mapToBillingInfo(res, targetId, startDate, currentDate);
+        return mapToBillingInfo(
+          userAppBillingInfo,
+          targetId,
+          startDate,
+          currentDate
+        );
       case "environment":
         const envBillingInfo = (await unwrap(() =>
           billingApi().getUserAppEnvironmentBillingInfo(
@@ -42,25 +47,25 @@ export const billingInfoProvider: PojaDataProvider<ToRecord<BillingInfo>> = {
         return {...billingInfo, id: targetId};
     }
   },
-  getList: function (): Promise<PagedResponse<ToRecord<BillingInfo>>> {
+  getList: () => {
     throw new Error("Function not implemented.");
   },
-  save: function (): Promise<ToRecord<BillingInfo>> {
+  save: () => {
     throw new Error("Function not implemented.");
   },
-  saveAll: function (): Promise<ToRecord<BillingInfo>[]> {
+  saveAll: () => {
     throw new Error("Function not implemented.");
   },
-  delete: function (): Promise<ToRecord<BillingInfo>> {
+  delete: () => {
     throw new Error("Function not implemented.");
   },
-  deleteMany: function (): Promise<ToRecord<BillingInfo>[]> {
+  deleteMany: () => {
     throw new Error("Function not implemented.");
   },
 };
 
 const mapToBillingInfo = (
-  data: BillingInfo[],
+  billingInfos: BillingInfo[],
   appId: string,
   startDate: Date,
   currentDate: Date
@@ -68,7 +73,7 @@ const mapToBillingInfo = (
   return {
     start_time: startDate,
     end_time: currentDate,
-    computed_price: data.reduce(
+    computed_price: billingInfos.reduce(
       (sum, billingInfo) => sum + billingInfo.computed_price!,
       0
     ),
