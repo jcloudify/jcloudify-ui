@@ -57,9 +57,6 @@ export const PojaConfViewV3_6_2: PojaConfViewComponent = ({
           <ComputeConf />
           <Divider />
 
-          <ConcurrencyConf />
-          <Divider />
-
           <DBConf />
           <Divider />
 
@@ -242,29 +239,6 @@ const GenAPIClient = () => {
     </Stack>
   );
 };
-
-const ConcurrencyConf = () => (
-  <Stack>
-    <Heading size="sm" title="Concurrency" mb={2} />
-    <GridLayout
-      xs={12}
-      md={6}
-      lg={4}
-      spacing={2}
-      rowSpacing={0.5}
-      render={renderWithLabel}
-    >
-      <TextField
-        label="Frontal Reserved Concurrent Executions NB"
-        source="concurrency.frontal_reserved_concurrent_executions_nb"
-      />
-      <TextField
-        label="Worker Reserved Concurrent Executions NB"
-        source="concurrency.worker_reserved_concurrent_executions_nb"
-      />
-    </GridLayout>
-  </Stack>
-);
 
 const ComputeConf = () => (
   <Stack>
