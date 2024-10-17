@@ -1,5 +1,6 @@
 export * from "./SetEnvironment";
 export * from "./EnvironmentList";
+export * from "./EnvironmentOverview";
 export * from "./EnvironmentCreate.tsx";
 export * from "./EnvironmentCreation.tsx";
 export * from "./EnvironmentShow.tsx";

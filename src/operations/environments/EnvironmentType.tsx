@@ -1,8 +1,9 @@
-import {Chip, Typography} from "@mui/material";
+import {Chip, ChipProps, Typography} from "@mui/material";
 import {EnvironmentType as IEnvironmentType} from "@jcloudify-api/typescript-client";
 
 export interface EnvironmentTypeProps {
   value: IEnvironmentType;
+  size?: ChipProps["size"];
 }
 
 const INDICATOR_COLORS = {
@@ -15,10 +16,13 @@ export const ENVIRONMENT_TYPE_TEXT = {
   PREPROD: "Preprod",
 } as const;
 
-export const EnvironmentType: React.FC<EnvironmentTypeProps> = ({value}) => {
+export const EnvironmentType: React.FC<EnvironmentTypeProps> = ({
+  value,
+  size = "small",
+}) => {
   return (
     <Chip
-      size="small"
+      size={size}
       label={
         <Typography variant="body2">
           {ENVIRONMENT_TYPE_TEXT[value] || value}

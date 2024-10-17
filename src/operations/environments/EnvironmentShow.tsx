@@ -5,125 +5,31 @@ import {
 } from "@jcloudify-api/typescript-client";
 import {
   ShowBase,
-  Labeled,
   useRecordContext,
   IconButtonWithTooltip,
   useGetOne,
   Loading,
-  DeleteWithConfirmButton,
-  useRedirect,
 } from "react-admin";
-import {Box, Stack, Typography, CircularProgress} from "@mui/material";
+import {Stack, Typography} from "@mui/material";
 import {Cancel, Edit} from "@mui/icons-material";
 import {useToggle} from "usehooks-ts";
-import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
-import {GitBranch} from "@/components/source_control";
-import {typoSizes} from "@/components/typo";
 import {ShowLayout} from "@/operations/components/show";
-import {
-  EnvironmentType,
-  useGetEnvironmentApiURL,
-} from "@/operations/environments";
+import {EnvironmentOverviewUI} from "@/operations/environments";
 import {
   PojaConfComponentVersion,
   PojaConfEdit,
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
 import {ToRecord} from "@/providers";
-import {TypographyLink} from "@/components/link";
 
-const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
-  const redirect = useRedirect();
-
-  const environment = useRecordContext<Environment>();
-
-  const {data: app} = useGetOne<ToRecord<Application>>("applications", {
-    id: appId,
-  });
-
-  const {apiUrl, isUnavailable, isLoadingApiURL} = useGetEnvironmentApiURL({
-    appId,
-    envId: environment?.id!,
-  });
+const EnvironmentShowUI: React.FC<{app: ToRecord<Application>}> = ({app}) => {
+  const environment = useRecordContext<ToRecord<Environment>>();
 
   return (
     <Stack mt={4} mb={3} spacing={3} width={{lg: "60%"}}>
-      <ContainerWithHeading
-        title={
-          <Stack direction="row">
-            <Typography variant={typoSizes.sm.primary} flex={1}>
-              Environment
-            </Typography>
-            <Box>
-              <DeleteWithConfirmButton
-                confirmColor="warning"
-                confirmContent="Are you sure you want to delete this environment?"
-                confirmTitle={
-                  <span>
-                    Delete &nbsp;
-                    <EnvironmentType value={environment?.environment_type!} />
-                    &nbsp; environment
-                  </span>
-                }
-                mutationOptions={{
-                  meta: {
-                    appId,
-                  },
-                  onSuccess: () => {
-                    redirect(`/applications/${appId}/show/environments`);
-                  },
-                }}
-              />
-            </Box>
-          </Stack>
-        }
-        sx={{fontSize: "1.2rem"}}
-      >
-        <Stack gap={1.5}>
-          <GridLayout xs={6} sm={4}>
-            <Labeled label="Type">
-              <EnvironmentType value={environment?.environment_type!} />
-            </Labeled>
-
-            <Labeled label="Source control">
-              <GitBranch
-                githubRepoURL={app?.repositoryUrl!}
-                branchName={
-                  environment?.environment_type?.toLowerCase() ?? "preprod"
-                }
-              />
-            </Labeled>
-
-            <Labeled label="Active Deployment URL">
-              <>
-                {isLoadingApiURL && (
-                  <Box display="flex" justifyContent="center" my={1}>
-                    <CircularProgress size={10} />
-                  </Box>
-                )}
-
-                {isUnavailable && <Typography>Not available</Typography>}
-
-                {apiUrl && (
-                  <TypographyLink
-                    fontSize="small"
-                    disableOpenIcon
-                    copiable={false}
-                    target="_blank"
-                    to={apiUrl?.value!}
-                    data-testid="api-url"
-                  >
-                    {apiUrl?.value!}
-                  </TypographyLink>
-                )}
-              </>
-            </Labeled>
-          </GridLayout>
-        </Stack>
-      </ContainerWithHeading>
-
-      {environment && <PojaConf envId={environment.id!} appId={appId} />}
+      <EnvironmentOverviewUI app={app} environment={environment!} />
+      <PojaConf envId={environment?.id!} appId={app.id} />
     </Stack>
   );
 };
@@ -181,6 +87,13 @@ export const EnvironmentShow: React.FC<{envId: string; appId: string}> = ({
   envId,
   appId,
 }) => {
+  const {data: app, isLoading: isLoadingApp} = useGetOne<ToRecord<Application>>(
+    "applications",
+    {
+      id: appId,
+    }
+  );
+
   return (
     <ShowBase
       resource="environments"
@@ -191,8 +104,8 @@ export const EnvironmentShow: React.FC<{envId: string; appId: string}> = ({
         },
       }}
     >
-      <ShowLayout>
-        <EnvironmentShowView appId={appId} />
+      <ShowLayout loading={isLoadingApp}>
+        <EnvironmentShowUI app={app!} />
       </ShowLayout>
     </ShowBase>
   );
