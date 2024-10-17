@@ -16,6 +16,7 @@ import {
   NumberInput,
   WithRecord,
   useGetOne,
+  required,
 } from "react-admin";
 import {useWatch} from "react-hook-form";
 import {
@@ -110,9 +111,6 @@ export const PojaConfFFV3_6_2: React.FC = memo(() => (
     <ComputeConf />
     <Divider />
 
-    <ConcurrencyConf />
-    <Divider />
-
     <DBConf />
     <Divider />
 
@@ -131,15 +129,6 @@ const GeneralConf = () => (
       <TextInput
         label="Package name"
         source="general.package_full_name"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <SelectInput
-        label="Queues NB"
-        source="general.with_queues_nb"
-        data-testid="general.with_queues_nb"
-        choices={makeSelectChoices(Object.values(WithQueuesNbEnum))}
         variant="outlined"
         size="medium"
         fullWidth
@@ -352,77 +341,76 @@ const GenAPIClientConf = () => {
   );
 };
 
-const ConcurrencyConf = () => (
-  <Stack>
-    <Heading size="sm" title="Concurrency" mb={2} />
-    <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
-      <NumberInput
-        label="Frontal Reserved Concurrent Executions NB"
-        source="concurrency.frontal_reserved_concurrent_executions_nb"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Worker Reserved Concurrent Executions NB"
-        source="concurrency.worker_reserved_concurrent_executions_nb"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-    </GridLayout>
-  </Stack>
-);
+const ComputeConf = () => {
+  const queuesNB = useWatch({name: "general.with_queues_nb"});
+  return (
+    <Stack>
+      <Heading size="sm" title="Compute" mb={2} />
+      <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
+        <NumberInput
+          label="Frontal Memory"
+          source="compute.frontal_memory"
+          variant="outlined"
+          size="medium"
+          fullWidth
+        />
+        <NumberInput
+          label="Frontal Function Timeout"
+          source="compute.frontal_function_timeout"
+          variant="outlined"
+          size="medium"
+          fullWidth
+        />
+        <SelectInput
+          label="Queues NB"
+          source="general.with_queues_nb"
+          data-testid="general.with_queues_nb"
+          choices={makeSelectChoices(Object.values(WithQueuesNbEnum))}
+          variant="outlined"
+          size="medium"
+          validate={required()}
+          fullWidth
+        />
+      </GridLayout>
 
-const ComputeConf = () => (
-  <Stack>
-    <Heading size="sm" title="Compute" mb={2} />
-    <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
-      <NumberInput
-        label="Frontal Memory"
-        source="compute.frontal_memory"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Frontal Function Timeout"
-        source="compute.frontal_function_timeout"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Worker Memory"
-        source="compute.worker_memory"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Worker Batch"
-        source="compute.worker_batch"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Worker Function 1 Timeout"
-        source="compute.worker_function_1_timeout"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-      <NumberInput
-        label="Worker Function 2 Timeout"
-        source="compute.worker_function_2_timeout"
-        variant="outlined"
-        size="medium"
-        fullWidth
-      />
-    </GridLayout>
-  </Stack>
-);
+      {!!queuesNB && (
+        <GridLayout xs={12} md={6} lg={4} spacing={2} rowSpacing={0.5}>
+          <NumberInput
+            label="Worker Memory"
+            source="compute.worker_memory"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+          <NumberInput
+            label="Worker Batch"
+            source="compute.worker_batch"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+          <NumberInput
+            label="Worker Function 1 Timeout"
+            source="compute.worker_function_1_timeout"
+            variant="outlined"
+            size="medium"
+            fullWidth
+          />
+
+          {queuesNB === WithQueuesNbEnum.NUMBER_2 && (
+            <NumberInput
+              label="Worker Function 2 Timeout"
+              source="compute.worker_function_2_timeout"
+              variant="outlined"
+              size="medium"
+              fullWidth
+            />
+          )}
+        </GridLayout>
+      )}
+    </Stack>
+  );
+};
 
 const MailingConf = () => (
   <Stack>
