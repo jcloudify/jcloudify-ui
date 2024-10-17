@@ -3,7 +3,6 @@ import {MdHome} from "react-icons/md";
 import {Box, Stack, Typography, useMediaQuery} from "@mui/material";
 import {colors} from "@/themes";
 import {Octagon} from "@/components/shape";
-import {redirect} from "@/utils/redirect";
 import {jcloudifyWebsiteUrl} from "@/config/env";
 
 export const LandContainer: React.FC<React.PropsWithChildren> = ({
@@ -43,7 +42,9 @@ export const LandContainer: React.FC<React.PropsWithChildren> = ({
           <Box>
             <IconButtonWithTooltip
               label="Home"
-              onClick={() => redirect(jcloudifyWebsiteUrl)}
+              onClick={() => {
+                window.open(jcloudifyWebsiteUrl);
+              }}
             >
               <MdHome size={20} />
             </IconButtonWithTooltip>
