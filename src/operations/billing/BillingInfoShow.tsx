@@ -1,13 +1,14 @@
 import {BillingInfo} from "@jcloudify-api/typescript-client";
-import {DateField, FunctionField, Labeled, ShowBase} from "react-admin";
+import {DateField, FunctionField, ShowBase} from "react-admin";
 import {Stack, Typography} from "@mui/material";
-import {ToRecord} from "@/providers";
 import {ShowLayout} from "@/operations/components/show";
+import {Labeled} from "@/operations/components/field";
+import {ToRecord} from "@/providers";
 
 export const BillingInfoShow: React.FC<{
   targetId?: string;
   targetResource?: string;
-}> = ({targetId = "summary", targetResource = "summary"}) => (
+}> = ({targetId = "*", targetResource = "*"}) => (
   <ShowBase
     resource="billingInfo"
     id={targetId}
@@ -24,11 +25,7 @@ export const BillingInfoShow: React.FC<{
               </Typography>
             )}
           />
-        </Labeled>
-        <Labeled>
           <DateField label="Start date" source="start_time" />
-        </Labeled>
-        <Labeled>
           <DateField label="End date" source="end_time" />
         </Labeled>
       </Stack>

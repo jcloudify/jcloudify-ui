@@ -1,7 +1,8 @@
-import {EmailField, Labeled, ShowBase, TextField} from "react-admin";
+import {EmailField, ShowBase, TextField} from "react-admin";
 import {Stack} from "@mui/material";
-import {authProvider} from "@/providers";
 import {ShowLayout} from "@/operations/components/show";
+import {Labeled} from "@/operations/components/field";
+import {authProvider} from "@/providers";
 
 export const PaymentDetailsShow: React.FC = () => {
   const customerId = authProvider.getCachedWhoami()?.user?.stripe_id!;
@@ -11,11 +12,7 @@ export const PaymentDetailsShow: React.FC = () => {
         <Stack direction="column" spacing={1} sx={{m: 2}}>
           <Labeled>
             <TextField source="name" />
-          </Labeled>
-          <Labeled>
             <EmailField source="email" />
-          </Labeled>
-          <Labeled>
             <TextField source="phone" />
           </Labeled>
         </Stack>

@@ -6,30 +6,23 @@ import {
   ShowBase,
   WithListContext,
 } from "react-admin";
-import {useParams} from "react-router-dom";
 import {Box, Stack, Typography} from "@mui/material";
-import {ToRecord} from "@/providers";
-import {BillingInfoShow} from "@/operations/billing";
+import {ContainerWithHeading} from "@/components/container";
 import {ShowLayout} from "@/operations/components/show";
 import {SimpleListEmpty} from "@/operations/components/list";
+import {BillingInfoShow} from "@/operations/billing";
 import {EnvironmentType} from "@/operations/environments";
-import {ContainerWithHeading} from "@/components/container";
+import {ToRecord} from "@/providers";
 import {colors} from "@/themes";
 
-export const BillingShow = () => {
-  const {appId} = useParams();
-
-  if (!appId) return null;
-
-  return (
-    <Stack direction="column" spacing={2}>
-      <Box sx={{p: 2, bgcolor: colors("light")}}>
-        <BillingInfoShow targetId={appId} targetResource="application" />
-      </Box>
-      <AppEnvironmentsBillingInfo appId={appId} />
-    </Stack>
-  );
-};
+export const BillingShow: React.FC<{appId: string}> = ({appId}) => (
+  <Stack direction="column" spacing={2}>
+    <Box sx={{p: 2, bgcolor: colors("light")}}>
+      <BillingInfoShow targetId={appId} targetResource="application" />
+    </Box>
+    <AppEnvironmentsBillingInfo appId={appId} />
+  </Stack>
+);
 
 const AppEnvironmentsBillingInfo: React.FC<{appId: string}> = ({appId}) => (
   <ListBase resource="environments" filter={{appId}}>
@@ -38,7 +31,11 @@ const AppEnvironmentsBillingInfo: React.FC<{appId: string}> = ({appId}) => (
         <ContainerWithHeading title="Details">
           {data.length ? (
             data.map((env) => (
-              <EnvironmentBillingInfo env={env} appId={appId} />
+              <EnvironmentBillingInfo
+                env={env}
+                appId={appId}
+                key={`billing_info_${env.id}`}
+              />
             ))
           ) : (
             <SimpleListEmpty />
