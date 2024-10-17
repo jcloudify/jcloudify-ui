@@ -73,7 +73,7 @@ export const POJA_CONF_V3_6_2_DEFAULT_VALUES: PojaConf1 = {
   },
   concurrency: NO_CONCURRENCY_CONF,
   compute: {
-    frontal_memory: 2048,
+    frontal_memory: 512,
     frontal_function_timeout: 30,
     worker_memory: 1024,
     worker_function_1_timeout: 600,
