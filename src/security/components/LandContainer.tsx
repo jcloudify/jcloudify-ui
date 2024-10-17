@@ -14,10 +14,7 @@ export const LandContainer: React.FC<React.PropsWithChildren> = ({
           width="100%"
           justifyContent="center"
           alignItems="center"
-          sx={{
-            background:
-              "linear-gradient(110deg, rgba(96,156,59,1) 9%, rgba(187,127,7,1) 48%, rgba(30,42,56,1) 97%)",
-          }}
+          sx={{backgroundColor: colors("dark-1")}}
         >
           <Typography variant="h4" fontWeight="600" color="#fff">
             Spring Boot, but cloud-native.

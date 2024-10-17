@@ -2,6 +2,7 @@ import {green, red, amber} from "@mui/material/colors";
 
 export const POJA_COLORS = {
   "dark-0": "#09090b",
+  "dark-1": "#121212",
   "light": "#fff",
   "gray": "#f9fafb",
   "gray-0": "#f3f4f6",
