@@ -11,5 +11,5 @@ export const billing: Operation = {
 };
 
 export * from "./Billing";
-export * from "./ShowBillingInfo";
+export * from "./BillingInfoShow";
 export * from "./BillingShow";

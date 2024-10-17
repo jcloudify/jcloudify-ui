@@ -3,7 +3,7 @@ import {Stack} from "@mui/material";
 import {authProvider} from "@/providers";
 import {ShowLayout} from "@/operations/components/show";
 
-export const PaymentDetailsShow: React.FC<{}> = () => {
+export const PaymentDetailsShow: React.FC = () => {
   const customerId = authProvider.getCachedWhoami()?.user?.stripe_id!;
   return (
     <ShowBase resource="paymentDetails" id={customerId}>

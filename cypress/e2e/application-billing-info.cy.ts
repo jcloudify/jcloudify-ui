@@ -49,6 +49,6 @@ describe("Application Billing Info", () => {
     cy.contains("End date");
     cy.contains(`${app1_prod_billing_info.end_time?.toLocaleDateString()}`);
     cy.contains("Details");
-    cy.contains("No results found");
+    cy.contains("No results");
   });
 });
