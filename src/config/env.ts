@@ -5,4 +5,7 @@ export const gh = {
 };
 
 export const baseUrl = process.env.GH_APP_CLIENT_ID!;
+
 export const stripePk = process.env.STRIPE_PUBLIC_KEY!;
+
+export const jcloudifyWebsiteUrl = process.env.JCLOUDIFY_WEBSITE_URL!;
