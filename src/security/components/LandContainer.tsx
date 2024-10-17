@@ -16,11 +16,11 @@ export const LandContainer: React.FC<React.PropsWithChildren> = ({
           alignItems="center"
           sx={{
             background:
-              "linear-gradient(110.6deg, rgb(156, 116, 129) -18.3%, rgb(67, 54, 74) 16.4%, rgb(47, 48, 67) 68.2%, rgb(27, 23, 36) 99.1%)",
+              "linear-gradient(110deg, rgba(96,156,59,1) 9%, rgba(187,127,7,1) 48%, rgba(30,42,56,1) 97%)",
           }}
         >
-          <Typography variant="h3" fontWeight="600" color="#fff">
-            Build for the future
+          <Typography variant="h4" fontWeight="600" color="#fff">
+            Spring Boot, but cloud-native.
           </Typography>
         </Stack>
       )}
