@@ -12,4 +12,5 @@ export const user1: User & {token: string} = {
   last_name: m.person.lastName(),
   avatar: m.image.avatarGitHub(),
   token: nanoid(),
+  stripe_id: "customerId",
 };
