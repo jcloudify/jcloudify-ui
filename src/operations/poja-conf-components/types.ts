@@ -1,25 +1,27 @@
 import {Application, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 import {UseUpdateOptions} from "react-admin";
 
-export type PojaConfTargetResource = "environment" | "deployment";
-
-export type PojaConfViewComponent = React.ComponentType<{
+export interface CommonPojaConfComponentProps {
   targetId: string;
-  targetResource: PojaConfTargetResource;
+  // possible type of resource on which the PojaConf configuration may apply to, ensuring clear context for the operation.
+  targetResource: "environment" | "deployment";
   appId: string;
-}>;
+}
+
+export type PojaConfViewComponent =
+  React.ComponentType<CommonPojaConfComponentProps>;
 
 export type PojaConfFFComponent = React.ComponentType;
 
-export type PojaConfEditComponent = React.ComponentType<{
-  targetId: string;
-  targetResource: PojaConfTargetResource;
-  appId: string;
-  mutationLifecycles?: Pick<
-    UseUpdateOptions,
-    "onSuccess" | "onSettled" | "onError"
-  >;
-}>;
+export type PojaConfEditComponent = React.ComponentType<
+  CommonPojaConfComponentProps & {
+    // Only allow passing mutation events, omitting other options for a focused API
+    mutationLifecycles?: Pick<
+      UseUpdateOptions,
+      "onSuccess" | "onSettled" | "onError"
+    >;
+  }
+>;
 
 /**
  * Each public version of Poja has its own unique set of form fields.
