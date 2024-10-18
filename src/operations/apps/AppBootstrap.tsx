@@ -61,12 +61,16 @@ export const AppBootstrap: React.FC = () => {
 
   const dataProvider = useDataProvider();
 
-  const {formTransformFormValues, formDefaultValues} = getPojaVersionedComponent("3.6.2" /* version */);
+  const {formTransformFormValues, formDefaultValues} =
+    getPojaVersionedComponent("3.6.2" /* version */);
 
   const createProductionEnvironment = async () => {
-    const {data: createdApp} = await dataProvider.getOne<ToRecord<Application>>("applications", {
-      id: newAppId,
-    })
+    const {data: createdApp} = await dataProvider.getOne<ToRecord<Application>>(
+      "applications",
+      {
+        id: newAppId,
+      }
+    );
     await create(
       "environments",
       {
@@ -74,14 +78,17 @@ export const AppBootstrap: React.FC = () => {
           appId: newAppId,
           ownerId: newEnvironmentId,
         },
-        data: formTransformFormValues({
-          to_create: {
-            id: newEnvironmentId,
-            environment_type: EnvironmentTypeEnum.PROD,
-            archived: false,
+        data: formTransformFormValues(
+          {
+            to_create: {
+              id: newEnvironmentId,
+              environment_type: EnvironmentTypeEnum.PROD,
+              archived: false,
+            },
+            ...(formDefaultValues || {}),
           },
-          ...(formDefaultValues || {}),
-        }, createdApp),
+          createdApp
+        ),
       },
       {
         onSuccess: () => {
