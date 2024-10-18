@@ -1,4 +1,3 @@
-import {PojaConfRecord} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {Application, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 
 export type PojaConfViewComponent = React.ComponentType<{
@@ -20,8 +19,8 @@ export type PojaConfEditComponent = React.ComponentType<{
  * view: displaying a given a config
  * edit: minimalistic edit cmp for pojaConf
  */
-export interface VersionedPojaConfComponents {
-  version: keyof typeof PojaConfRecord;
+export interface PojaComponentPackage {
+  version: string;
   ff: PojaConfFFComponent;
   view: PojaConfViewComponent;
   edit: PojaConfEditComponent;
@@ -36,5 +35,3 @@ export type PojaConfComponent =
   | PojaConfFFComponent
   | PojaConfEditComponent
   | PojaConfViewComponent;
-
-export type PojaConfComponentVersion = VersionedPojaConfComponents["version"];

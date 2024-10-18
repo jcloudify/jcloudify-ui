@@ -1,7 +1,6 @@
 import {PojaVersion} from "@jcloudify-api/typescript-client";
 import {useMemo, useEffect, useState} from "react";
 import {useGetList} from "react-admin";
-import {PojaConfComponentVersion} from "@/operations/environments/poja-conf-form";
 import {ToRecord} from "@/providers";
 
 export const usePojaVersionState = (defaultSelected?: string) => {
@@ -25,7 +24,7 @@ export const usePojaVersionState = (defaultSelected?: string) => {
   }, [defaultSelected, pojaVersions]);
 
   return {
-    pojaVersion: pojaVersion as PojaConfComponentVersion,
+    pojaVersion,
     setPojaVersion,
     pojaVersions,
     isLoadingPojaVersions: isLoading,

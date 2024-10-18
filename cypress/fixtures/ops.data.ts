@@ -1,4 +1,4 @@
-import {POJA_CONF_V3_6_2_DEFAULT_VALUES} from "../../src/operations/environments/poja-conf-form/v3_6_2/constant";
+import {POJA_CONF_V3_6_2_DEFAULT_VALUES} from "../../src/operations/poja-conf-components/v3_6_2/constant";
 import {Token, User} from "@jcloudify-api/typescript-client";
 
 export const it_yumeT023: User = {

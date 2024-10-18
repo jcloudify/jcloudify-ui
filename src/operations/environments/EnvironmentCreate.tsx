@@ -24,12 +24,12 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
-import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
-import {usePojaVersionState} from "@/operations/environments/poja-conf-form/hooks";
+import {getPojaComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
+import {usePojaVersionState} from "@/operations/poja-conf-components/hooks";
 import {
   PojaConfFF,
   is_with_gen_api_client,
-} from "@/operations/environments/poja-conf-form";
+} from "@/operations/poja-conf-components";
 import {makeSelectChoices} from "@/operations/utils/ra-props";
 import {ToRecord} from "@/providers";
 
@@ -63,14 +63,14 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
 
   const {creatable} = useEnvironmentCreation(appId);
 
-  const pojaComponents = useMemo(
-    () => getPojaVersionedComponent(pojaVersion),
+  const pojaComponentPackage = useMemo(
+    () => getPojaComponentPackage(pojaVersion),
     [pojaVersion]
   );
 
   const defaultValues = useMemo(() => {
     return {
-      ...(pojaComponents?.formDefaultValues || {}),
+      ...(pojaComponentPackage?.formDefaultValues || {}),
       to_create: {id: newEnvironmentId},
       __flags: {
         with_gen_clients: !templateConf
@@ -79,14 +79,16 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
       },
       ...(templateConf || {}),
     };
-  }, [newEnvironmentId, templateConf, pojaComponents]);
+  }, [newEnvironmentId, templateConf, pojaComponentPackage]);
 
   const isFromScratch = !templateConf;
 
   return (
     <CreateBase
       resource="environments"
-      transform={(data) => pojaComponents.formTransformFormValues(data, app!)}
+      transform={(data) =>
+        pojaComponentPackage.formTransformFormValues(data, app!)
+      }
       mutationOptions={{
         meta: {
           appId: app?.id,
@@ -200,8 +202,8 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
             <Stack direction="row" spacing={2}>
               <SaveButton
                 label="Create"
-                alwaysEnable={!!pojaComponents}
-                disabled={!pojaComponents}
+                alwaysEnable={!!pojaComponentPackage}
+                disabled={!pojaComponentPackage}
               />
             </Stack>
           </Toolbar>

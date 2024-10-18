@@ -17,10 +17,7 @@ import {ContainerWithHeading} from "@/components/container";
 import {VCS} from "@/components/source_control";
 import {ShowLayout} from "@/operations/components/show";
 import {EnvironmentType} from "@/operations/environments";
-import {
-  PojaConfComponentVersion,
-  PojaConfView,
-} from "@/operations/environments/poja-conf-form";
+import {PojaConfView} from "@/operations/poja-conf-components";
 import {DeploymentProcess} from "@/operations/deployments";
 import {JCBot} from "@/operations/github";
 import {colors} from "@/themes";
@@ -133,7 +130,7 @@ const PojaConf: React.FC<{deploymentId: string; appId: string}> = ({
 
       {!!pojaConf && (
         <PojaConfView
-          version={pojaConf.version as PojaConfComponentVersion}
+          version={pojaConf.version}
           appId={appId}
           targetId={deploymentId}
           targetResource="deployment"

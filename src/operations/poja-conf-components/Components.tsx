@@ -1,38 +1,37 @@
-import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
+import {ComponentProps, ComponentType} from "react";
 import {Stack, Typography, Chip} from "@mui/material";
 import {Heading} from "@/components/head";
 import {Divider} from "@/components/divider";
 import {typoSizes} from "@/components/typo";
 import {
   PojaConfComponent,
-  PojaConfComponentVersion,
   PojaConfEditComponent,
   PojaConfFFComponent,
   PojaConfViewComponent,
-  VersionedPojaConfComponents,
-} from "@/operations/environments/poja-conf-form";
+  PojaComponentPackage,
+} from "@/operations/poja-conf-components";
+import {getPojaComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
 import {
   NoPojaConfVersionSelected,
   PojaConfVersionUnavailable,
-} from "./poja-conf-component-error";
-import {ComponentProps, ComponentType} from "react";
+} from "@/operations/poja-conf-components/Error";
 
 // Higher-Order Component to handle common logic
-const withPojaConfVersionCheck = <P extends ComponentProps<PojaConfComponent>>(
+const WithPojaConfVersion = <P extends ComponentProps<PojaConfComponent>>(
   Cmp: ComponentType<{
-    pojaConfComponent: VersionedPojaConfComponents;
-    version: PojaConfComponentVersion;
+    pojaComponentPackage: PojaComponentPackage;
+    version: string;
     props: P;
   }>
 ) => {
-  return (props: P & {version?: PojaConfComponentVersion}) => {
+  return (props: P & {version?: string}) => {
     if (!props.version) return <NoPojaConfVersionSelected />;
-    const pojaConfComponent = getPojaVersionedComponent(props.version);
+    const pojaConfComponent = getPojaComponentPackage(props.version);
     if (!pojaConfComponent)
       return <PojaConfVersionUnavailable version={props.version} />;
     return (
       <Cmp
-        pojaConfComponent={pojaConfComponent}
+        pojaComponentPackage={pojaConfComponent}
         version={props.version}
         props={props}
       />
@@ -42,24 +41,24 @@ const withPojaConfVersionCheck = <P extends ComponentProps<PojaConfComponent>>(
 
 type PojaComponentRenderer<Component extends PojaConfComponent> =
   React.ComponentType<{
-    pojaConfComponent: VersionedPojaConfComponents;
-    version: PojaConfComponentVersion;
+    pojaComponentPackage: PojaComponentPackage;
+    version: string;
     props: ComponentProps<Component>;
   }>;
 
 const PojaConfView: PojaComponentRenderer<PojaConfViewComponent> = ({
-  pojaConfComponent,
+  pojaComponentPackage,
   props,
-}) => <pojaConfComponent.view {...props} />;
+}) => <pojaComponentPackage.view {...props} />;
 
 const PojaConfFF: PojaComponentRenderer<PojaConfFFComponent> = ({
-  pojaConfComponent,
+  pojaComponentPackage,
   version: _version,
   props,
-}) => <pojaConfComponent.ff {...props} />;
+}) => <pojaComponentPackage.ff {...props} />;
 
 const PojaConfEdit: PojaComponentRenderer<PojaConfEditComponent> = ({
-  pojaConfComponent,
+  pojaComponentPackage,
   version,
   props,
 }) => (
@@ -86,19 +85,19 @@ const PojaConfEdit: PojaComponentRenderer<PojaConfEditComponent> = ({
       />
       <Divider />
     </Stack>
-    <pojaConfComponent.edit {...props} />
+    <pojaComponentPackage.edit {...props} />
   </Stack>
 );
 
 /**
- * Facade Components that get `PojaComponent` according to the version passed to them
+ * Main Components that get `PojaComponentPackage` according to the version passed to them
  */
-const PojaConfViewFacade = withPojaConfVersionCheck(PojaConfView);
-const PojaConfFFFacade = withPojaConfVersionCheck(PojaConfFF);
-const PojaConfEditFacade = withPojaConfVersionCheck(PojaConfEdit);
+const PojaVersionConfView = WithPojaConfVersion(PojaConfView);
+const PojaVersionConfFF = WithPojaConfVersion(PojaConfFF);
+const PojaVersionConfEdit = WithPojaConfVersion(PojaConfEdit);
 
 export {
-  PojaConfViewFacade as PojaConfView,
-  PojaConfFFFacade as PojaConfFF,
-  PojaConfEditFacade as PojaConfEdit,
+  PojaVersionConfView as PojaConfView,
+  PojaVersionConfFF as PojaConfFF,
+  PojaVersionConfEdit as PojaConfEdit,
 };

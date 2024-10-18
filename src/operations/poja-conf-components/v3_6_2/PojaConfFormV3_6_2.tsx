@@ -36,9 +36,11 @@ import {
   BatchArrayEditorField,
   BatchRecordEditorField,
 } from "@/operations/components/field";
-import {is_with_gen_api_client} from "@/operations/environments/poja-conf-form/common";
-import {transformFormValuesV3_6_2} from "@/operations/environments/poja-conf-form/v3_6_2/mapperV3_6_2";
-import {PojaConfEditComponent} from "@/operations/environments/poja-conf-form/types";
+import {
+  PojaConfEditComponent,
+  is_with_gen_api_client,
+} from "@/operations/poja-conf-components";
+import {transformFormValuesV3_6_2} from "@/operations/poja-conf-components/v3_6_2/mapperV3_6_2";
 import {ToRecord} from "@/providers";
 
 export const PojaConfEditV3_6_2: PojaConfEditComponent = ({

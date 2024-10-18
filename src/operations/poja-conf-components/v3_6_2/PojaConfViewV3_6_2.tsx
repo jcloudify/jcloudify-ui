@@ -18,7 +18,7 @@ import {
   StringArrayField,
   renderWithLabel,
 } from "@/operations/components/field";
-import {PojaConfViewComponent} from "@/operations/environments/poja-conf-form";
+import {PojaConfViewComponent} from "@/operations/poja-conf-components";
 import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,

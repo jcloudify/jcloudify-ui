@@ -25,11 +25,7 @@ import {
   EnvironmentType,
   useGetEnvironmentApiURL,
 } from "@/operations/environments";
-import {
-  PojaConfComponentVersion,
-  PojaConfEdit,
-  PojaConfView,
-} from "@/operations/environments/poja-conf-form";
+import {PojaConfEdit, PojaConfView} from "@/operations/poja-conf-components";
 import {ToRecord} from "@/providers";
 import {TypographyLink} from "@/components/link";
 
@@ -159,7 +155,7 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
       {!!pojaConf &&
         (isEditConf ? (
           <PojaConfEdit
-            version={pojaConf.version as PojaConfComponentVersion}
+            version={pojaConf.version}
             appId={appId}
             targetId={environment?.id!}
             targetResource="environment"
@@ -167,7 +163,7 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
           />
         ) : (
           <PojaConfView
-            version={pojaConf.version as PojaConfComponentVersion}
+            version={pojaConf.version}
             appId={appId}
             targetId={environment?.id!}
             targetResource="environment"
