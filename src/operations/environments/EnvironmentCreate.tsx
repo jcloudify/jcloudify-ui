@@ -86,9 +86,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
   return (
     <CreateBase
       resource="environments"
-      transform={(data) =>
-        pojaComponentPackage.formTransformFormValues(data, app!)
-      }
+      transform={(data) => pojaComponentPackage.formTransformValues(data, app!)}
       mutationOptions={{
         meta: {
           appId: app?.id,

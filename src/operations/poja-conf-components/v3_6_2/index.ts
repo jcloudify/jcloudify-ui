@@ -10,5 +10,5 @@ export const pojaConfComponentV3_6_2: PojaComponentPackage = {
   edit: PojaConfEditV3_6_2,
   view: PojaConfViewV3_6_2,
   formDefaultValues: POJA_CONF_V3_6_2_DEFAULT_VALUES,
-  formTransformFormValues: transformFormValuesV3_6_2,
+  formTransformValues: transformFormValuesV3_6_2,
 };

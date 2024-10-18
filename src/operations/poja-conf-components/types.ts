@@ -28,7 +28,7 @@ export interface PojaComponentPackage {
   /**
    * any values obtained from this version form can be normalized with this fn
    */
-  formTransformFormValues: (conf: any, app: Application) => OneOfPojaConf;
+  formTransformValues: (conf: any, app: Application) => OneOfPojaConf;
 }
 
 export type PojaConfComponent =
