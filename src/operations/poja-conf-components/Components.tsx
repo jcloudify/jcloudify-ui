@@ -8,9 +8,9 @@ import {
   PojaConfEditComponent,
   PojaConfFFComponent,
   PojaConfViewComponent,
-  PojaComponentPackage,
+  PojaConfComponentPackage,
 } from "@/operations/poja-conf-components";
-import {getPojaComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
+import {getPojaConfComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
 import {
   NoPojaConfVersionSelected,
   PojaConfVersionUnavailable,
@@ -19,14 +19,14 @@ import {
 // Higher-Order Component to handle common logic
 const WithPojaConfVersion = <P extends ComponentProps<PojaConfComponent>>(
   Cmp: ComponentType<{
-    pojaComponentPackage: PojaComponentPackage;
+    pojaComponentPackage: PojaConfComponentPackage;
     version: string;
     props: P;
   }>
 ) => {
   return (props: P & {version?: string}) => {
     if (!props.version) return <NoPojaConfVersionSelected />;
-    const pojaConfComponent = getPojaComponentPackage(props.version);
+    const pojaConfComponent = getPojaConfComponentPackage(props.version);
     if (!pojaConfComponent)
       return <PojaConfVersionUnavailable version={props.version} />;
     return (
@@ -41,7 +41,7 @@ const WithPojaConfVersion = <P extends ComponentProps<PojaConfComponent>>(
 
 type PojaComponentRenderer<Component extends PojaConfComponent> =
   React.ComponentType<{
-    pojaComponentPackage: PojaComponentPackage;
+    pojaComponentPackage: PojaConfComponentPackage;
     version: string;
     props: ComponentProps<Component>;
   }>;
@@ -90,7 +90,7 @@ const PojaConfEdit: PojaComponentRenderer<PojaConfEditComponent> = ({
 );
 
 /**
- * Main Components that get `PojaComponentPackage` according to the version passed to them
+ * Main Components that get `PojaConfComponentPackage` according to the version passed to them
  */
 const PojaVersionConfView = WithPojaConfVersion(PojaConfView);
 const PojaVersionConfFF = WithPojaConfVersion(PojaConfFF);

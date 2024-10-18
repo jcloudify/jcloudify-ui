@@ -24,7 +24,7 @@ import {
   EnvironmentType,
   useEnvironmentCreation,
 } from "@/operations/environments";
-import {getPojaComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
+import {getPojaConfComponentPackage} from "@/operations/poja-conf-components/pojaComponentPackageRegistry";
 import {usePojaVersionState} from "@/operations/poja-conf-components/hooks";
 import {
   PojaConfFF,
@@ -64,7 +64,7 @@ const _EnvironmentCreate: React.FC<EnvironmentCreateProps> = ({
   const {creatable} = useEnvironmentCreation(appId);
 
   const pojaComponentPackage = useMemo(
-    () => getPojaComponentPackage(pojaVersion),
+    () => getPojaConfComponentPackage(pojaVersion),
     [pojaVersion]
   );
 

@@ -31,7 +31,7 @@ export type PojaConfEditComponent = React.ComponentType<
  * - `view`: Fields for displaying Poja configuration details.
  * - `edit`: Component used specifically for editing Poja configurations.
  */
-export interface PojaComponentPackage {
+export interface PojaConfComponentPackage {
   version: string;
   ff: PojaConfFFComponent;
   view: PojaConfViewComponent;
