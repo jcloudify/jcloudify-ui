@@ -1,15 +1,19 @@
 import {Application, OneOfPojaConf} from "@jcloudify-api/typescript-client";
 import {UseUpdateOptions} from "react-admin";
 
+export type PojaConfTargetResource = "environment" | "deployment";
+
 export type PojaConfViewComponent = React.ComponentType<{
   targetId: string;
-  targetResource: "environment" | "deployment";
+  targetResource: PojaConfTargetResource;
   appId: string;
 }>;
-export type PojaConfFFComponent = React.ComponentType<{}>;
+
+export type PojaConfFFComponent = React.ComponentType;
+
 export type PojaConfEditComponent = React.ComponentType<{
   targetId: string;
-  targetResource: "environment" | "deployment";
+  targetResource: PojaConfTargetResource;
   appId: string;
   mutationLifecycles?: Pick<
     UseUpdateOptions,
