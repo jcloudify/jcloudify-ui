@@ -3,9 +3,9 @@ import {Box} from "@mui/material";
 import {
   EnvironmentCreate,
   EnvironmentCreation,
-  EnvironmentList,
   EnvironmentShow,
   EnvironmentDiff,
+  EnvironmentsShow,
 } from "@/operations/environments";
 import {StackList} from "@/operations/stacks";
 import {LambdaFunctionsList} from "@/operations/lambda-functions";
@@ -13,22 +13,13 @@ import {WithTab} from "@/components/tab";
 import {Heading} from "@/components/head";
 import {Pagination} from "@/operations/components/list";
 
-export const AppEnvironmentList: React.FC = () => {
+export const AppEnvironmentsShow: React.FC = () => {
   const {appId} = useParams();
   if (!appId) return null;
   return (
     <WithTab tab="Environments">
       <Box mt={1.5}>
-        <EnvironmentList
-          exporter={false}
-          appId={appId}
-          title=" "
-          empty={false}
-          pagination={false}
-          filter={{
-            appId,
-          }}
-        />
+        <EnvironmentsShow appId={appId} />
       </Box>
     </WithTab>
   );
