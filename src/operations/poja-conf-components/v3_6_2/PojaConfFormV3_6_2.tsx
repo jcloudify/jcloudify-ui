@@ -47,7 +47,7 @@ export const PojaConfEditV3_6_2: PojaConfEditComponent = ({
   appId,
   targetResource,
   targetId,
-  onSuccess,
+  mutationLifecycles,
 }) => {
   const {data: app} = useGetOne<ToRecord<Application>>("applications", {
     id: appId,
@@ -66,11 +66,11 @@ export const PojaConfEditV3_6_2: PojaConfEditComponent = ({
       }}
       redirect={false}
       mutationOptions={{
+        ...mutationLifecycles,
         meta: {
           appId,
           targetId,
         },
-        onSuccess,
       }}
     >
       <WithRecord<PojaConf1>

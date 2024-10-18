@@ -159,7 +159,9 @@ const PojaConf: React.FC<{envId: string; appId: string}> = ({appId, envId}) => {
             appId={appId}
             targetId={environment?.id!}
             targetResource="environment"
-            onSuccess={() => setIsEditConf(false)}
+            mutationLifecycles={{
+              onSuccess: () => setIsEditConf(false),
+            }}
           />
         ) : (
           <PojaConfView
