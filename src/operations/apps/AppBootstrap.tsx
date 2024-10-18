@@ -1,6 +1,7 @@
 import {
   EnvironmentType as EnvironmentTypeEnum,
   GithubAppInstallation,
+  Application,
 } from "@jcloudify-api/typescript-client";
 import {useMemo} from "react";
 import {
@@ -20,6 +21,7 @@ import {
   useCreate,
   Loading,
   useRedirect,
+  useDataProvider,
 } from "react-admin";
 import {
   FormHelperText,
@@ -46,7 +48,7 @@ import {typoSizes} from "@/components/typo";
 import {ToRecord, appCreateCache} from "@/providers";
 import {gh} from "@/config/env";
 import {redirect} from "@/utils/redirect";
-import {getPojaVersionedComponent} from "../environments/poja-conf-form/poja-conf-record";
+import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 
 export const AppBootstrap: React.FC = () => {
   const redirect = useRedirect();
@@ -57,9 +59,14 @@ export const AppBootstrap: React.FC = () => {
 
   const [create, {isLoading: isCreatingProductionEnvironment}] = useCreate();
 
-  const {formDefaultValues} = getPojaVersionedComponent("3.6.2" /* version */);
+  const dataProvider = useDataProvider();
+
+  const {formTransformFormValues, formDefaultValues} = getPojaVersionedComponent("3.6.2" /* version */);
 
   const createProductionEnvironment = async () => {
+    const {data: createdApp} = await dataProvider.getOne<ToRecord<Application>>("applications", {
+      id: newAppId,
+    })
     await create(
       "environments",
       {
@@ -67,14 +74,14 @@ export const AppBootstrap: React.FC = () => {
           appId: newAppId,
           ownerId: newEnvironmentId,
         },
-        data: {
+        data: formTransformFormValues({
           to_create: {
             id: newEnvironmentId,
             environment_type: EnvironmentTypeEnum.PROD,
             archived: false,
           },
           ...(formDefaultValues || {}),
-        },
+        }, createdApp),
       },
       {
         onSuccess: () => {
