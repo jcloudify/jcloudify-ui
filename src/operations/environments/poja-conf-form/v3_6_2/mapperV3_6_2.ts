@@ -12,6 +12,9 @@ import {
   NO_PUBLISH_CLIENT_CONF,
   NO_MAILING_CONF,
   NO_CONCURRENCY_CONF,
+  QUEUE0_COMPUTE_WORKER_CONF,
+  QUEUE1_COMPUTE_WORKER_CONF,
+  QUEUE2_COMPUTE_WORKER_CONF,
 } from "./constant";
 
 export interface PojaConfFormDataV3_6_2 extends OneOfPojaConf {
@@ -32,6 +35,7 @@ export const transformFormValuesV3_6_2 = (
 ): PojaConf1 => {
   const {__flags, ...normalizedConf} = {
     ...pojaConf,
+    compute: normalizeComputeConf(pojaConf),
     general: normalizeGeneralConf(pojaConf, with_app),
     gen_api_client: normalizeGenApiClientConf(pojaConf) as any,
     database: normalizeDBConf(pojaConf),
@@ -40,6 +44,34 @@ export const transformFormValuesV3_6_2 = (
     emailing: pojaConf.emailing || NO_MAILING_CONF,
   };
   return normalizedConf;
+};
+
+const normalizeComputeConf = ({general, compute}: PojaConfFormDataV3_6_2) => {
+  const {with_queues_nb} = general!;
+  const {
+    worker_memory,
+    worker_function_1_timeout,
+    worker_function_2_timeout,
+    worker_batch,
+    ...restCompute
+  } = compute!;
+
+  if (!with_queues_nb)
+    return {
+      ...QUEUE0_COMPUTE_WORKER_CONF,
+      ...restCompute,
+    };
+
+  if (with_queues_nb === 1)
+    return {
+      ...QUEUE1_COMPUTE_WORKER_CONF,
+      ...restCompute,
+    };
+
+  return {
+    ...QUEUE2_COMPUTE_WORKER_CONF,
+    ...restCompute,
+  };
 };
 
 const normalizeGeneralConf = (
