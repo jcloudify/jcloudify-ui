@@ -38,6 +38,7 @@ import {ToRecord} from "@/providers";
 import {GitCommit} from "@/components/source_control";
 import {TopLink} from "@/components/link";
 import {fromToNow} from "@/utils/date";
+import {getPojaVersionedComponent} from "./poja-conf-form/poja-conf-record";
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
   const {created} = useEnvironmentCreation(appId);
@@ -228,7 +229,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   const {data: activationConfig, isLoading: isLoadingActivationConfig} =
     useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
-      id: toActivateFrom.id,
+      id: toActivateFrom?.id,
       meta: {
         appId,
         targetResource: "environment",
@@ -236,9 +237,14 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
     });
 
   const activateEnvironment = async () => {
-    if (!created.length) {
-      console.log("navigate to create from scratch");
+    if (!toActivateFrom) {
+      const pcc = getPojaVersionedComponent("3.6.2");
+      return createEnvironmentWithConfig({
+        config: pcc.formDefaultValues!,
+        environment: {environment_type: type, archived: false},
+      });
     }
+
     createEnvironmentWithConfig({
       config: activationConfig!,
       environment: {environment_type: type, archived: false},
@@ -264,7 +270,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
           {ENVIRONMENT_TYPE_TEXT[type]}
         </Typography>
-        {type === EnvironmentTypeEnum.PREPROD && (
+        {type === EnvironmentTypeEnum.PREPROD && toActivateFrom && (
           <Typography>
             You sure you only need a Prod environment? If a bug happens on Prod,
             it would be less tricky to reproduce and fix it on Preprod first,
@@ -274,8 +280,13 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
         <Typography>
           A single click on the Active button below, and you will have a{" "}
-          <b>{ENVIRONMENT_TYPE_TEXT[type!]}</b>&nbsp; cloned from{" "}
-          <b>{ENVIRONMENT_TYPE_TEXT[toActivateFrom.environment_type!]}</b>!
+          <b>{ENVIRONMENT_TYPE_TEXT[type!]}</b>&nbsp;
+          {toActivateFrom && (
+            <>
+              cloned from{" "}
+              <b>{ENVIRONMENT_TYPE_TEXT[toActivateFrom.environment_type!]}</b>!
+            </>
+          )}
         </Typography>
       </CardContent>
 
