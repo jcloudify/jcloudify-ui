@@ -1,6 +1,18 @@
-import {Environment, EnvironmentType} from "@jcloudify-api/typescript-client";
-import {Link, Loading} from "react-admin";
-import {PiGitCommitFill as GitCommit} from "react-icons/pi";
+import {
+  BillingInfo,
+  Environment,
+  EnvironmentType as EnvironmentTypeEnum,
+  OneOfPojaConf,
+} from "@jcloudify-api/typescript-client";
+import {
+  DeleteWithConfirmButton,
+  Link,
+  Loading,
+  RecordContextProvider,
+  useGetOne,
+  useRedirect,
+} from "react-admin";
+import {PiGitCommitFill as GitCommitIcon} from "react-icons/pi";
 import {
   Button,
   Box,
@@ -9,17 +21,23 @@ import {
   CardActions,
   Typography,
   Stack,
+  CircularProgress,
+  CardActionArea,
 } from "@mui/material";
 import {Add, CompareArrows} from "@mui/icons-material";
 import {
   ENVIRONMENT_TYPE_TEXT,
+  EnvironmentType,
+  useCreateEnvironmentWithConfig,
   useEnvironmentCreation,
   useGetEnvironmentMap,
 } from "@/operations/environments";
 import {typoSizes} from "@/components/typo";
-import {BulkDeleteButton} from "@/operations/components/list";
 import {useGetLatestDeployment} from "@/operations/deployments";
 import {ToRecord} from "@/providers";
+import {GitCommit} from "@/components/source_control";
+import {fromToNow} from "@/utils/date";
+import {TopLink} from "@/components/link";
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
   const {canCreateMore, created} = useEnvironmentCreation(appId);
@@ -48,45 +66,154 @@ const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
 
 export interface EnvironmentCardProps {
   appId: string;
-  type: EnvironmentType;
+  type: EnvironmentTypeEnum;
   environment?: ToRecord<Environment>;
 }
 
-const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
-  appId,
-  type,
-  environment,
-}) => {
-  const {latestDeployment, isLoading: isLoadingLastDeployment} =
-    useGetLatestDeployment({appId, envType: type});
+const LatestDeployedCommit: React.FC<{
+  appId: string;
+  envType: EnvironmentTypeEnum;
+}> = ({appId, envType}) => {
+  const {latestDeployment, isLoading} = useGetLatestDeployment({
+    appId,
+    envType,
+  });
+  if (isLoading) {
+    return (
+      <Stack direction="row" spacing={2}>
+        <CircularProgress size={15} />
+        <Typography flex={1}>Fetching latest deployed commit...</Typography>
+      </Stack>
+    );
+  }
+  if (!isLoading && !latestDeployment) {
+    return <Typography>No deployed commit yet.</Typography>;
+  }
+
+  const {github_meta, creation_datetime} = latestDeployment;
 
   return (
-    <Card sx={{width: "40%", p: 1}}>
-      <CardContent component={Stack} direction="column" spacing={2}>
+    <Stack direction="row" alignItems="flex-start" spacing={2}>
+      <Box>
+        <GitCommitIcon size={18} />
+      </Box>
+
+      <Stack direction="column" spacing={0.5}>
+        <GitCommit {...github_meta} />
+        <Typography color="text.secondary">
+          {fromToNow(creation_datetime!)}
+        </Typography>
+      </Stack>
+    </Stack>
+  );
+};
+
+const MonthToDateCost: React.FC<{appId: string; envId: string}> = ({
+  appId,
+  envId,
+}) => {
+  const {data: billingInfo, isLoading} = useGetOne<ToRecord<BillingInfo>>(
+    "billingInfo",
+    {
+      id: envId,
+      meta: {
+        appId,
+        targetResource: "environment",
+      },
+    }
+  );
+
+  if (isLoading) {
+    return (
+      <Stack direction="row" spacing={2}>
+        <CircularProgress size={15} />
+        <Typography flex={1}>Computing environment billing...</Typography>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack direction="row" spacing={1} alignItems="center">
+      <Typography fontWeight="520" variant={typoSizes.sm.primary}>
+        $ {billingInfo?.computed_price}
+      </Typography>
+      &nbsp;
+      <Typography
+        color="text.secondary"
+        fontWeight="500"
+        flex={1}
+        variant="body1"
+      >
+        Month-to-date cost
+      </Typography>
+    </Stack>
+  );
+};
+
+const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
+  appId,
+  environment,
+}) => {
+  return (
+    <Card
+      sx={{
+        width: "40%",
+        display: "flex",
+        flexDirection: "column !important",
+        position: "relative",
+      }}
+    >
+      <CardContent
+        component={Stack}
+        direction="column"
+        spacing={2}
+        sx={{flex: 1, p: 2}}
+      >
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
-          {ENVIRONMENT_TYPE_TEXT[type]}
+          {ENVIRONMENT_TYPE_TEXT[environment?.environment_type!]}
         </Typography>
 
-        {!!latestDeployment && (
-          <Stack direction="row" alignItems="flex-start" spacing={2}>
-            <Box>
-              <GitCommit size={20} />
-            </Box>
+        <Stack flex={1} zIndex={3}>
+          <LatestDeployedCommit
+            appId={appId}
+            envType={environment?.environment_type!}
+          />
+        </Stack>
 
-            <Stack direction="column">
-              <Typography>
-                <b>{latestDeployment.github_meta?.commit?.sha?.slice(0, 7)}</b>
-                &nbsp; Latest deployed commit
-              </Typography>
-            </Stack>
-          </Stack>
-        )}
+        <MonthToDateCost appId={appId} envId={environment?.id!} />
       </CardContent>
-      <CardActions sx={{justifyContent: "flex-end"}}>
-        <Button variant="outlined" color="error">
-          Deactivate
-        </Button>
+
+      <CardActions sx={{justifyContent: "flex-end", p: 2}}>
+        <RecordContextProvider value={environment!}>
+          <DeleteWithConfirmButton
+            sx={{zIndex: 3}}
+            resource="environments"
+            confirmColor="warning"
+            variant="outlined"
+            size="large"
+            startIcon={false}
+            label="Deactivate"
+            confirmContent="Are you sure you want to deactivate this environment?"
+            confirmTitle={
+              <span>
+                Deactivate &nbsp;
+                <EnvironmentType value={environment?.environment_type!} />
+                &nbsp; environment
+              </span>
+            }
+            mutationOptions={{
+              meta: {
+                appId,
+              },
+              onSuccess: () => {
+                /* prevents auto redirect */
+              },
+            }}
+          />
+        </RecordContextProvider>
       </CardActions>
+
+      <TopLink index={2} to={environment?.id!} />
     </Card>
   );
 };
@@ -94,11 +221,42 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
   appId,
   type,
-  environment,
 }) => {
+  const {created} = useEnvironmentCreation(appId);
+  const toActivateFrom = created[0];
+
+  const [createEnvironmentWithConfig, {isLoading: isActivatingEnvironment}] =
+    useCreateEnvironmentWithConfig(appId);
+
+  const {data: activationConfig, isLoading: isLoadingActivationConfig} =
+    useGetOne<ToRecord<OneOfPojaConf>>("pojaConf", {
+      id: toActivateFrom.id,
+      meta: {
+        appId,
+        targetResource: "environment",
+      },
+    });
+
+  const activateEnvironment = async () => {
+    if (!created.length) {
+      console.log("navigate to create from scratch");
+    }
+    createEnvironmentWithConfig({
+      config: activationConfig!,
+      environment: {environment_type: type, archived: false},
+    });
+  };
+
   return (
-    <Card sx={{width: "40%", p: 1}}>
-      <CardContent component={Stack} direction="column" spacing={2} flex={1}>
+    <Card
+      sx={{
+        width: "40%",
+        p: 1,
+        display: "flex",
+        flexDirection: "column !important",
+      }}
+    >
+      <CardContent component={Stack} direction="column" spacing={2}>
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
           {ENVIRONMENT_TYPE_TEXT[type]}
         </Typography>
@@ -109,14 +267,20 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
         </Typography>
 
         <Typography>
-          A single click on the Active button below, and you will have a Preprod
-          cloned from Prod!
+          A single click on the Active button below, and you will have a{" "}
+          <b>Preprod</b>&nbsp; cloned from <b>Prod</b>!
         </Typography>
       </CardContent>
 
       <CardActions sx={{justifyContent: "flex-end"}}>
-        <Button variant="outlined" color="success" size="large">
-          Activate
+        <Button
+          variant="outlined"
+          color="success"
+          size="large"
+          onClick={activateEnvironment}
+          disabled={isActivatingEnvironment || isLoadingActivationConfig}
+        >
+          {isActivatingEnvironment ? "Activating..." : "Activate"}
         </Button>
       </CardActions>
     </Card>
@@ -142,12 +306,12 @@ export const EnvironmentsShow: React.FC<{appId: string}> = ({appId}) => {
     <Stack mt={4} mb={3} direction="row" width="100%" spacing={3}>
       <EnvironmentCard
         appId={appId}
-        type={EnvironmentType.PROD}
+        type={EnvironmentTypeEnum.PROD}
         environment={environmentMap.prod}
       />
       <EnvironmentCard
         appId={appId}
-        type={EnvironmentType.PREPROD}
+        type={EnvironmentTypeEnum.PREPROD}
         environment={environmentMap.preprod}
       />
     </Stack>

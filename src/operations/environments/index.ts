@@ -12,3 +12,4 @@ export * from "./types";
 export * from "./useEnvironmentCreation";
 export * from "./useGetEnvironmentApiURL";
 export * from "./useGetEnvironmentMap";
+export * from "./useCreateEnvironmentwithConfig";
