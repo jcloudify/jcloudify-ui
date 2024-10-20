@@ -9,6 +9,7 @@ import {
   Link,
   Loading,
   RecordContextProvider,
+  TopToolbar,
   useGetOne,
   useRedirect,
 } from "react-admin";
@@ -22,9 +23,8 @@ import {
   Typography,
   Stack,
   CircularProgress,
-  CardActionArea,
 } from "@mui/material";
-import {Add, CompareArrows} from "@mui/icons-material";
+import {CompareArrows} from "@mui/icons-material";
 import {
   ENVIRONMENT_TYPE_TEXT,
   EnvironmentType,
@@ -36,30 +36,28 @@ import {typoSizes} from "@/components/typo";
 import {useGetLatestDeployment} from "@/operations/deployments";
 import {ToRecord} from "@/providers";
 import {GitCommit} from "@/components/source_control";
-import {fromToNow} from "@/utils/date";
 import {TopLink} from "@/components/link";
+import {fromToNow} from "@/utils/date";
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
-  const {canCreateMore, created} = useEnvironmentCreation(appId);
+  const {created} = useEnvironmentCreation(appId);
   return (
-    <Stack py={1} direction="row" alignItems="center" spacing={2}>
+    <Stack
+      py={1}
+      direction="row"
+      alignItems="center"
+      spacing={2}
+      justifyContent="flex-end"
+    >
       <Button
         to="diff"
         startIcon={<CompareArrows />}
         component={Link}
         variant="outlined"
         disabled={created.length !== 2}
-        label="Diff"
-      />
-
-      <Button
-        to="creation-template"
-        startIcon={<Add />}
-        component={Link}
-        variant="contained"
-        label="Create"
-        disabled={!canCreateMore}
-      />
+      >
+        Diff
+      </Button>
     </Stack>
   );
 };
@@ -157,7 +155,7 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
   return (
     <Card
       sx={{
-        width: "40%",
+        width: "100%",
         display: "flex",
         flexDirection: "column !important",
         position: "relative",
@@ -249,14 +247,9 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   return (
     <Card
-      sx={{
-        width: "40%",
-        p: 1,
-        display: "flex",
-        flexDirection: "column !important",
-      }}
+      sx={{width: "100%", display: "flex", flexDirection: "column !important"}}
     >
-      <CardContent component={Stack} direction="column" spacing={2}>
+      <CardContent component={Stack} direction="column" spacing={2} p={2}>
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
           {ENVIRONMENT_TYPE_TEXT[type]}
         </Typography>
@@ -272,7 +265,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
         </Typography>
       </CardContent>
 
-      <CardActions sx={{justifyContent: "flex-end"}}>
+      <CardActions sx={{justifyContent: "flex-end", p: 2}}>
         <Button
           variant="outlined"
           color="success"
@@ -303,17 +296,21 @@ export const EnvironmentsShow: React.FC<{appId: string}> = ({appId}) => {
     );
 
   return (
-    <Stack mt={4} mb={3} direction="row" width="100%" spacing={3}>
-      <EnvironmentCard
-        appId={appId}
-        type={EnvironmentTypeEnum.PROD}
-        environment={environmentMap.prod}
-      />
-      <EnvironmentCard
-        appId={appId}
-        type={EnvironmentTypeEnum.PREPROD}
-        environment={environmentMap.preprod}
-      />
+    <Stack mt={1}>
+      <ListActions appId={appId} />
+
+      <Stack mb={3} direction="row" width="100%" spacing={3}>
+        <EnvironmentCard
+          appId={appId}
+          type={EnvironmentTypeEnum.PROD}
+          environment={environmentMap.prod}
+        />
+        <EnvironmentCard
+          appId={appId}
+          type={EnvironmentTypeEnum.PREPROD}
+          environment={environmentMap.preprod}
+        />
+      </Stack>
     </Stack>
   );
 };
