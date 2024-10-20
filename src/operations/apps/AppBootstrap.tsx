@@ -1,7 +1,6 @@
 import {
   EnvironmentType as EnvironmentTypeEnum,
   GithubAppInstallation,
-  Application,
 } from "@jcloudify-api/typescript-client";
 import {useMemo} from "react";
 import {
@@ -18,10 +17,8 @@ import {
   useGetList,
   useInput,
   useNotify,
-  useCreate,
   Loading,
   useRedirect,
-  useDataProvider,
 } from "react-admin";
 import {
   FormHelperText,
@@ -45,10 +42,11 @@ import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
 import {Divider} from "@/components/divider";
 import {typoSizes} from "@/components/typo";
+import {useCreateEnvironmentWithConfig} from "@/operations/environments";
+import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {ToRecord, appCreateCache} from "@/providers";
 import {gh} from "@/config/env";
 import {redirect} from "@/utils/redirect";
-import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 
 export const AppBootstrap: React.FC = () => {
   const redirect = useRedirect();
@@ -57,42 +55,24 @@ export const AppBootstrap: React.FC = () => {
   const newAppId = useMemo(() => nanoid(), []);
   const newEnvironmentId = useMemo(() => nanoid(), []);
 
-  const [create, {isLoading: isCreatingProductionEnvironment}] = useCreate();
+  const [createEnvironmentWithConfig, {isLoading: isCreatingEnvironment}] =
+    useCreateEnvironmentWithConfig(newAppId);
 
-  const dataProvider = useDataProvider();
+  const setupPreprodEnvironment = async () => {
+    const pcc = getPojaVersionedComponent("3.6.2" /* version */);
 
-  const {formTransformFormValues, formDefaultValues} =
-    getPojaVersionedComponent("3.6.2" /* version */);
-
-  const createProductionEnvironment = async () => {
-    const {data: createdApp} = await dataProvider.getOne<ToRecord<Application>>(
-      "applications",
+    createEnvironmentWithConfig(
       {
-        id: newAppId,
-      }
-    );
-    await create(
-      "environments",
-      {
-        meta: {
-          appId: newAppId,
-          ownerId: newEnvironmentId,
+        config: pcc.formDefaultValues!,
+        environment: {
+          id: newEnvironmentId,
+          environment_type: EnvironmentTypeEnum.PREPROD,
+          archived: false,
         },
-        data: formTransformFormValues(
-          {
-            to_create: {
-              id: newEnvironmentId,
-              environment_type: EnvironmentTypeEnum.PROD,
-              archived: false,
-            },
-            ...(formDefaultValues || {}),
-          },
-          createdApp
-        ),
       },
       {
         onSuccess: () => {
-          notify("Production environment created successfully.", {
+          notify("Preprod environment created successfully.", {
             type: "success",
           });
           redirect(
@@ -116,7 +96,7 @@ export const AppBootstrap: React.FC = () => {
           <Typography variant={typoSizes.sm.secondary} color="text.secondary">
             JCloudify enables you to effortlessly bootstrap a new app that will
             be pushed to the repository of your choice and deployed to a{" "}
-            <b>Production-ready</b> environment.
+            <b>Preprod</b> environment.
           </Typography>
         }
         mb={4}
@@ -128,12 +108,12 @@ export const AppBootstrap: React.FC = () => {
         resource="applications"
         mutationOptions={{
           onSuccess: () => {
-            void createProductionEnvironment();
+            void setupPreprodEnvironment();
           },
         }}
       >
         <Form
-          disabled={isCreatingProductionEnvironment}
+          disabled={isCreatingEnvironment}
           defaultValues={{id: newAppId, package_name: "com.example.demo"}}
         >
           <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
@@ -155,8 +135,8 @@ export const AppBootstrap: React.FC = () => {
         </Form>
       </CreateBase>
 
-      <Dialog open={isCreatingProductionEnvironment}>
-        <DialogTitle>Setting up the Production environment</DialogTitle>
+      <Dialog open={isCreatingEnvironment}>
+        <DialogTitle>Setting up the Preprod environment</DialogTitle>
         <DialogContent>
           <Loading loadingPrimary="" loadingSecondary="" />
         </DialogContent>

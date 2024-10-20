@@ -1,6 +1,10 @@
+import {EnvironmentType as EnvironmentTypeEnum} from "@jcloudify-api/typescript-client";
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
+import {prod_env} from "../fixtures/environment.mock";
+import {preprod_env2_conf1} from "../fixtures/config.mock";
+import {jcloudify} from "../support/util";
 
 describe("Environment", () => {
   beforeEach(() => {
@@ -10,31 +14,29 @@ describe("Environment", () => {
   });
 
   context("Read", () => {
-    specify("List available environment for the viewed app", () => {
+    specify("Display environments for the viewed app", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
+      cy.wait("@getEnvBillingInfo");
 
-      cy.contains("prod_env");
       cy.contains("Prod");
 
-      cy.contains("preprod_env");
-      cy.contains("Preprod");
-
-      cy.getByHref(`/applications`).click();
-      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-      cy.wait("@getEnvironments");
-
-      cy.contains("preprod_env2");
-      cy.contains("Preprod");
+      cy.contains("poja: gen");
+      cy.contains("fdf8268");
+      cy.contains("$ 7.25");
     });
 
     specify("Shows the clicked environment details", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-      cy.contains("prod_env").click();
+
+      cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
+      cy.wait("@getEnvBillingInfo");
+
+      cy.getByTestid(`environment-${prod_env.id}`).click();
 
       cy.wait("@getEnvironmentById");
-
-      cy.contains("Prod");
 
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
@@ -67,11 +69,17 @@ describe("Environment", () => {
         () => {
           cy.getByTestid(`show-${app1.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+          cy.wait("@getEnvironments");
+          cy.wait("@getDeployments");
+          cy.wait("@getEnvBillingInfo");
           cy.contains("Diff").should("not.have.attr", "aria-disabled");
 
           cy.getByHref(`/applications`).click();
           cy.getByTestid(`show-${app2.id}-app`).click({force: true});
           cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+          cy.wait("@getEnvironments");
+          cy.wait("@getDeployments");
+          cy.wait("@getEnvBillingInfo");
           cy.contains("Diff").should("have.attr", "aria-disabled", "true");
         }
       );
@@ -79,6 +87,9 @@ describe("Environment", () => {
       specify("Compare Environment Differences", () => {
         cy.getByTestid(`show-${app1.id}-app`).click({force: true});
         cy.getByHref(`/applications/${app1.id}/show/environments`).click();
+        cy.wait("@getEnvironments");
+        cy.wait("@getDeployments");
+        cy.wait("@getEnvBillingInfo");
         cy.contains("Diff").click();
 
         cy.contains("Environment Diff");
@@ -92,49 +103,68 @@ describe("Environment", () => {
   });
 
   context("Create environment", () => {
-    specify(
-      "Create button is disabled when there is no available environment to create",
-      () => {
-        cy.getByTestid(`show-${app1.id}-app`).click({force: true});
-        cy.getByHref(`/applications/${app1.id}/show/environments`).click();
-        cy.contains("Create").should("have.attr", "aria-disabled", "true");
-      }
-    );
+    specify("Deactivate activated ones", () => {
+      cy.getByTestid(`show-${app1.id}-app`).click({force: true});
+      cy.getByHref(`/applications/${app1.id}/show/environments`).click();
 
-    specify(
-      "Create button is enabled when there is available environment to create",
-      () => {
-        cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-        cy.getByHref(`/applications/${app2.id}/show/environments`).click();
-        cy.contains("Create").should("not.have.attr", "aria-disabled");
-      }
-    );
-
-    specify("(ui flow)from scratch", () => {
-      cy.getByTestid(`show-${app2.id}-app`).click({force: true});
-      cy.getByHref(`/applications/${app2.id}/show/environments`).click();
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications/${app1.id}/environments`),
+        (req) => {
+          return req.reply({...req, statusCode: 201});
+        }
+      ).as("DeactivatePreprodEnvironment");
 
       cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
+      cy.wait("@getEnvBillingInfo");
 
-      cy.contains("Create").click();
-      cy.getByTestid("CreateFromScratch").click();
-      cy.contains("From scratch");
+      cy.get(`.PREPROD-environment-card [aria-label='Deactivate']`).click();
+      cy.contains("Confirm").click();
+      cy.wait("@DeactivatePreprodEnvironment");
+
+      cy.get(`.PREPROD-environment-card [aria-label='Activate']`).should(
+        "exist"
+      );
     });
 
-    specify("(ui flow) from an existing one, create an available", () => {
+    specify("Activate deactivated ones", () => {
       cy.getByTestid(`show-${app2.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app2.id}/show/environments`).click();
 
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications/${app2.id}/environments`),
+        (req) => {
+          const [env] = req.body.data;
+          expect(env.environment_type).to.eq(EnvironmentTypeEnum.PROD);
+          return req.reply({...req, statusCode: 200});
+        }
+      ).as("ActivateProd");
+
+      cy.intercept(
+        "PUT",
+        jcloudify(
+          `/users/${user1.id}/applications/${app2.id}/environments/*/config`
+        ),
+        (req) => {
+          const {id, ...conf} = req.body;
+          expect(conf).to.deep.eq(preprod_env2_conf1);
+          return req.reply({...req, statusCode: 200});
+        }
+      ).as("ActivateProdConfFromPreprod");
+
       cy.wait("@getEnvironments");
+      cy.wait("@getDeployments");
+      cy.wait("@getEnvBillingInfo");
 
-      cy.contains("Create").click();
-      cy.muiSelect("[data-testid='select-creation-template']", "preprod_env2");
-      cy.getByTestid("CreateFromExisting").click();
-      cy.contains("From Preprod");
+      cy.get(`.PROD-environment-card [aria-label='Activate']`).click();
 
-      // BUGFIX
-      // should be able to create an env from an existing one without editing any config
-      cy.get("[aria-label='Create']").should("be.enabled");
+      cy.wait("@getEnvironmentConfig");
+      cy.wait("@ActivateProd");
+      cy.wait("@ActivateProdConfFromPreprod");
+
+      cy.get(`.PROD-environment-card [aria-label='Activate']`).click();
     });
   });
 });
