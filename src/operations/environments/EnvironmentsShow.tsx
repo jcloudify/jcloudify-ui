@@ -264,11 +264,13 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
           {ENVIRONMENT_TYPE_TEXT[type]}
         </Typography>
-        <Typography>
-          You sure you only need a Prod environment? If a bug happen Prod, it
-          would be less tricky to reproduce and fix it on Preprod first, and
-          promote Preprod to Prod after that.
-        </Typography>
+        {type === EnvironmentTypeEnum.PREPROD && (
+          <Typography>
+            You sure you only need a Prod environment? If a bug happens on Prod,
+            it would be less tricky to reproduce and fix it on Preprod first,
+            and promote Preprod to Prod after that.
+          </Typography>
+        )}
 
         <Typography>
           A single click on the Active button below, and you will have a{" "}
