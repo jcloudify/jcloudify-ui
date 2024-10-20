@@ -55,18 +55,6 @@ export const useCreateEnvironmentWithConfig = (
       return;
     }
 
-    console.log("before_transform_conf", params.config);
-    console.log(
-      "after_transform_conf",
-      pcc.formTransformFormValues(
-        {
-          to_create: params.environment,
-          ...params.config,
-        },
-        targetApp!
-      )
-    );
-
     await create(
       "environments",
       {
