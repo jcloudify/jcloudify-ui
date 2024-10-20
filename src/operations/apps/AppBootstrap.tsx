@@ -2,7 +2,7 @@ import {
   EnvironmentType as EnvironmentTypeEnum,
   GithubAppInstallation,
 } from "@jcloudify-api/typescript-client";
-import {useMemo} from "react";
+import {useState, useMemo, useEffect} from "react";
 import {
   CreateBase,
   Form,
@@ -43,6 +43,7 @@ import {GridLayout} from "@/components/grid";
 import {Divider} from "@/components/divider";
 import {typoSizes} from "@/components/typo";
 import {useCreateEnvironmentWithConfig} from "@/operations/environments";
+import {useCheckAppIsPushed} from "@/operations/apps";
 import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {ToRecord, appCreateCache} from "@/providers";
 import {gh} from "@/config/env";
@@ -52,11 +53,25 @@ export const AppBootstrap: React.FC = () => {
   const redirect = useRedirect();
   const notify = useNotify();
 
+  const [hasCreatedApp, setHasCreatedApp] = useState(false);
+
   const newAppId = useMemo(() => nanoid(), []);
   const newEnvironmentId = useMemo(() => nanoid(), []);
 
+  const isPushed = useCheckAppIsPushed({
+    appId: newAppId,
+    enabled: hasCreatedApp,
+  });
+
   const [createEnvironmentWithConfig, {isLoading: isCreatingEnvironment}] =
     useCreateEnvironmentWithConfig(newAppId);
+
+  useEffect(() => {
+    if (isPushed) {
+      setHasCreatedApp(false);
+      setupPreprodEnvironment();
+    }
+  }, [isPushed]);
 
   const setupPreprodEnvironment = async () => {
     const pcc = getPojaVersionedComponent("3.6.2" /* version */);
@@ -108,7 +123,7 @@ export const AppBootstrap: React.FC = () => {
         resource="applications"
         mutationOptions={{
           onSuccess: () => {
-            void setupPreprodEnvironment();
+            setHasCreatedApp(true);
           },
         }}
       >
@@ -135,7 +150,7 @@ export const AppBootstrap: React.FC = () => {
         </Form>
       </CreateBase>
 
-      <Dialog open={isCreatingEnvironment}>
+      <Dialog open={(hasCreatedApp && !isPushed) || isCreatingEnvironment}>
         <DialogTitle>Setting up the Preprod environment</DialogTitle>
         <DialogContent>
           <Loading loadingPrimary="" loadingSecondary="" />
