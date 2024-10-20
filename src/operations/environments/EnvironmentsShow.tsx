@@ -9,9 +9,7 @@ import {
   Link,
   Loading,
   RecordContextProvider,
-  TopToolbar,
   useGetOne,
-  useRedirect,
 } from "react-admin";
 import {PiGitCommitFill as GitCommitIcon} from "react-icons/pi";
 import {
