@@ -247,9 +247,20 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   return (
     <Card
-      sx={{width: "100%", display: "flex", flexDirection: "column !important"}}
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column !important",
+        position: "relative",
+      }}
     >
-      <CardContent component={Stack} direction="column" spacing={2} p={2}>
+      <CardContent
+        component={Stack}
+        direction="column"
+        spacing={2}
+        p={2}
+        flex={1}
+      >
         <Typography variant={typoSizes.lg.primary} fontWeight={560}>
           {ENVIRONMENT_TYPE_TEXT[type]}
         </Typography>
@@ -261,7 +272,8 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
         <Typography>
           A single click on the Active button below, and you will have a{" "}
-          <b>Preprod</b>&nbsp; cloned from <b>Prod</b>!
+          <b>{ENVIRONMENT_TYPE_TEXT[type!]}</b>&nbsp; cloned from{" "}
+          <b>{ENVIRONMENT_TYPE_TEXT[toActivateFrom.environment_type!]}</b>!
         </Typography>
       </CardContent>
 
