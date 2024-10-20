@@ -22,6 +22,7 @@ import {PojaConfViewComponent} from "@/operations/environments/poja-conf-form";
 import {
   DatabaseConf1WithDatabaseEnum,
   PojaConf1,
+  WithQueuesNbEnum,
 } from "@jcloudify-api/typescript-client";
 
 export const PojaConfViewV3_6_2: PojaConfViewComponent = ({
@@ -102,7 +103,6 @@ const GeneralConf = () => (
       render={renderWithLabel}
     >
       <TextField label="Package name" source="general.package_full_name" />
-      <TextField label="Queues NB" source="general.with_queues_nb" />
       <BooleanField label="Snapstart" source="general.with_snapstart" />
     </GridLayout>
 
@@ -240,35 +240,56 @@ const GenAPIClient = () => {
   );
 };
 
-const ComputeConf = () => (
-  <Stack>
-    <Heading size="sm" title="Compute" mb={2} />
-    <GridLayout
-      xs={12}
-      md={6}
-      lg={4}
-      spacing={2}
-      rowSpacing={0.5}
-      render={renderWithLabel}
-    >
-      <TextField label="Frontal Memory" source="compute.frontal_memory" />
-      <TextField
-        label="Frontal Function Timeout"
-        source="compute.frontal_function_timeout"
-      />
-      <TextField label="Worker Memory" source="compute.worker_memory" />
-      <TextField label="Worker Batch" source="compute.worker_batch" />
-      <TextField
-        label="Worker Function 1 Timeout"
-        source="compute.worker_function_1_timeout"
-      />
-      <TextField
-        label="Worker Function 2 Timeout"
-        source="compute.worker_function_2_timeout"
-      />
-    </GridLayout>
-  </Stack>
-);
+const ComputeConf = () => {
+  const conf = useRecordContext<PojaConf1>();
+  const queuesNB = conf?.general?.with_queues_nb;
+
+  return (
+    <Stack>
+      <Heading size="sm" title="Compute" mb={2} />
+      <GridLayout
+        xs={12}
+        md={6}
+        lg={4}
+        spacing={2}
+        rowSpacing={0.5}
+        render={renderWithLabel}
+      >
+        <TextField label="Frontal Memory" source="compute.frontal_memory" />
+        <TextField
+          label="Frontal Function Timeout"
+          source="compute.frontal_function_timeout"
+        />
+        <TextField label="Queues NB" source="general.with_queues_nb" />
+      </GridLayout>
+
+      {!!queuesNB && (
+        <GridLayout
+          xs={12}
+          md={6}
+          lg={4}
+          spacing={2}
+          rowSpacing={0.5}
+          render={renderWithLabel}
+        >
+          <TextField label="Worker Memory" source="compute.worker_memory" />
+          <TextField label="Worker Batch" source="compute.worker_batch" />
+          <TextField
+            label="Worker Function 1 Timeout"
+            source="compute.worker_function_1_timeout"
+          />
+
+          {queuesNB === WithQueuesNbEnum.NUMBER_2 && (
+            <TextField
+              label="Worker Function 2 Timeout"
+              source="compute.worker_function_2_timeout"
+            />
+          )}
+        </GridLayout>
+      )}
+    </Stack>
+  );
+};
 
 const MailingConf = () => (
   <Stack>

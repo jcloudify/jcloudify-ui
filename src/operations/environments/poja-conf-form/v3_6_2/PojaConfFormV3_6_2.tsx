@@ -18,7 +18,7 @@ import {
   useGetOne,
   required,
 } from "react-admin";
-import {useWatch} from "react-hook-form";
+import {useFormContext, useWatch} from "react-hook-form";
 import {
   Stack,
   Accordion,
@@ -342,7 +342,9 @@ const GenAPIClientConf = () => {
 };
 
 const ComputeConf = () => {
-  const queuesNB = useWatch({name: "general.with_queues_nb"});
+  const {watch} = useFormContext();
+  const queuesNB = watch("general.with_queues_nb");
+
   return (
     <Stack>
       <Heading size="sm" title="Compute" mb={2} />

@@ -39,7 +39,7 @@ const createConf1 = (
     worker_reserved_concurrent_executions_nb: 0,
   },
   compute: {
-    frontal_memory: 2048,
+    frontal_memory: 512,
     frontal_function_timeout: 30,
     worker_memory: 1024,
     worker_batch: 5,
