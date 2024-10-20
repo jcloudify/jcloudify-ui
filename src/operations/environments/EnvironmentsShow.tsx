@@ -23,6 +23,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import {CompareArrows} from "@mui/icons-material";
+import {nanoid} from "nanoid";
 import {
   ENVIRONMENT_TYPE_TEXT,
   EnvironmentType,
@@ -239,13 +240,13 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
       const pcc = getPojaVersionedComponent("3.6.2");
       return createEnvironmentWithConfig({
         config: pcc.formDefaultValues!,
-        environment: {environment_type: type, archived: false},
+        environment: {id: nanoid(), environment_type: type, archived: false},
       });
     }
 
     createEnvironmentWithConfig({
       config: activationConfig!,
-      environment: {environment_type: type, archived: false},
+      environment: {id: nanoid(), environment_type: type, archived: false},
     });
   };
 

@@ -3,9 +3,8 @@ import {
   Environment,
   OneOfPojaConf,
 } from "@jcloudify-api/typescript-client";
-import {useCreate, useGetOne} from "react-admin";
+import {useCreate, useDataProvider} from "react-admin";
 import {MutateOptions} from "@tanstack/react-query";
-import {nanoid} from "nanoid";
 import {PojaConfComponentVersion} from "@/operations/environments/poja-conf-form";
 import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {ToRecord} from "@/providers";
@@ -27,19 +26,20 @@ export type UseCreateEnvironmentWithConfigResult = [
 export const useCreateEnvironmentWithConfig = (
   targetAppId: string
 ): UseCreateEnvironmentWithConfigResult => {
-  const {data: targetApp, isLoading: isLoadingApp} = useGetOne<
-    ToRecord<Application>
-  >("applications", {
-    id: targetAppId,
-  });
-
-  const [create, {isLoading: isCreatingEnvironment}] = useCreate();
+  const dataProvider = useDataProvider();
+  const [create, {isLoading}] = useCreate();
 
   const createEnvironmentWithConfig = async (
     params: CreateEnvironmentWithConfigParams,
     options?: MutateOptions<any, any, unknown>
   ) => {
-    const newEnvironmentId = nanoid();
+    const {data: targetApp} = await dataProvider.getOne<ToRecord<Application>>(
+      "applications",
+      {
+        id: targetAppId,
+      }
+    );
+
     const pcc = getPojaVersionedComponent(
       params.config.version as PojaConfComponentVersion
     );
@@ -60,14 +60,11 @@ export const useCreateEnvironmentWithConfig = (
       {
         meta: {
           appId: targetAppId,
-          ownerId: newEnvironmentId,
+          ownerId: params.environment.id,
         },
         data: pcc.formTransformFormValues(
           {
-            to_create: {
-              ...params.environment,
-              id: newEnvironmentId,
-            },
+            to_create: params.environment,
             ...(params.config || pcc.formDefaultValues),
           },
           targetApp!
@@ -77,8 +74,5 @@ export const useCreateEnvironmentWithConfig = (
     );
   };
 
-  return [
-    createEnvironmentWithConfig,
-    {isLoading: isLoadingApp || isCreatingEnvironment},
-  ];
+  return [createEnvironmentWithConfig, {isLoading}];
 };

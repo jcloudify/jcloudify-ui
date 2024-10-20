@@ -67,11 +67,11 @@ describe("Application", () => {
         (req) => {
           const [environmentToCreate] = req.body.data;
           expect(environmentToCreate.environment_type).to.eq(
-            EnvironmentTypeEnum.PROD
+            EnvironmentTypeEnum.PREPROD
           );
           return req.reply({...req, statusCode: 201});
         }
-      ).as("createProductionEnvironment");
+      ).as("createPreprodEnvironment");
 
       cy.intercept(
         "PUT",
@@ -81,7 +81,7 @@ describe("Application", () => {
           expect(pojaConf.general.app_name).to.eq(app1.name);
           return req.reply({...req, statusCode: 201});
         }
-      ).as("createProductionEnvironmentConfig");
+      ).as("createPreprodEnvironmentConfig");
 
       cy.get('[href="/applications/create/new"]').click();
 
@@ -101,11 +101,11 @@ describe("Application", () => {
       cy.wait("@createNewApp");
 
       cy.wait("@getApplication");
-      cy.contains("Setting up the Production environment");
-      cy.wait("@createProductionEnvironment");
-      cy.wait("@createProductionEnvironmentConfig");
+      cy.contains("Setting up the Preprod environment");
+      cy.wait("@createPreprodEnvironment");
+      cy.wait("@createPreprodEnvironmentConfig");
 
-      cy.contains("Production environment created successfully");
+      cy.contains("Preprod environment created successfully");
     });
 
     specify("Displays server side 400 error on incorrect payload", () => {
