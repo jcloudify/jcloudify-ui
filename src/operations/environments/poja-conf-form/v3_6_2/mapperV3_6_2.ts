@@ -57,8 +57,12 @@ const normalizeGeneralConf = (
     custom_java_env_vars: Array.isArray(custom_java_env_vars)
       ? toRecord(custom_java_env_vars)
       : custom_java_env_vars,
-    custom_java_deps: fromStringValue(custom_java_deps),
-    custom_java_repositories: fromStringValue(custom_java_repositories),
+    custom_java_deps: Array.isArray(custom_java_deps)
+      ? custom_java_deps
+      : fromStringValue(custom_java_deps),
+    custom_java_repositories: Array.isArray(custom_java_repositories)
+      ? custom_java_repositories
+      : fromStringValue(custom_java_repositories),
   };
 };
 
@@ -80,7 +84,7 @@ const normalizeGenApiClientConf = ({
   __flags,
   gen_api_client,
 }: PojaConfFormDataV3_6_2): GenApiClient1 => {
-  if (!__flags?.with_gen_clients)
+  if (__flags && !__flags?.with_gen_clients)
     return {
       ...NO_PUBLISH_CLIENT_CONF,
       ts_client_api_url_env_var_name: null,

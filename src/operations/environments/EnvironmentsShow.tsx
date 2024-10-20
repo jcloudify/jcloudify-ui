@@ -151,9 +151,12 @@ const MonthToDateCost: React.FC<{appId: string; envId: string}> = ({
 const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
   appId,
   environment,
+  type,
 }) => {
   return (
     <Card
+      data-testid={`environment-${environment?.id}`}
+      className={`${type}-environment-card`}
       sx={{
         width: "100%",
         display: "flex",
@@ -184,6 +187,7 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
       <CardActions sx={{justifyContent: "flex-end", p: 2}}>
         <RecordContextProvider value={environment!}>
           <DeleteWithConfirmButton
+            aria-label="Deactivate"
             sx={{zIndex: 3}}
             resource="environments"
             confirmColor="warning"
@@ -244,6 +248,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
       });
     }
 
+    console.log("activation_config", activationConfig);
     createEnvironmentWithConfig({
       config: activationConfig!,
       environment: {id: nanoid(), environment_type: type, archived: false},
@@ -252,6 +257,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   return (
     <Card
+      className={`${type}-environment-card`}
       sx={{
         width: "100%",
         display: "flex",
@@ -291,6 +297,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
       <CardActions sx={{justifyContent: "flex-end", p: 2}}>
         <Button
+          aria-label="Activate"
           variant="outlined"
           color="success"
           size="large"

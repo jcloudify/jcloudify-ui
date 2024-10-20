@@ -16,6 +16,7 @@ import {
 } from "../fixtures/stack.mock";
 import {
   depl1_prod_env_conf1,
+  preprod_env2_conf1,
   preprod_env_conf1,
   prod_env_conf1,
 } from "../fixtures/config.mock";
@@ -32,8 +33,8 @@ import {jcloudify} from "./util";
 import {isDateBetween} from "../../src/utils/date";
 import {
   app1_billing_info,
-  app1_preprod_billing_info,
-  app1_prod_billing_info,
+  prod_billing_info,
+  preprod_billing_info,
   billingInfo,
 } from "../fixtures/billing-info.mock";
 import {paymentDetails} from "../fixtures/billing.mock";
@@ -84,25 +85,35 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(`/users/*/applications/${app1.id}/billing?startTime=*&endTime=*`),
     app1_billing_info
   ).as("getAppBillingInfo");
+
   cy.intercept(
     "GET",
     jcloudify(`/users/*/applications/${app3.id}/billing?startTime=*&endTime=*`),
     []
   ).as("getAppBillingInfo");
+
   cy.intercept(
     "GET",
     jcloudify(
       `/users/*/applications/${app1.id}/environments/${prod_env.id}/billing?startTime=*&endTime=*`
     ),
-    app1_prod_billing_info
+    prod_billing_info
   ).as("getEnvBillingInfo");
   cy.intercept(
     "GET",
     jcloudify(
       `/users/*/applications/${app1.id}/environments/${preprod_env.id}/billing?startTime=*&endTime=*`
     ),
-    app1_preprod_billing_info
+    preprod_billing_info
   ).as("getEnvBillingInfo");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app2.id}/environments/${preprod_env2.id}/billing?startTime=*&endTime=*`
+    ),
+    preprod_billing_info
+  ).as("getEnvBillingInfo");
+
   cy.intercept(
     "GET",
     jcloudify(`/users/*/billing?startTime=*&endTime=*`),
@@ -180,7 +191,7 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(
       `/users/*/applications/${app2.id}/environments/preprod_env2/config`
     ),
-    preprod_env_conf1
+    preprod_env2_conf1
   ).as("getEnvironmentConfig");
 
   cy.intercept("GET", jcloudify(`/users/${user1.id}/installations`), {
@@ -289,13 +300,12 @@ Cypress.Commands.add("mockApiGet", () => {
   ).as("getLogStreamEvents");
 
   cy.intercept(
-    jcloudify(`/users/${user1.id}/applications/${app1.id}/deployments*`),
+    jcloudify(`/users/${user1.id}/applications/*/deployments*`),
     (req) => {
       const {query} = req;
       const {environmentType, startDatetime, endDatetime} = query;
       const data = depls.filter(
         (depl) =>
-          depl.application_id === app1.id &&
           (!environmentType ||
             environmentType ===
               depl.github_meta?.commit?.branch?.toUpperCase()) &&
