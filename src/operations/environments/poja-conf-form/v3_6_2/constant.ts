@@ -1,5 +1,4 @@
 import {
-  ComputeConf1,
   ConcurrencyConf1,
   DatabaseConf1WithDatabaseEnum,
   MailingConf1,
@@ -36,17 +35,6 @@ export const MAILING_CONF: MailingConf1 = {
 export const NO_CONCURRENCY_CONF: ConcurrencyConf1 = {
   frontal_reserved_concurrent_executions_nb: null,
   worker_reserved_concurrent_executions_nb: null,
-};
-
-export const QUEUE0_COMPUTE_WORKER_CONF: ComputeConf1 = {
-  worker_memory: 0,
-  worker_function_1_timeout: 0,
-  worker_function_2_timeout: 0,
-  worker_batch: 0,
-};
-
-export const QUEUE1_COMPUTE_WORKER_CONF: ComputeConf1 = {
-  worker_function_2_timeout: 0,
 };
 
 export const POJA_CONF_V3_6_2_DEFAULT_VALUES: PojaConf1 = {
@@ -87,6 +75,9 @@ export const POJA_CONF_V3_6_2_DEFAULT_VALUES: PojaConf1 = {
   compute: {
     frontal_memory: 512,
     frontal_function_timeout: 30,
-    ...QUEUE0_COMPUTE_WORKER_CONF,
+    worker_memory: 1024,
+    worker_function_1_timeout: 600,
+    worker_function_2_timeout: 600,
+    worker_batch: 5,
   },
 };

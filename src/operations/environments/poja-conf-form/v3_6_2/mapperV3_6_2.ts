@@ -12,8 +12,6 @@ import {
   NO_PUBLISH_CLIENT_CONF,
   NO_MAILING_CONF,
   NO_CONCURRENCY_CONF,
-  QUEUE0_COMPUTE_WORKER_CONF,
-  QUEUE1_COMPUTE_WORKER_CONF,
 } from "./constant";
 
 export interface PojaConfFormDataV3_6_2 extends OneOfPojaConf {
@@ -45,21 +43,8 @@ export const transformFormValuesV3_6_2 = (
   return normalizedConf;
 };
 
-const normalizeComputeConf = ({general, compute}: PojaConfFormDataV3_6_2) => {
-  const {with_queues_nb} = general!;
-  if (!with_queues_nb) {
-    return {
-      ...compute,
-      ...QUEUE0_COMPUTE_WORKER_CONF,
-    };
-  }
-
-  if (with_queues_nb === 1) {
-    return {
-      ...compute,
-      ...QUEUE1_COMPUTE_WORKER_CONF,
-    };
-  }
+const normalizeComputeConf = ({compute}: PojaConfFormDataV3_6_2) => {
+  // TODO: queues_nb mapping
   return compute;
 };
 

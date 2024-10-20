@@ -150,7 +150,9 @@ export const AppBootstrap: React.FC = () => {
         </Form>
       </CreateBase>
 
-      <Dialog open={(hasCreatedApp && !isPushed) || isCreatingEnvironment}>
+      <Dialog
+        open={(hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment}
+      >
         <DialogTitle>Setting up the Preprod environment</DialogTitle>
         <DialogContent>
           <Loading loadingPrimary="" loadingSecondary="" />
