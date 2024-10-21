@@ -7,14 +7,19 @@ describe("Check deployment", () => {
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
     cy.intercept(
       "GET",
-      jcloudify(`/users/*/applications?page=*&page_size=*`)
+      jcloudify(`/users/${it_yumeT023.id}/applications?page=*&page_size=*`)
     ).as("getApplications");
-    cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
-      "getEnvironments"
-    );
     cy.intercept(
       "GET",
-      jcloudify(`/users/*/applications/*/environments/*/config`)
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments`
+      )
+    ).as("getEnvironments");
+    cy.intercept(
+      "GET",
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments/*/config`
+      )
     ).as("getEnvironmentConf");
 
     cy.withToken(it_pat);
@@ -45,10 +50,5 @@ describe("Check deployment", () => {
           expect(response.status).to.eq(200);
         });
       });
-
-    cy.getByTestid(`show-${TARGET_APP_ID}-app`)
-      .find("[aria-label='delete']")
-      .click();
-    cy.contains("Confirm").click();
   });
 });

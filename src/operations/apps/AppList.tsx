@@ -52,7 +52,8 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
           </Stack>
           <Box>
             <IconButtonWithTooltip
-              label="delete"
+              data-testid={`delete-${app.id}-app`}
+              label="Delete"
               sx={{zIndex: 2}}
               color="error"
               onClick={handleDialogOpen}

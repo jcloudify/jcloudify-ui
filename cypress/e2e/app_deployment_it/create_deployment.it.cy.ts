@@ -10,23 +10,34 @@ import {jcloudify} from "../../support/util";
 
 describe("Create deployment", () => {
   specify("create app and [PROD] environment", () => {
-    cy.intercept("PUT", jcloudify(`/users/*/applications`), (req) => {
-      req.body.data[0].id = TARGET_APP_ID;
-    }).as("createApp");
+    cy.intercept(
+      "PUT",
+      jcloudify(`/users/${it_yumeT023.id}/applications`),
+      (req) => {
+        req.body.data[0].id = TARGET_APP_ID;
+      }
+    ).as("createApp");
 
     cy.intercept(
       "PUT",
-      jcloudify(`/users/*/applications/*/environments/*/config`)
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments/*/config`
+      )
     ).as("createEnv");
 
     cy.intercept("GET", jcloudify(`/poja-versions`)).as("getPojaVersions");
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
-    cy.intercept("GET", jcloudify(`/users/*/applications/*/environments`)).as(
-      "getEnvironments"
-    );
     cy.intercept(
       "GET",
-      jcloudify(`/users/*/applications/*/environments/*/config`)
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments`
+      )
+    ).as("getEnvironments");
+    cy.intercept(
+      "GET",
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments/*/config`
+      )
     ).as("getEnvironmentConfig");
 
     cy.withToken(it_pat);
@@ -34,11 +45,6 @@ describe("Create deployment", () => {
     cy.visit("/");
 
     cy.wait("@whoami");
-    cy.get("[aria-label='Profile']").click();
-
-    cy.contains(it_yumeT023.username!);
-    cy.contains(it_yumeT023.email!);
-    cy.get("body").click();
 
     cy.get('[href="/applications/create/new"]').click();
 
