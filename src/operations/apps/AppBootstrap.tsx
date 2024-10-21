@@ -109,6 +109,9 @@ export const AppBootstrap: React.FC = () => {
     );
   };
 
+  const isSettingUpEnvironment =
+    (hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment;
+
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
       <Title title="App" />
@@ -140,7 +143,7 @@ export const AppBootstrap: React.FC = () => {
         }}
       >
         <Form
-          disabled={isCreatingEnvironment}
+          disabled={isSettingUpEnvironment}
           defaultValues={{id: newAppId, package_name: "com.example.demo"}}
         >
           <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
@@ -162,9 +165,7 @@ export const AppBootstrap: React.FC = () => {
         </Form>
       </CreateBase>
 
-      <Dialog
-        open={(hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment}
-      >
+      <Dialog open={isSettingUpEnvironment}>
         <DialogTitle>Setting up the Preprod environment</DialogTitle>
         <DialogContent>
           <Loading loadingPrimary="" loadingSecondary="" />
