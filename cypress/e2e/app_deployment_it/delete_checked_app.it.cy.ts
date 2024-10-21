@@ -1,4 +1,3 @@
-import {isValidURL} from "../../../src/utils/url";
 import {it_pat, it_yumeT023, TARGET_APP_ID} from "../../fixtures/ops.data";
 import {jcloudify} from "../../support/util";
 
