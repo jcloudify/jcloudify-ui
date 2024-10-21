@@ -1,4 +1,8 @@
-import {GithubAppInstallation} from "@jcloudify-api/typescript-client";
+import {
+  EnvironmentType as EnvironmentTypeEnum,
+  GithubAppInstallation,
+} from "@jcloudify-api/typescript-client";
+import {useState, useMemo, useEffect} from "react";
 import {
   CreateBase,
   Form,
@@ -12,12 +16,19 @@ import {
   Title,
   useGetList,
   useInput,
+  useNotify,
+  Loading,
+  useRedirect,
 } from "react-admin";
 import {
   FormHelperText,
+  Typography,
   Stack,
   Box,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   MenuItem,
   FormControl,
   ListItemText,
@@ -25,18 +36,70 @@ import {
 } from "@mui/material";
 import {GitHub, Add} from "@mui/icons-material";
 import {nanoid} from "nanoid";
-import {useLocation} from "react-router-dom";
 import {useFormContext} from "react-hook-form";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
 import {Divider} from "@/components/divider";
+import {typoSizes} from "@/components/typo";
+import {useCreateEnvironmentWithConfig} from "@/operations/environments";
+import {useCheckAppIsPushed} from "@/operations/apps";
+import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
 import {ToRecord, appCreateCache} from "@/providers";
 import {gh} from "@/config/env";
 import {redirect} from "@/utils/redirect";
 
 export const AppBootstrap: React.FC = () => {
-  const {state: appCreateState = {}} = useLocation();
+  const redirect = useRedirect();
+  const notify = useNotify();
+
+  const [hasCreatedApp, setHasCreatedApp] = useState(false);
+
+  const newAppId = useMemo(() => nanoid(), []);
+  const newEnvironmentId = useMemo(() => nanoid(), []);
+
+  const isPushed = useCheckAppIsPushed({
+    appId: newAppId,
+    enabled: hasCreatedApp,
+  });
+
+  const [createEnvironmentWithConfig, {isLoading: isCreatingEnvironment}] =
+    useCreateEnvironmentWithConfig(newAppId);
+
+  useEffect(() => {
+    if (isPushed) {
+      setHasCreatedApp(false);
+      setupPreprodEnvironment();
+    }
+  }, [isPushed]);
+
+  const setupPreprodEnvironment = async () => {
+    const pcc = getPojaVersionedComponent("3.6.2" /* version */);
+
+    createEnvironmentWithConfig(
+      {
+        config: pcc.formDefaultValues!,
+        environment: {
+          id: newEnvironmentId,
+          environment_type: EnvironmentTypeEnum.PREPROD,
+          archived: false,
+        },
+      },
+      {
+        onSuccess: () => {
+          notify("Preprod environment created successfully.", {
+            type: "success",
+          });
+          redirect(
+            `/applications/${newAppId}/show/environments/${newEnvironmentId}`
+          );
+        },
+        onError: (e: any) => {
+          notify(e.message, {type: "error"});
+        },
+      }
+    );
+  };
 
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
@@ -44,14 +107,30 @@ export const AppBootstrap: React.FC = () => {
 
       <Heading
         title="Create New Application"
-        subtitle="JCloudify enables you to effortlessly bootstrap a new application, which will be pushed to a GitHub repository of your choice once your create an environment for it."
+        subtitle={
+          <Typography variant={typoSizes.sm.secondary} color="text.secondary">
+            JCloudify enables you to effortlessly bootstrap a new app that will
+            be pushed to the repository of your choice and deployed to a{" "}
+            <b>Preprod</b> environment.
+          </Typography>
+        }
         mb={4}
         size="sm"
         p={1}
       />
 
-      <CreateBase resource="applications">
-        <Form defaultValues={{...appCreateState, id: nanoid()}}>
+      <CreateBase
+        resource="applications"
+        mutationOptions={{
+          onSuccess: () => {
+            setHasCreatedApp(true);
+          },
+        }}
+      >
+        <Form
+          disabled={isCreatingEnvironment}
+          defaultValues={{id: newAppId, package_name: "com.example.demo"}}
+        >
           <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
             <AppInfo />
             <CreateGitRepository />
@@ -70,6 +149,15 @@ export const AppBootstrap: React.FC = () => {
           </Toolbar>
         </Form>
       </CreateBase>
+
+      <Dialog
+        open={(hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment}
+      >
+        <DialogTitle>Setting up the Preprod environment</DialogTitle>
+        <DialogContent>
+          <Loading loadingPrimary="" loadingSecondary="" />
+        </DialogContent>
+      </Dialog>
     </Stack>
   );
 };
@@ -85,6 +173,16 @@ const AppInfo = () => {
           variant="outlined"
           source="name"
           placeholder="e.g: foo"
+          size="medium"
+          validate={required()}
+          fullWidth
+        />
+
+        <TextInput
+          variant="outlined"
+          label="Package name"
+          source="package_name"
+          placeholder="e.g: com.example.demo"
           size="medium"
           validate={required()}
           fullWidth

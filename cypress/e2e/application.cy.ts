@@ -1,3 +1,4 @@
+import {EnvironmentType as EnvironmentTypeEnum} from "@jcloudify-api/typescript-client";
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 import {stripPrefix} from "../../src/utils/str";
@@ -32,6 +33,12 @@ describe("Application", () => {
   context("create", () => {
     specify("Create new application", () => {
       cy.intercept(
+        "GET",
+        jcloudify(`/users/${user1.id}/applications/*`),
+        app1
+      ).as("getApplication");
+
+      cy.intercept(
         "PUT",
         jcloudify(`/users/${user1.id}/applications`),
         (req) => {
@@ -54,6 +61,28 @@ describe("Application", () => {
         }
       ).as("createNewApp");
 
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications/*/environments`),
+        (req) => {
+          const [environmentToCreate] = req.body.data;
+          expect(environmentToCreate.environment_type).to.eq(
+            EnvironmentTypeEnum.PREPROD
+          );
+          return req.reply({...req, statusCode: 201});
+        }
+      ).as("createPreprodEnvironment");
+
+      cy.intercept(
+        "PUT",
+        jcloudify(`/users/${user1.id}/applications/*/environments/*/config`),
+        (req) => {
+          const pojaConf = req.body;
+          expect(pojaConf.general.app_name).to.eq(app1.name);
+          return req.reply({...req, statusCode: 201});
+        }
+      ).as("createPreprodEnvironmentConfig");
+
       cy.get('[href="/applications/create/new"]').click();
 
       cy.wait("@getUserInstallations");
@@ -71,7 +100,12 @@ describe("Application", () => {
       cy.get("[aria-label='Save']").click();
       cy.wait("@createNewApp");
 
-      cy.pathnameEq("/applications");
+      cy.wait("@getApplication");
+      cy.contains("Setting up the Preprod environment");
+      cy.wait("@createPreprodEnvironment");
+      cy.wait("@createPreprodEnvironmentConfig");
+
+      cy.contains("Preprod environment created successfully");
     });
 
     specify("Displays server side 400 error on incorrect payload", () => {

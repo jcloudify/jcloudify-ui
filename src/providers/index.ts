@@ -18,5 +18,7 @@ export * from "./logGroupProvider";
 export * from "./logStreamProvider";
 export * from "./logStreamEventProvider";
 export * from "./pojaVersionProvider";
+export * from "./billingInfoProvider";
+export * from "./paymentDetailsProvider";
 
 export * from "./cache";

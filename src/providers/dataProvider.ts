@@ -17,6 +17,8 @@ import {
   logStreamProvider,
   logStreamEventProvider,
   deploymentStateProvider,
+  billingInfoProvider,
+  paymentDetailsProvider,
 } from "./";
 
 /**
@@ -57,6 +59,10 @@ const getProvider = (resource: string): PojaDataProvider<any> => {
       return logStreamProvider;
     case "logStreamEvents":
       return logStreamEventProvider;
+    case "billingInfo":
+      return billingInfoProvider;
+    case "paymentDetails":
+      return paymentDetailsProvider;
     default:
       throw new Error("Unexpected resource: " + resource);
   }

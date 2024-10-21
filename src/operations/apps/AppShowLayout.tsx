@@ -6,7 +6,7 @@ import {Box} from "@mui/material";
 import {Tabs} from "@/components/tab";
 import {ToRecord} from "@/providers";
 
-const tabList = ["Environments", "Deployments"];
+const tabList = ["Environments", "Deployments", "Billing"];
 
 export const AppShowLayout: React.FC = () => {
   return (

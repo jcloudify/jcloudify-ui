@@ -1,5 +1,5 @@
 export * from "./SetEnvironment";
-export * from "./EnvironmentList";
+export * from "./EnvironmentsShow";
 export * from "./EnvironmentCreate.tsx";
 export * from "./EnvironmentCreation.tsx";
 export * from "./EnvironmentShow.tsx";
@@ -11,3 +11,5 @@ export * from "./types";
 
 export * from "./useEnvironmentCreation";
 export * from "./useGetEnvironmentApiURL";
+export * from "./useGetEnvironmentMap";
+export * from "./useCreateEnvironmentWithConfig";

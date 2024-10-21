@@ -6,7 +6,7 @@ import {
   prod_env,
 } from "../fixtures/environment.mock";
 import {user1} from "../fixtures/user.mock";
-import {app1, app2, apps} from "../fixtures/application.mock";
+import {app1, app2, app3, apps} from "../fixtures/application.mock";
 import {user1_installations} from "../fixtures/installation.mock";
 import {
   app1_prod_stack_events,
@@ -16,6 +16,7 @@ import {
 } from "../fixtures/stack.mock";
 import {
   depl1_prod_env_conf1,
+  preprod_env2_conf1,
   preprod_env_conf1,
   prod_env_conf1,
 } from "../fixtures/config.mock";
@@ -30,6 +31,13 @@ import {app1_prod_env_frontal_function_log_group1_stream1_events} from "../fixtu
 import {depl1, depls} from "../fixtures//deployment.mock";
 import {jcloudify} from "./util";
 import {isDateBetween} from "../../src/utils/date";
+import {
+  app1_billing_info,
+  prod_billing_info,
+  preprod_billing_info,
+  billingInfo,
+} from "../fixtures/billing-info.mock";
+import {paymentDetails} from "../fixtures/billing.mock";
 
 Cypress.Commands.add("getByTestid", <Subject = any>(id: string) => {
   return cy.get<Subject>(`[data-testid='${id}']`);
@@ -72,6 +80,49 @@ Cypress.Commands.add("mockToken", (token) => {
 });
 
 Cypress.Commands.add("mockApiGet", () => {
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app1.id}/billing?startTime=*&endTime=*`),
+    app1_billing_info
+  ).as("getAppBillingInfo");
+
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app3.id}/billing?startTime=*&endTime=*`),
+    []
+  ).as("getAppBillingInfo");
+
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app1.id}/environments/${prod_env.id}/billing?startTime=*&endTime=*`
+    ),
+    prod_billing_info
+  ).as("getEnvBillingInfo");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app1.id}/environments/${preprod_env.id}/billing?startTime=*&endTime=*`
+    ),
+    preprod_billing_info
+  ).as("getEnvBillingInfo");
+  cy.intercept(
+    "GET",
+    jcloudify(
+      `/users/*/applications/${app2.id}/environments/${preprod_env2.id}/billing?startTime=*&endTime=*`
+    ),
+    preprod_billing_info
+  ).as("getEnvBillingInfo");
+
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/billing?startTime=*&endTime=*`),
+    billingInfo
+  ).as("getBillingInfo");
+  cy.intercept("GET", jcloudify(`/users/*/payment-details`), paymentDetails).as(
+    "getPaymentDetails"
+  );
+
   cy.intercept("GET", jcloudify(`/users/*/applications?page=*&page_size=*`), {
     data: apps,
   }).as("getApplications");
@@ -80,6 +131,9 @@ Cypress.Commands.add("mockApiGet", () => {
     "getApplication"
   );
   cy.intercept("GET", jcloudify(`/users/*/applications/${app2.id}`), app2).as(
+    "getApplication"
+  );
+  cy.intercept("GET", jcloudify(`/users/*/applications/${app3.id}`), app3).as(
     "getApplication"
   );
 
@@ -95,6 +149,13 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(`/users/*/applications/${app2.id}/environments`),
     {
       data: [preprod_env2],
+    }
+  ).as("getEnvironments");
+  cy.intercept(
+    "GET",
+    jcloudify(`/users/*/applications/${app3.id}/environments`),
+    {
+      data: [],
     }
   ).as("getEnvironments");
   cy.intercept(
@@ -130,7 +191,7 @@ Cypress.Commands.add("mockApiGet", () => {
     jcloudify(
       `/users/*/applications/${app2.id}/environments/preprod_env2/config`
     ),
-    preprod_env_conf1
+    preprod_env2_conf1
   ).as("getEnvironmentConfig");
 
   cy.intercept("GET", jcloudify(`/users/${user1.id}/installations`), {
@@ -239,13 +300,12 @@ Cypress.Commands.add("mockApiGet", () => {
   ).as("getLogStreamEvents");
 
   cy.intercept(
-    jcloudify(`/users/${user1.id}/applications/${app1.id}/deployments*`),
+    jcloudify(`/users/${user1.id}/applications/*/deployments*`),
     (req) => {
       const {query} = req;
       const {environmentType, startDatetime, endDatetime} = query;
       const data = depls.filter(
         (depl) =>
-          depl.application_id === app1.id &&
           (!environmentType ||
             environmentType ===
               depl.github_meta?.commit?.branch?.toUpperCase()) &&

@@ -4,6 +4,8 @@ import {
   AppBar as RAAppBar,
   UserMenu as RAUserMenu,
   useLogout,
+  TitlePortal,
+  Link,
 } from "react-admin";
 import {
   Box,
@@ -15,9 +17,11 @@ import {
   Avatar,
   Chip,
   Stack,
+  Button,
 } from "@mui/material";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {authProvider} from "@/providers";
+import {jcloudifyWebsiteUrl} from "@/config/env";
 
 const UserMenu: React.FC = () => {
   const logout = useLogout();
@@ -85,5 +89,18 @@ const UserMenu: React.FC = () => {
 
 // open to cusomization
 export const AppBar: React.FC<RAAppBarProps> = (props) => {
-  return <RAAppBar {...props} userMenu={<UserMenu />} />;
+  return (
+    <RAAppBar {...props} userMenu={<UserMenu />}>
+      <TitlePortal />
+      <Button
+        size="small"
+        component={Link}
+        target="_blank"
+        to={`${jcloudifyWebsiteUrl}/docs`}
+        sx={{fontSize: 12}}
+      >
+        Docs
+      </Button>
+    </RAAppBar>
+  );
 };
