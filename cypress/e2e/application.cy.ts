@@ -89,7 +89,7 @@ describe("Application", () => {
       cy.wait("@getUserInstallations");
 
       cy.getByName("name").type(app1.name!);
-      cy.getByName("package_name").type("fr.univr.lim");
+      cy.getByName("package_name").clear().type("fr.univr.lim");
       
       cy.muiSelect(
         "[data-testid='select-installation-id']",
