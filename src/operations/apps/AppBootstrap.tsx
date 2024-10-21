@@ -129,10 +129,13 @@ export const AppBootstrap: React.FC = () => {
 
       <CreateBase
         resource="applications"
+        transform={({package_name, ...sanitizedApp}) => {
+          packageNameRef.current = package_name;
+          return sanitizedApp;
+        }}
         mutationOptions={{
-          onSuccess: (app) => {
+          onSuccess: () => {
             setHasCreatedApp(true);
-            packageNameRef.current = app.package_name;
           },
         }}
       >
