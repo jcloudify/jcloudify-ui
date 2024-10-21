@@ -12,6 +12,7 @@ import {
   NO_PUBLISH_CLIENT_CONF,
   NO_MAILING_CONF,
   NO_CONCURRENCY_CONF,
+  POJA_CONF_V3_6_2_DEFAULT_VALUES,
 } from "./constant";
 
 export interface PojaConfFormDataV3_6_2 extends OneOfPojaConf {
@@ -45,7 +46,10 @@ export const transformFormValuesV3_6_2 = (
 
 const normalizeComputeConf = ({compute}: PojaConfFormDataV3_6_2) => {
   // TODO: queues_nb mapping
-  return compute;
+  return {
+    ...POJA_CONF_V3_6_2_DEFAULT_VALUES.compute,
+    ...compute,
+  };
 };
 
 const normalizeGeneralConf = (

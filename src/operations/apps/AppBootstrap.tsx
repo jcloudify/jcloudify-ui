@@ -2,7 +2,7 @@ import {
   EnvironmentType as EnvironmentTypeEnum,
   GithubAppInstallation,
 } from "@jcloudify-api/typescript-client";
-import {useState, useMemo, useEffect} from "react";
+import {useState, useMemo, useEffect, useRef} from "react";
 import {
   CreateBase,
   Form,
@@ -55,6 +55,8 @@ export const AppBootstrap: React.FC = () => {
 
   const [hasCreatedApp, setHasCreatedApp] = useState(false);
 
+  const packageNameRef = useRef("");
+
   const newAppId = useMemo(() => nanoid(), []);
   const newEnvironmentId = useMemo(() => nanoid(), []);
 
@@ -78,7 +80,13 @@ export const AppBootstrap: React.FC = () => {
 
     createEnvironmentWithConfig(
       {
-        config: pcc.formDefaultValues!,
+        config: {
+          ...pcc.formDefaultValues!,
+          general: {
+            ...pcc.formDefaultValues!.general,
+            package_full_name: packageNameRef.current,
+          },
+        },
         environment: {
           id: newEnvironmentId,
           environment_type: EnvironmentTypeEnum.PREPROD,
@@ -121,6 +129,10 @@ export const AppBootstrap: React.FC = () => {
 
       <CreateBase
         resource="applications"
+        transform={({package_name, ...sanitizedApp}) => {
+          packageNameRef.current = package_name;
+          return sanitizedApp;
+        }}
         mutationOptions={{
           onSuccess: () => {
             setHasCreatedApp(true);

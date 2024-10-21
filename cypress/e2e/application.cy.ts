@@ -79,6 +79,7 @@ describe("Application", () => {
         (req) => {
           const pojaConf = req.body;
           expect(pojaConf.general.app_name).to.eq(app1.name);
+          expect(pojaConf.general.package_full_name).to.eq("fr.univr.lim");
           return req.reply({...req, statusCode: 201});
         }
       ).as("createPreprodEnvironmentConfig");
@@ -88,6 +89,7 @@ describe("Application", () => {
       cy.wait("@getUserInstallations");
 
       cy.getByName("name").type(app1.name!);
+      cy.getByName("package_name").clear().type("fr.univr.lim");
 
       cy.muiSelect(
         "[data-testid='select-installation-id']",
