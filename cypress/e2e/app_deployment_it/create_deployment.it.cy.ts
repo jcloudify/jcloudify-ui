@@ -1,3 +1,4 @@
+import {Application} from "@jcloudify-api/typescript-client";
 import {
   it_app,
   it_installation,
@@ -10,36 +11,39 @@ describe("Create deployment", () => {
   specify("create app and [PREPROD] environment", () => {
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
 
-    cy.intercept("PUT", jcloudify(`/users/${it_yumeT023.id}/applications`)).as("createApp");
+    cy.intercept("PUT", jcloudify(`/users/${it_yumeT023.id}/applications`)).as(
+      "createApp"
+    );
 
     cy.intercept(
       "GET",
-      jcloudify(`/users/${it_yumeT023.id}/applications?page=*&page_size=*`),
+      jcloudify(`/users/${it_yumeT023.id}/applications?page=*&page_size=*`)
     ).as("getApps");
 
     cy.intercept(
       "PUT",
-      jcloudify(
-        `/users/${it_yumeT023.id}/applications/*/environments`
-      )).as("createPreprodEnv");
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments`)
+    ).as("createPreprodEnv");
 
     cy.intercept(
       "PUT",
-      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)).as("createPreprodEnvConf");
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)
+    ).as("createPreprodEnvConf");
 
     cy.intercept(
       "GET",
-      jcloudify(
-        `/users/${it_yumeT023.id}/applications/*/environments/*`
-      )).as("getEnv");
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*`)
+    ).as("getEnv");
 
     cy.intercept(
       "GET",
-      jcloudify(
-        `/users/${it_yumeT023.id}/applications/*/environments/*/config`
-      )).as("getEnvConf");
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)
+    ).as("getEnvConf");
 
-    cy.intercept("GET", jcloudify(`/users/${it_yumeT023.id}/applications/*`)).as("getApp");
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*`)
+    ).as("getApp");
 
     cy.withToken(it_pat);
 
@@ -64,8 +68,23 @@ describe("Create deployment", () => {
     cy.wait("@createApp");
     cy.contains("Setting up the Preprod environment");
 
-    cy.wait("@getApp");
-    cy.wait(10 * 1000);
+    cy.wait("@getApp").then(({response}) => {
+      // Custom wait until the response contains repositoryUrl
+      function waitForRepositoryUrl() {
+        // Check if the repositoryUrl is defined
+        const app: Application = response?.body;
+        if (app.repositoryUrl) {
+          // Proceed if repositoryUrl is defined
+          return cy.wrap(app.repositoryUrl);
+        } else {
+          // Retry the request if repositoryUrl is not defined
+          cy.wait("@getApp").then(waitForRepositoryUrl);
+        }
+      }
+
+      // Start polling until repositoryUrl is defined
+      waitForRepositoryUrl();
+    });
 
     cy.wait("@createPreprodEnv");
     cy.wait("@createPreprodEnvConf");
