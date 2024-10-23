@@ -16,13 +16,14 @@ describe("Check deployment", () => {
       jcloudify(`/users/${it_yumeT023.id}/applications/*`)
     ).as("getApp");
 
-    cy.intercept("GET", jcloudify(`/users/${it_yumeT023.id}/applications/*/environments`)).as(
-      "getEnvs"
-    );
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments`)
+    ).as("getEnvs");
 
     cy.intercept(
       "GET",
-      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*`),
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*`)
     ).as("getEnv");
 
     cy.intercept(
@@ -30,25 +31,30 @@ describe("Check deployment", () => {
       jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)
     ).as("getEnvConf");
 
-    cy.intercept("GET",
+    cy.intercept(
+      "GET",
       jcloudify(
         `/users/${it_yumeT023.id}/applications/*/environments/*/billing?startTime=*&endTime=*`
-      )).as("getEnvBillingInfo");
-
-  cy.intercept(
-    "GET",
-    jcloudify(
-      `/users/${it_yumeT023.id}/applications/*/environments/*/stacks?page=*&page_size=*`
-    )).as("getEnvStacks");
-
-  cy.intercept(
-    "GET",
-    jcloudify(
-      `/users/${it_yumeT023.id}/applications/*/environments/*/stacks/*/outputs?page=*&page_size=*`
-    )).as("getEnvStackOutputs");
+      )
+    ).as("getEnvBillingInfo");
 
     cy.intercept(
-      jcloudify(`/users/${it_yumeT023.id}/applications/*/deployments*`)).as("getDeployments");
+      "GET",
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/*/environments/*/stacks?page=*&page_size=*`
+      )
+    ).as("getEnvStacks");
+
+    cy.intercept(
+      "GET",
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/*/environments/*/stacks/*/outputs?page=*&page_size=*`
+      )
+    ).as("getEnvStackOutputs");
+
+    cy.intercept(
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/deployments*`)
+    ).as("getDeployments");
 
     cy.withToken(it_pat);
 
@@ -60,16 +66,16 @@ describe("Check deployment", () => {
     cy.get(`[data-cy='application-${it_app.name}']`).click({force: true});
 
     cy.wait("@getEnvs");
-    cy.wait("@getDeployments")
+    cy.wait("@getDeployments");
     cy.wait("@getEnvBillingInfo");
 
     cy.get("[data-cy='PREPROD-environment']").click();
 
     cy.wait("@getEnv");
-    cy.wait("@getEnvConf")
+    cy.wait("@getEnvConf");
 
     cy.wait("@getEnvStacks");
-    cy.wait("@getEnvStackOutputs")
+    cy.wait("@getEnvStackOutputs");
 
     cy.getByTestid("api-url")
       .invoke("text")

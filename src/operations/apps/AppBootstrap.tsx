@@ -144,7 +144,10 @@ export const AppBootstrap: React.FC = () => {
       >
         <Form
           disabled={isSettingUpEnvironment}
-          defaultValues={{id: newAppId.current, package_name: "com.example.demo"}}
+          defaultValues={{
+            id: newAppId.current,
+            package_name: "com.example.demo",
+          }}
         >
           <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
             <AppInfo />
