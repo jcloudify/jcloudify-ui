@@ -31,6 +31,7 @@ export const TARGET_APP_ID = String(
 export const it_app = {
   id: TARGET_APP_ID,
   name: `jcloudify-${TARGET_APP_ID}`,
+  package_name: `com.jcloudify.app`,
   repo: {
     name: `jcloudify-${TARGET_APP_ID}`,
     description: "jc-ops operationalization",

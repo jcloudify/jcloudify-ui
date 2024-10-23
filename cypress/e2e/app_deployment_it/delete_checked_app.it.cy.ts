@@ -1,4 +1,4 @@
-import {it_pat, it_yumeT023, TARGET_APP_ID} from "../../fixtures/ops.data";
+import {it_app, it_pat, it_yumeT023} from "../../fixtures/ops.data";
 import {jcloudify} from "../../support/util";
 
 describe("Delete checked app", () => {
@@ -7,15 +7,13 @@ describe("Delete checked app", () => {
     cy.intercept(
       "GET",
       jcloudify(`/users/*/applications?page=*&page_size=*`)
-    ).as("getApplications");
+    ).as("getApps");
     cy.intercept(
       "GET",
-      jcloudify(
-        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments`
-      )
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments`)
     ).as("getEnvironments");
     cy.intercept("PUT", jcloudify(`/users/${it_yumeT023.id}/applications`)).as(
-      "deleteApplications"
+      "deleteApp"
     );
 
     cy.withToken(it_pat);
@@ -23,10 +21,10 @@ describe("Delete checked app", () => {
     cy.visit("/");
 
     cy.wait("@whoami");
-    cy.wait("@getApplications");
+    cy.wait("@getApps");
 
-    cy.getByTestid(`delete-${TARGET_APP_ID}-app`).click();
+    cy.getByTestid(`delete-${it_app.name}-app`).click();
     cy.contains("Confirm").click();
-    cy.wait("@deleteApplications");
+    cy.wait("@deleteApp");
   });
 });

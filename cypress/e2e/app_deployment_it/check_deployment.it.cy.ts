@@ -1,45 +1,81 @@
 import {isValidURL} from "../../../src/utils/url";
-import {it_pat, it_yumeT023, TARGET_APP_ID} from "../../fixtures/ops.data";
+import {it_app, it_pat, it_yumeT023} from "../../fixtures/ops.data";
 import {jcloudify} from "../../support/util";
 
 describe("Check deployment", () => {
   specify("check deployment configuration and active deployment URL", () => {
     cy.intercept("GET", jcloudify(`/whoami`)).as("whoami");
+
     cy.intercept(
       "GET",
       jcloudify(`/users/${it_yumeT023.id}/applications?page=*&page_size=*`)
-    ).as("getApplications");
+    ).as("getApps");
+
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*`)
+    ).as("getApp");
+
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments`)
+    ).as("getEnvs");
+
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*`)
+    ).as("getEnv");
+
+    cy.intercept(
+      "GET",
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)
+    ).as("getEnvConf");
+
     cy.intercept(
       "GET",
       jcloudify(
-        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments`
+        `/users/${it_yumeT023.id}/applications/*/environments/*/billing?startTime=*&endTime=*`
       )
-    ).as("getEnvironments");
+    ).as("getEnvBillingInfo");
+
     cy.intercept(
       "GET",
       jcloudify(
-        `/users/${it_yumeT023.id}/applications/${TARGET_APP_ID}/environments/*/config`
+        `/users/${it_yumeT023.id}/applications/*/environments/*/stacks?page=*&page_size=*`
       )
-    ).as("getEnvironmentConf");
+    ).as("getEnvStacks");
+
+    cy.intercept(
+      "GET",
+      jcloudify(
+        `/users/${it_yumeT023.id}/applications/*/environments/*/stacks/*/outputs?page=*&page_size=*`
+      )
+    ).as("getEnvStackOutputs");
+
+    cy.intercept(
+      jcloudify(`/users/${it_yumeT023.id}/applications/*/deployments*`)
+    ).as("getDeployments");
 
     cy.withToken(it_pat);
 
     cy.visit("/");
 
     cy.wait("@whoami");
-    cy.wait("@getApplications");
+    cy.wait("@getApps");
 
-    cy.get("[aria-label='Profile']").click();
+    cy.get(`[data-cy='application-${it_app.name}']`).click({force: true});
 
-    cy.contains(it_yumeT023.username!);
-    cy.contains(it_yumeT023.email!);
-    cy.get("body").click();
+    cy.wait("@getEnvs");
+    cy.wait("@getDeployments");
+    cy.wait("@getEnvBillingInfo");
 
-    cy.getByTestid(`show-${TARGET_APP_ID}-app`).click({force: true});
-    cy.getByHref(`/applications/${TARGET_APP_ID}/show/environments`).click();
+    cy.get("[data-cy='PREPROD-environment']").click();
 
-    cy.contains("Prod").click();
-    cy.contains("prod");
+    cy.wait("@getEnv");
+    cy.wait("@getEnvConf");
+
+    cy.wait("@getEnvStacks");
+    cy.wait("@getEnvStackOutputs");
 
     cy.getByTestid("api-url")
       .invoke("text")

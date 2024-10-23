@@ -2,7 +2,7 @@ import {
   EnvironmentType as EnvironmentTypeEnum,
   GithubAppInstallation,
 } from "@jcloudify-api/typescript-client";
-import {useState, useMemo, useEffect, useRef} from "react";
+import {useState, useEffect, useRef} from "react";
 import {
   CreateBase,
   Form,
@@ -35,8 +35,8 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import {GitHub, Add} from "@mui/icons-material";
-import {nanoid} from "nanoid";
 import {useFormContext} from "react-hook-form";
+import {nanoid} from "nanoid";
 import {Heading} from "@/components/head";
 import {ContainerWithHeading} from "@/components/container";
 import {GridLayout} from "@/components/grid";
@@ -57,16 +57,16 @@ export const AppBootstrap: React.FC = () => {
 
   const packageNameRef = useRef("");
 
-  const newAppId = useMemo(() => nanoid(), []);
-  const newEnvironmentId = useMemo(() => nanoid(), []);
+  const newAppId = useRef(nanoid());
+  const newEnvironmentId = useRef(nanoid());
 
   const isPushed = useCheckAppIsPushed({
-    appId: newAppId,
+    appId: newAppId.current,
     enabled: hasCreatedApp,
   });
 
   const [createEnvironmentWithConfig, {isLoading: isCreatingEnvironment}] =
-    useCreateEnvironmentWithConfig(newAppId);
+    useCreateEnvironmentWithConfig(newAppId.current);
 
   useEffect(() => {
     if (isPushed) {
@@ -88,7 +88,7 @@ export const AppBootstrap: React.FC = () => {
           },
         },
         environment: {
-          id: newEnvironmentId,
+          id: newEnvironmentId.current,
           environment_type: EnvironmentTypeEnum.PREPROD,
           archived: false,
         },
@@ -99,7 +99,7 @@ export const AppBootstrap: React.FC = () => {
             type: "success",
           });
           redirect(
-            `/applications/${newAppId}/show/environments/${newEnvironmentId}`
+            `/applications/${newAppId.current}/show/environments/${newEnvironmentId.current}`
           );
         },
         onError: (e: any) => {
@@ -108,6 +108,9 @@ export const AppBootstrap: React.FC = () => {
       }
     );
   };
+
+  const isSettingUpEnvironment =
+    (hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment;
 
   return (
     <Stack mb={2} p={2} justifyContent="center" width="100%" mx={0}>
@@ -140,8 +143,11 @@ export const AppBootstrap: React.FC = () => {
         }}
       >
         <Form
-          disabled={isCreatingEnvironment}
-          defaultValues={{id: newAppId, package_name: "com.example.demo"}}
+          disabled={isSettingUpEnvironment}
+          defaultValues={{
+            id: newAppId.current,
+            package_name: "com.example.demo",
+          }}
         >
           <Stack spacing={3} width={{xs: "100%", md: "60%"}} mb={7}>
             <AppInfo />
@@ -162,9 +168,7 @@ export const AppBootstrap: React.FC = () => {
         </Form>
       </CreateBase>
 
-      <Dialog
-        open={(hasCreatedApp && !isPushed) || isPushed || isCreatingEnvironment}
-      >
+      <Dialog open={isSettingUpEnvironment}>
         <DialogTitle>Setting up the Preprod environment</DialogTitle>
         <DialogContent>
           <Loading loadingPrimary="" loadingSecondary="" />
