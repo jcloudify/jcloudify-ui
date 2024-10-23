@@ -36,6 +36,7 @@
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.21.2",
     "usehooks-ts": "^3.1.0",
+    "uuid": "^10.0.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -48,6 +49,7 @@
     "@types/prismjs": "^1.26.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
