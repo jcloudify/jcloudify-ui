@@ -19,6 +19,7 @@ import {useToggle} from "usehooks-ts";
 import {GridLayout} from "@/components/grid";
 import {ContainerWithHeading} from "@/components/container";
 import {GitBranch} from "@/components/source_control";
+import {TypographyLink} from "@/components/link";
 import {typoSizes} from "@/components/typo";
 import {ShowLayout} from "@/operations/components/show";
 import {
@@ -31,7 +32,6 @@ import {
   PojaConfView,
 } from "@/operations/environments/poja-conf-form";
 import {ToRecord} from "@/providers";
-import {TypographyLink} from "@/components/link";
 
 const EnvironmentShowView: React.FC<{appId: string}> = ({appId}) => {
   const redirect = useRedirect();

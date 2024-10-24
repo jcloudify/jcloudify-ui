@@ -23,16 +23,6 @@ describe("Check deployment", () => {
 
     cy.intercept(
       "GET",
-      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*`)
-    ).as("getEnv");
-
-    cy.intercept(
-      "GET",
-      jcloudify(`/users/${it_yumeT023.id}/applications/*/environments/*/config`)
-    ).as("getEnvConf");
-
-    cy.intercept(
-      "GET",
       jcloudify(
         `/users/${it_yumeT023.id}/applications/*/environments/*/billing?startTime=*&endTime=*`
       )
@@ -69,15 +59,10 @@ describe("Check deployment", () => {
     cy.wait("@getDeployments");
     cy.wait("@getEnvBillingInfo");
 
-    cy.get("[data-cy='PREPROD-environment']").click();
-
-    cy.wait("@getEnv");
-    cy.wait("@getEnvConf");
-
     cy.wait("@getEnvStacks");
     cy.wait("@getEnvStackOutputs");
 
-    cy.getByTestid("api-url")
+    cy.get("[data-cy='environment-PREPROD'] [data-testid='api-url']")
       .invoke("text")
       .then((apiUrl) => {
         expect(isValidURL(apiUrl)).to.be.true;

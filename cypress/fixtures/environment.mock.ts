@@ -21,3 +21,6 @@ export const preprod_env2: ToRecord<Environment> = {
 };
 
 export const envs = [prod_env, preprod_env, preprod_env2];
+
+export const app1_envs = [prod_env, preprod_env];
+export const app2_envs = [preprod_env2];
