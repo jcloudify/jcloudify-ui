@@ -1,7 +1,7 @@
 import {
   app1_preprod_stacks,
-  app1_prod_stack_events,
-  app1_prod_stack_outputs,
+  stack_events,
+  stack_outputs_with_apiUrl,
   app1_prod_stacks,
 } from "../fixtures/stack.mock";
 import {app1} from "../fixtures/application.mock";
@@ -46,7 +46,7 @@ describe.skip("Stack", () => {
 
       cy.wait("@getEnvironmentStackEvents");
 
-      cy.wrap(app1_prod_stack_events).each((event: any, idx) => {
+      cy.wrap(stack_events).each((event: any, idx) => {
         cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
           event.logical_resource_id
         );
@@ -73,7 +73,7 @@ describe.skip("Stack", () => {
 
       cy.wait("@getEnvironmentStackOutputs");
 
-      cy.wrap(app1_prod_stack_outputs).each((output: any, idx) => {
+      cy.wrap(stack_outputs_with_apiUrl).each((output: any, idx) => {
         cy.get(`.MuiTableBody-root > :nth-child(${idx + 1})`).contains(
           output.key
         );

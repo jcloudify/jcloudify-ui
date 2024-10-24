@@ -13,7 +13,6 @@ import {user1_installations} from "../fixtures/installation.mock";
 import {
   app1_prod_stacks,
   app1_preprod_stacks,
-  app2_prod_stacks,
   app2_preprod_stacks,
   stack_events,
   stack_outputs_with_apiUrl,
