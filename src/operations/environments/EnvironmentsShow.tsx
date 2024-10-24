@@ -11,7 +11,10 @@ import {
   RecordContextProvider,
   useGetOne,
 } from "react-admin";
-import {PiGitCommitFill as GitCommitIcon} from "react-icons/pi";
+import {
+  PiGitCommitFill as GitCommitIcon,
+  PiAppWindowFill as Cloud,
+} from "react-icons/pi";
 import {
   Button,
   Box,
@@ -29,15 +32,17 @@ import {
   EnvironmentType,
   useCreateEnvironmentWithConfig,
   useEnvironmentCreation,
+  useGetEnvironmentApiURL,
   useGetEnvironmentMap,
 } from "@/operations/environments";
 import {typoSizes} from "@/components/typo";
+import {TopLink, TypographyLink} from "@/components/link";
 import {useGetLatestDeployment} from "@/operations/deployments";
-import {ToRecord} from "@/providers";
 import {GitCommit} from "@/components/source_control";
-import {TopLink} from "@/components/link";
+import {getPojaVersionedComponent} from "@/operations/environments/poja-conf-form/poja-conf-record";
+import {ToRecord} from "@/providers";
 import {fromToNow} from "@/utils/date";
-import {getPojaVersionedComponent} from "./poja-conf-form/poja-conf-record";
+import {colors} from "@/themes";
 
 const ListActions: React.FC<{appId: string | undefined}> = ({appId}) => {
   const {created} = useEnvironmentCreation(appId);
@@ -67,6 +72,34 @@ export interface EnvironmentCardProps {
   type: EnvironmentTypeEnum;
   environment?: ToRecord<Environment>;
 }
+
+const ActiveDeploymentUrl: React.FC<{appId: string; envId: string}> = ({
+  appId,
+  envId,
+}) => {
+  const {apiUrl, isLoadingApiURL} = useGetEnvironmentApiURL({appId, envId});
+  if (!isLoadingApiURL && !apiUrl?.value) return null;
+  return (
+    <Stack direction="row" alignItems="flex-start" spacing={2}>
+      <Box>
+        <Cloud size={18} />
+      </Box>
+
+      <Box>
+        <TypographyLink
+          data-testid="api-url"
+          fontSize="small"
+          disableOpenIcon
+          copiable={false}
+          target="_blank"
+          to={apiUrl?.value!}
+        >
+          {apiUrl?.value}
+        </TypographyLink>
+      </Box>
+    </Stack>
+  );
+};
 
 const LatestDeployedCommit: React.FC<{
   appId: string;
@@ -175,11 +208,19 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
           {ENVIRONMENT_TYPE_TEXT[environment?.environment_type!]}
         </Typography>
 
-        <Stack flex={1} zIndex={3}>
+        <Stack
+          flex={1}
+          zIndex={3}
+          direction="column"
+          spacing={2}
+          borderBottom={`1px solid ${colors("gray-0")}`}
+          pb={2.5}
+        >
           <LatestDeployedCommit
             appId={appId}
             envType={environment?.environment_type!}
           />
+          <ActiveDeploymentUrl appId={appId} envId={environment?.id!} />
         </Stack>
 
         <MonthToDateCost appId={appId} envId={environment?.id!} />
@@ -249,7 +290,6 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
       });
     }
 
-    console.log("activation_config", activationConfig);
     createEnvironmentWithConfig({
       config: activationConfig!,
       environment: {id: nanoid(), environment_type: type, archived: false},
