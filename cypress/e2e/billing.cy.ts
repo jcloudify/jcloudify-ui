@@ -13,6 +13,9 @@ describe("Billing", () => {
     cy.wait("@getBillingInfo");
     cy.wait("@getPaymentDetails");
 
+    cy.contains(
+      "JCloudify is currently in beta testing and is free of charge, so make the most of it! Billing is provided for information only."
+    );
     cy.contains("Payment Details Summary");
     cy.contains("Current month");
     cy.contains(`$ ${billingInfo.computed_price?.toFixed(2)}`);
