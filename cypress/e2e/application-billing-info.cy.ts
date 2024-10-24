@@ -21,6 +21,9 @@ describe("Application Billing Info", () => {
     cy.wait("@getAppBillingInfo");
     cy.wait("@getEnvironments");
     cy.wait("@getEnvBillingInfo");
+    cy.contains(
+      "JCloudify is currently in beta testing and is free of charge, so make the most of it! Billing is provided for information only."
+    );
     cy.contains("Current month");
     cy.contains("$ 8.88");
     cy.contains("Start date");
@@ -42,6 +45,9 @@ describe("Application Billing Info", () => {
     cy.get('[href="/applications/app3/show/billing"]').click();
     cy.wait("@getAppBillingInfo");
     cy.wait("@getEnvironments");
+    cy.contains(
+      "JCloudify is currently in beta testing and is free of charge, so make the most of it! Billing is provided for information only."
+    );
     cy.contains("Current month");
     cy.contains("$ 0.00");
     cy.contains("Start date");
