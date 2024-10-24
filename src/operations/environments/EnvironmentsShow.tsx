@@ -78,7 +78,7 @@ const ActiveDeploymentUrl: React.FC<{appId: string; envId: string}> = ({
   envId,
 }) => {
   const {apiUrl, isLoadingApiURL} = useGetEnvironmentApiURL({appId, envId});
-  if (!isLoadingApiURL && !apiUrl?.value) return null;
+  if (isLoadingApiURL || !apiUrl?.value) return null;
   return (
     <Stack direction="row" alignItems="flex-start" spacing={2}>
       <Box>
