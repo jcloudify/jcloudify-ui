@@ -1,4 +1,5 @@
 import {useParams} from "react-router-dom";
+import {Box} from "@mui/material";
 import {WithTab} from "@/components/tab";
 import {BillingShow} from "@/operations/billing";
 
@@ -9,7 +10,9 @@ export const AppBilling: React.FC = () => {
 
   return (
     <WithTab tab="Billing">
-      <BillingShow appId={appId} />
+      <Box mt={4}>
+        <BillingShow appId={appId} />
+      </Box>
     </WithTab>
   );
 };

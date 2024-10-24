@@ -1,6 +1,6 @@
 import {BillingInfo} from "@jcloudify-api/typescript-client";
 
-const currentDate = new Date();
+const currentDate = new Date("2024-09-10");
 const startDate = new Date(
   currentDate.getFullYear(),
   currentDate.getMonth(),

@@ -1,9 +1,10 @@
 import {BillingInfo} from "@jcloudify-api/typescript-client";
 import {DateField, FunctionField, ShowBase} from "react-admin";
-import {Stack, Typography} from "@mui/material";
+import {Box, Card, CardContent, Stack, Typography} from "@mui/material";
+import {CalendarMonth as CalendarMonthIcon} from "@mui/icons-material";
 import {ShowLayout} from "@/operations/components/show";
-import {Labeled} from "@/operations/components/field";
 import {ToRecord} from "@/providers";
+import {colors} from "@/themes";
 
 export const BillingInfoShow: React.FC<{
   targetId?: string;
@@ -15,20 +16,45 @@ export const BillingInfoShow: React.FC<{
     queryOptions={{meta: {targetResource}}}
   >
     <ShowLayout>
-      <Stack direction="column" spacing={1}>
-        <Labeled>
-          <FunctionField<ToRecord<BillingInfo>>
-            label="Current month"
-            render={(record) => (
-              <Typography variant="h4">
-                $ {record.computed_price?.toFixed(2)}
-              </Typography>
-            )}
-          />
-          <DateField label="Start date" source="start_time" />
-          <DateField label="End date" source="end_time" />
-        </Labeled>
-      </Stack>
+      <Card
+        sx={{
+          bgcolor: colors("dark-1"),
+          color: colors("light"),
+          borderRadius: 2,
+        }}
+      >
+        <CardContent>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-around"
+            sx={{p: 2}}
+          >
+            <Stack direction="row" spacing={3} alignItems="center">
+              <CalendarMonthIcon sx={{fontSize: 54}} />
+              <Stack direction="column" spacing={1}>
+                <DateField
+                  source="end_time"
+                  textTransform="capitalize"
+                  variant="h5"
+                  options={{
+                    month: "long",
+                  }}
+                />
+                <Typography variant="caption">Total Due</Typography>
+              </Stack>
+            </Stack>
+            <FunctionField<ToRecord<BillingInfo>>
+              render={(record) => (
+                <Typography variant="h2">
+                  $ {record.computed_price?.toFixed(2)}
+                </Typography>
+              )}
+            />
+          </Stack>
+        </CardContent>
+      </Card>
     </ShowLayout>
   </ShowBase>
 );

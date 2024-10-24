@@ -21,17 +21,13 @@ describe("Application Billing Info", () => {
     cy.wait("@getAppBillingInfo");
     cy.wait("@getEnvironments");
     cy.wait("@getEnvBillingInfo");
-    cy.contains("Current month");
+    cy.contains("Total Due");
     cy.contains("$ 8.88");
-    cy.contains("Start date");
-    cy.contains(`${prod_billing_info.start_time?.toLocaleDateString()}`);
-    cy.contains("End date");
-    cy.contains(`${prod_billing_info.end_time?.toLocaleDateString()}`);
     cy.contains("Details");
     cy.contains("Prod");
-    cy.contains(`$ ${prod_billing_info.computed_price}`);
+    cy.contains(`$ ${prod_billing_info.computed_price?.toFixed(2)}`);
     cy.contains("Preprod");
-    cy.contains(`$ ${preprod_billing_info.computed_price}`);
+    cy.contains(`$ ${preprod_billing_info.computed_price?.toFixed(2)}`);
   });
 
   specify("Show no env app billing info", () => {
@@ -42,12 +38,8 @@ describe("Application Billing Info", () => {
     cy.get('[href="/applications/app3/show/billing"]').click();
     cy.wait("@getAppBillingInfo");
     cy.wait("@getEnvironments");
-    cy.contains("Current month");
+    cy.contains("Total Due");
     cy.contains("$ 0.00");
-    cy.contains("Start date");
-    cy.contains(`${prod_billing_info.start_time?.toLocaleDateString()}`);
-    cy.contains("End date");
-    cy.contains(`${prod_billing_info.end_time?.toLocaleDateString()}`);
     cy.contains("Details");
     cy.contains("No results");
   });
