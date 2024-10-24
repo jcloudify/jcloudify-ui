@@ -19,12 +19,16 @@ describe("Environment", () => {
       cy.wait("@getEnvironments");
       cy.wait("@getDeployments");
       cy.wait("@getEnvBillingInfo");
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
 
       cy.contains("Prod");
-
       cy.contains("poja: gen");
       cy.contains("fdf8268");
       cy.contains("$ 7.25");
+      cy.getByTestid("api-url").contains(
+        app1_prod_stack_outputs[0].value! /* ApiUrl */
+      );
     });
 
     specify("Shows the clicked environment details", () => {
@@ -33,6 +37,8 @@ describe("Environment", () => {
       cy.wait("@getEnvironments");
       cy.wait("@getDeployments");
       cy.wait("@getEnvBillingInfo");
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
 
       cy.getByTestid(`environment-${prod_env.id}`).click();
 
@@ -80,6 +86,9 @@ describe("Environment", () => {
           cy.wait("@getEnvironments");
           cy.wait("@getDeployments");
           cy.wait("@getEnvBillingInfo");
+          cy.wait("@getEnvironmentStacks");
+          cy.wait("@getEnvironmentStackOutputs");
+
           cy.contains("Diff").should("have.attr", "aria-disabled", "true");
         }
       );
@@ -90,6 +99,9 @@ describe("Environment", () => {
         cy.wait("@getEnvironments");
         cy.wait("@getDeployments");
         cy.wait("@getEnvBillingInfo");
+        cy.wait("@getEnvironmentStacks");
+        cy.wait("@getEnvironmentStackOutputs");
+
         cy.contains("Diff").click();
 
         cy.contains("Environment Diff");
@@ -118,6 +130,8 @@ describe("Environment", () => {
       cy.wait("@getEnvironments");
       cy.wait("@getDeployments");
       cy.wait("@getEnvBillingInfo");
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
 
       cy.get(`.PREPROD-environment-card [aria-label='Deactivate']`).click();
       cy.contains("Confirm").click();
@@ -157,6 +171,8 @@ describe("Environment", () => {
       cy.wait("@getEnvironments");
       cy.wait("@getDeployments");
       cy.wait("@getEnvBillingInfo");
+      cy.wait("@getEnvironmentStacks");
+      cy.wait("@getEnvironmentStackOutputs");
 
       cy.get(`.PROD-environment-card [aria-label='Activate']`).click();
 

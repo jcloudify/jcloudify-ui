@@ -68,6 +68,8 @@ describe("Check deployment", () => {
     cy.wait("@getEnvs");
     cy.wait("@getDeployments");
     cy.wait("@getEnvBillingInfo");
+    cy.wait("@getEnvStacks");
+    cy.wait("@getEnvStackOutputs");
 
     cy.get("[data-cy='PREPROD-environment']").click();
 
