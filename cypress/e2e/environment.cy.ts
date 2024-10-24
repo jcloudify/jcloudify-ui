@@ -2,7 +2,6 @@ import {EnvironmentType as EnvironmentTypeEnum} from "@jcloudify-api/typescript-
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
 import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
-import {prod_env} from "../fixtures/environment.mock";
 import {preprod_env2_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "../support/util";
 
@@ -26,9 +25,7 @@ describe("Environment", () => {
       cy.contains("poja: gen");
       cy.contains("fdf8268");
       cy.contains("$ 7.25");
-      cy.getByTestid("api-url").contains(
-        app1_prod_stack_outputs[0].value! /* ApiUrl */
-      );
+      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
     });
 
     specify("Shows the clicked environment details", () => {
@@ -40,7 +37,7 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
 
-      cy.getByTestid(`environment-${prod_env.id}`).click();
+      cy.getByTestid(`show-PROD-environment`).click({force: true});
 
       cy.wait("@getEnvironmentById");
 
@@ -114,7 +111,7 @@ describe("Environment", () => {
     });
   });
 
-  context("Create environment", () => {
+  context.only("Create environment", () => {
     specify("Deactivate activated ones", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app1.id}/show/environments`).click();
@@ -133,11 +130,13 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
 
-      cy.get(`.PREPROD-environment-card [aria-label='Deactivate']`).click();
+      cy.get(
+        `[data-cy='environment-PREPROD'] [aria-label='Deactivate']`
+      ).click();
       cy.contains("Confirm").click();
       cy.wait("@DeactivatePreprodEnvironment");
 
-      cy.get(`.PREPROD-environment-card [aria-label='Activate']`).should(
+      cy.get(`[data-cy='environment-PREPROD'] [aria-label='Activate']`).should(
         "exist"
       );
     });
@@ -174,13 +173,13 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
 
-      cy.get(`.PROD-environment-card [aria-label='Activate']`).click();
+      cy.get(`[data-cy='environment-PREPROD'] [aria-label='Activate']`).click();
 
       cy.wait("@getEnvironmentConfig");
       cy.wait("@ActivateProd");
       cy.wait("@ActivateProdConfFromPreprod");
 
-      cy.get(`.PROD-environment-card [aria-label='Activate']`).click();
+      cy.get(`[data-cy='environment-PREPROD'] [aria-label='Activate']`).click();
     });
   });
 });

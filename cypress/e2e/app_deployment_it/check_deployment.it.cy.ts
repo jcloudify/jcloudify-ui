@@ -71,7 +71,7 @@ describe("Check deployment", () => {
     cy.wait("@getEnvStacks");
     cy.wait("@getEnvStackOutputs");
 
-    cy.get("[data-cy='PREPROD-environment']").click();
+    cy.getByTestid("show-PREPROD-environment").click({force: true});
 
     cy.wait("@getEnv");
     cy.wait("@getEnvConf");

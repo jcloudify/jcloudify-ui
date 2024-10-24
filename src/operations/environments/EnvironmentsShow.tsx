@@ -93,6 +93,7 @@ const ActiveDeploymentUrl: React.FC<{appId: string; envId: string}> = ({
           copiable={false}
           target="_blank"
           to={apiUrl?.value!}
+          zIndex={2}
         >
           {apiUrl?.value}
         </TypographyLink>
@@ -130,7 +131,9 @@ const LatestDeployedCommit: React.FC<{
       </Box>
 
       <Stack direction="column" spacing={0.5}>
-        <GitCommit {...github_meta} />
+        <Box zIndex={2}>
+          <GitCommit {...github_meta} />
+        </Box>
         <Typography color="text.secondary">
           {fromToNow(creation_datetime!)}
         </Typography>
@@ -189,8 +192,8 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
   return (
     <Card
       data-testid={`environment-${environment?.id}`}
-      className={`${type}-environment-card`}
-      data-cy={`${type}-environment`}
+      data-cy={`environment-${type}`}
+      role="button"
       sx={{
         width: "100%",
         display: "flex",
@@ -210,7 +213,6 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
         <Stack
           flex={1}
-          zIndex={3}
           direction="column"
           spacing={2}
           borderBottom={`1px solid ${colors("gray-0")}`}
@@ -257,7 +259,11 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
         </RecordContextProvider>
       </CardActions>
 
-      <TopLink index={2} to={environment?.id!} />
+      <TopLink
+        index={1}
+        to={environment?.id!}
+        data-testid={`show-${type}-environment`}
+      />
     </Card>
   );
 };
@@ -298,7 +304,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   return (
     <Card
-      className={`${type}-environment-card`}
+      data-cy={`environment-${type}`}
       sx={{
         width: "100%",
         display: "flex",
@@ -344,6 +350,7 @@ const DeactivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
           size="large"
           onClick={activateEnvironment}
           disabled={isActivatingEnvironment || isLoadingActivationConfig}
+          sx={{zIndex: 2}}
         >
           {isActivatingEnvironment ? "Activating..." : "Activate"}
         </Button>
