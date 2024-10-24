@@ -1,50 +1,38 @@
 import {
-  Stack,
+  Application,
+  Environment,
+  EnvironmentType,
   StackEvent,
   StackOutput,
   StackType,
 } from "@jcloudify-api/typescript-client";
 import {nanoid} from "nanoid";
-import {app1} from "./application.mock";
-import {preprod_env, prod_env} from "./environment.mock";
-import {ToRecord} from "../../src/providers";
+import {app1, app2} from "./application.mock";
+import {preprod_env, preprod_env2, prod_env} from "./environment.mock";
 import {getEnumValues} from "../../src/utils/enum";
 import {snakeToKebab} from "../../src/utils/str";
 
-export const app1_prod_stacks: ToRecord<Stack>[] = getEnumValues(StackType).map(
-  (stack_type) => ({
-    id: `app1-prod-${stack_type}-stack`,
-    name: `${app1.name}-prod-${snakeToKebab(stack_type).toLowerCase()}`,
+const makeStacks = (app: Application, env: Environment) =>
+  getEnumValues(StackType).map((stack_type) => ({
+    id: `${app.id}-${env.environment_type!.toLowerCase()}-${stack_type}-stack`,
+    name: `${app.name}-prod-${snakeToKebab(stack_type).toLowerCase()}`,
     cf_stack_id: nanoid(),
     creation_datetime: new Date("2024-07-25T05:12:58.615Z"),
     update_datetime: new Date("2024-07-25T05:12:58.615Z"),
     application: app1,
-    environment: prod_env,
+    environment: env,
     stack_type,
-  })
-);
+  }));
 
-export const app1_preprod_stacks: ToRecord<Stack>[] = getEnumValues(
-  StackType
-).map((stack_type) => ({
-  id: `app1-preprod-${stack_type}-stack`,
-  name: `${app1.name}-preprod-${snakeToKebab(stack_type).toLowerCase()}`,
-  cf_stack_id: nanoid(),
-  creation_datetime: new Date("2024-07-25T05:12:58.615Z"),
-  update_datetime: new Date("2024-07-25T05:12:58.615Z"),
-  application: app1,
-  environment: preprod_env,
-  stack_type,
-}));
+export const app1_prod_stacks = makeStacks(app1, prod_env);
+export const app1_preprod_stacks = makeStacks(app1, preprod_env);
+export const app2_preprod_stacks = makeStacks(app2, preprod_env2);
+export const app2_prod_stacks = makeStacks(app2, {
+  ...preprod_env2,
+  environment_type: EnvironmentType.PROD,
+});
 
-export const stacks = {
-  [app1.id]: {
-    [prod_env.id]: app1_prod_stacks,
-    [preprod_env.id]: app1_preprod_stacks,
-  },
-};
-
-export const app1_prod_stack_events: StackEvent[] = [
+export const stack_events: StackEvent[] = [
   {
     event_id: "39166810-6073-11ef-ad18-0a78309a1bb3",
     logical_resource_id: "prod-compute-permission-jcloudify-cloudy",
@@ -103,12 +91,15 @@ export const app1_prod_stack_events: StackEvent[] = [
   },
 ];
 
-export const app1_prod_stack_outputs: StackOutput[] = [
+export const stack_outputs_with_apiUrl: StackOutput[] = [
   {
     key: "ApiUrl",
     value: "https://nsqk8hbcv.execute-api.eu-west-3.amazonaws.com/Prod",
     description: "API Gateway endpoint URL",
   },
+];
+
+export const stack_outputs_without_apiUrl: StackOutput[] = [
   {
     key: "ELB-VPCID",
     value: "a-vpcid",

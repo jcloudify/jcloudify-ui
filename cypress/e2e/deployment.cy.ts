@@ -10,7 +10,7 @@ import {
   provision_failed,
   provision_inProgress,
 } from "../fixtures/deployment-state.mock";
-import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
+import {stack_outputs_with_apiUrl} from "../fixtures/stack.mock";
 import {STATUS} from "../../src/operations/deployments/state";
 
 describe("Deployment", () => {
@@ -309,7 +309,7 @@ describe("Deployment", () => {
 
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
-      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
+      cy.contains(stack_outputs_with_apiUrl[0].value! /* ApiUrl */);
     });
   });
 });

@@ -4,6 +4,7 @@ export default defineConfig({
   viewportWidth: 1366,
   viewportHeight: 768,
   projectId: "q7vvqw",
+  chromeWebSecurity: false,
   env: {
     codeCoverage: {
       exclude: ["cypress/**/*"],
