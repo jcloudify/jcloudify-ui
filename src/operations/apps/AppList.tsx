@@ -52,7 +52,8 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
           </Stack>
           <Box>
             <IconButtonWithTooltip
-              label="delete"
+              data-testid={`delete-${app.name}-app`}
+              label="Delete"
               sx={{zIndex: 2}}
               color="error"
               onClick={handleDialogOpen}
@@ -97,6 +98,7 @@ const AppGridTile: React.FC<AppProps> = ({app}) => {
 
         <Link
           data-testid={`show-${app.id}-app`}
+          data-cy={`application-${app.name}`}
           to={`${app.id}/show`}
           sx={{
             top: 0,

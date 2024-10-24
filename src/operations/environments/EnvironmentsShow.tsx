@@ -157,6 +157,7 @@ const ActivatedEnvironmentCard: React.FC<EnvironmentCardProps> = ({
     <Card
       data-testid={`environment-${environment?.id}`}
       className={`${type}-environment-card`}
+      data-cy={`${type}-environment`}
       sx={{
         width: "100%",
         display: "flex",

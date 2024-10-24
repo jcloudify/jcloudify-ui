@@ -66,3 +66,16 @@ jobs:
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+      - name: cleanup target app
+        # do not run when 'canceled'
+        if: success() || failure()
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          spec: cypress/e2e/app_deployment_it/delete_checked_app.it.cy.ts
+          # Already installed in the previous step
+          install: false
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
