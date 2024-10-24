@@ -1,7 +1,7 @@
 import {EnvironmentType as EnvironmentTypeEnum} from "@jcloudify-api/typescript-client";
 import {user1} from "../fixtures/user.mock";
 import {app1, app2} from "../fixtures/application.mock";
-import {app1_prod_stack_outputs} from "../fixtures/stack.mock";
+import {stack_outputs_with_apiUrl} from "../fixtures/stack.mock";
 import {preprod_env2_conf1} from "../fixtures/config.mock";
 import {jcloudify} from "../support/util";
 
@@ -25,7 +25,7 @@ describe("Environment", () => {
       cy.contains("poja: gen");
       cy.contains("fdf8268");
       cy.contains("$ 7.25");
-      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
+      cy.contains(stack_outputs_with_apiUrl[0].value! /* ApiUrl */);
     });
 
     specify("Shows the clicked environment details", () => {
@@ -43,7 +43,7 @@ describe("Environment", () => {
 
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
-      cy.contains(app1_prod_stack_outputs[0].value! /* ApiUrl */);
+      cy.contains(stack_outputs_with_apiUrl[0].value! /* ApiUrl */);
 
       // env variables
       cy.getByTestid("custom_java_env_vars_accordion").click();
@@ -111,7 +111,7 @@ describe("Environment", () => {
     });
   });
 
-  context.only("Create environment", () => {
+  context("Create environment", () => {
     specify("Deactivate activated ones", () => {
       cy.getByTestid(`show-${app1.id}-app`).click({force: true});
       cy.getByHref(`/applications/${app1.id}/show/environments`).click();
@@ -173,13 +173,12 @@ describe("Environment", () => {
       cy.wait("@getEnvironmentStacks");
       cy.wait("@getEnvironmentStackOutputs");
 
-      cy.get(`[data-cy='environment-PREPROD'] [aria-label='Activate']`).click();
+      cy.get(`[data-cy='environment-PROD'] [aria-label='Activate']`).click();
 
       cy.wait("@getEnvironmentConfig");
       cy.wait("@ActivateProd");
       cy.wait("@ActivateProdConfFromPreprod");
-
-      cy.get(`[data-cy='environment-PREPROD'] [aria-label='Activate']`).click();
+      // TODO: mock environment creation
     });
   });
 });
